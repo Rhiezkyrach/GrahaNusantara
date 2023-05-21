@@ -1,0 +1,29 @@
+{
+    "name": "Raja Media",
+    "short_name": "Raja Media",
+    "start_url": "/index.php",
+    "background_color": "#d10010",
+    "description": "Media Informasi Indonesia",
+    "display": "standalone",
+    "theme_color": "#d10010",
+    "icons": [
+        {
+            "src": "raja_media_solid.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "raja_media_white.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "raja_media_red.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+    ]
+}

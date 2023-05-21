@@ -1,0 +1,8 @@
+User-agent: *
+Allow: / 
+Disallow: /cmslogin
+Disallow: /admin/
+Disallow: /search
+
+Sitemap: https://www.rajamedia.co/feedberita
+Sitemap: https://www.rajamedia.co/sitemap

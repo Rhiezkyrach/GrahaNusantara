@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous">
+
+    <title>Document</title>
+</head>
+<body>
+  <header class="w-full h-auto bg-white shadow-md lg:shadow-none transition">
+    <!-- Mobile Nav -->
+    <nav class="lg:hidden px-4 mx-auto py-2">
+      <div class="relative flex flex-warp items-center justify-between">
+        <div id="justify" class="z-10 w-full flex items-center justify-between">
+          <a href="#">
+            <img src="https://sinpo.id/assets2/images/logo_sinpo_id.png" alt="" class="w-36">
+          </a>
+          <!-- hamburger Menu -->
+          <div class="flex">
+            <button id="hamburger" class="relative w-10 h-10">
+              <div role="hidden" id="line" class="inset-0 w-6 h-0.5 m-auto rounded-full bg-gray-500 rotate-0 transition duration-300"></div>
+              <div role="hidden" id="line2" class="inset-0 w-5 h-0.5 mt-1.5 mr-2 m-auto rounded-full bg-gray-500 rotate-0 transition duration-300"></div>
+              <div role="hidden" id="line3" class="inset-0 w-6 h-0.5 mt-1.5 m-auto rounded-full bg-gray-500 rotate-0 transition duration-300"></div> 
+            </button>
+          </div>
+          <!-- /Hamburger Menu -->
+        </div>
+      </div>
+
+      <div id="navlinks" class="hidden h-auto w-full bg-white transition">
+        <ul class="py-4 text-gray-600 text-lg tracking-wide lg:flex lg:space-x-8 lg:py-0">
+            <li>
+                <a href="" class="block w-full py-3 transition hover:text-cyan-600">Portfolio</a>
+            </li>
+            <li>
+                <a href="" class="block w-full py-3 transition hover:text-cyan-600">Services</a>
+            </li>
+            <li>
+                <a href="" class="block w-full py-3 transition hover:text-cyan-600">About</a>
+            </li>
+            <li>
+                <a href="" class="block w-full py-3 transition hover:text-cyan-600">Blog</a>
+            </li>
+            <li class="mt-4 lg:mt-0">
+                <a href="" class="block w-full py-3 px-6 rounded-xl bg-cyan-500 transition hover:bg-cyan-600 focus:bg-cyan-700 active:bg-cyan-800">
+                    <span class="block text-center text-white font-semibold lg:text-base">Contact us</span>
+                </a>
+            </li>
+        </ul>
+      </div>
+
+      <!-- Ekplorasi -->
+      <div id="eksplor" class="flex flex-row overflow-x-auto py-2 no-scrollbar">
+        <div class="px-3 py-1 bg-red-600 rounded-md text-sm font-semibold text-white whitespace-nowrap"><i class="far fa-compass"></i> Eksplorasi</div>
+           <div class="flex-shrink-0 w-px ml-3 h-auto bg-gray-300"> </div>
+        <a href="#" class="ml-3 px-3 py-1 border border-blue-500 rounded-full text-xs font-semibold hover:bg-blue-500 hover:text-white">Parlemen</a>
+        <a href="#" class="ml-2 px-3 py-1 border border-blue-500 rounded-full text-xs font-semibold hover:bg-blue-500 hover:text-white">Politik</a>
+        <a href="#" class="ml-2 px-3 py-1 border border-blue-500 rounded-full text-xs font-semibold hover:bg-blue-500 hover:text-white">Hukum</a>
+        <a href="#" class="ml-2 px-3 py-1 border border-blue-500 rounded-full text-xs font-semibold hover:bg-blue-500 hover:text-white">Peristiwa</a>
+        <a href="#" class="ml-2 px-3 py-1 border border-blue-500 rounded-full text-xs font-semibold hover:bg-blue-500 hover:text-white">Ekbis</a>
+        <a href="#" class="ml-2 px-3 py-1 border border-blue-500 rounded-full text-xs font-semibold hover:bg-blue-500 hover:text-white">Olahraga</a>
+      </div>
+      <!-- /Ekplorasi -->
+    </nav>
+    <!-- /Mobile Nav -->
+
+    <!-- PC Nav -->
+    <nav class="hidden lg:block">
+      <div class="w-full h-auto bg-gray-100 shadow-md">
+        <div class="px-36 2xl:px-[360px] py-1.5 flex flex-row items-center justify-between">
+
+          <div class="flex flex-row gap-2 items-center">
+            <div class="text-sm text-gray-500 font-medium">Rabu, 23 Desember 2021 | 15:00 WIB</div>
+          </div>
+
+          <div class="relative block w-64">
+            <div class="absolute right-0  w-6 h-6 rounded-full mr-3">
+              <button type="submit" class="p-2 text-sm text-red-600"><i class="fas fa-search"></i></button>
+            </div>
+            <input type="text" class="w-full px-3 py-1 rounded-full border border-gray-200 focus:outline-none focus:ring-1 focus:ring-sky-500 placeholder:text-sm" placeholder="Cari Berita...">
+          </div>
+
+        </div>
+      </div>
+
+      <div class="px-36 2xl:px-[360px] mt-6 flex flex-row items-center justify-between">
+        <div class="w-4/12">
+          <a href="#"><img src="https://sinpo.id/assets2/images/logo_sinpo_id.png" alt=""></a>
+        </div>
+
+        <div class="w-5/12">
+          <div class="h-28 2xl:h-32 py-2 px-4 bg-gradient-to-r from-emerald-100 to-teal-100 rounded-md overflow-hidden">
+            <div class="font-bold text-sm text-center text-gray-800">UPDATE KASUS COVID-19 INDONESIA</div>
+            <div class="flex flex-row gap-2 justify-between">
+
+              <div class="mt-1 py-1 2xl:py-2 px-4 2xl:px-3 flex flex-col items-center bg-teal-500 rounded-md">
+                <div class="text-xxs text-center text-white">POSITIF</div>
+                <div class="text-2xl 2xl:text-3xl font-bold text-center text-white">4,272,421</div>
+              </div>
+
+              <div class="mt-1 py-1 2xl:py-2 px-4 2xl:px-3 flex flex-col items-center bg-rose-500 rounded-md">
+                <div class="text-xxs text-center text-white">MENINGGAL</div>
+                <div class="text-2xl 2xl:text-3xl font-bold text-center text-white">144,174</div>
+              </div>
+
+              <div class="mt-1 py-1 2xl:py-2 px-4 2xl:px-3 flex flex-col items-center bg-emerald-500 rounded-md">
+                <div class="text-xxs text-center text-white">SEMBUH</div>
+                <div class="text-2xl 2xl:text-3xl font-bold text-center text-white">4,119,472</div>
+              </div>
+
+            </div>
+            <div class="mt-2 text-xxxs text-center text-gray-800">Update: 18 Januari 2022, Pukul 16:00 WIB - Sumber: covid19.go.id, kawalcorona.com</div>
+          </div>
+        </div> 
+
+      </div>
+
+      <div class="px-36 2xl:px-[360px] mt-6">
+        
+        <ul class="w-full flex flex-row grow-0 gap-2 lg:gap-1 items-center justify-between py-2.5 px-6 bg-gradient-to-tr from-red-700 to-rose-600 rounded-md">
+          <li class="lg:text-xs xl:text-sm 2xl:text-base text-white hover:text-yellow-300 font-bold whitespace-nowrap"><a href="#"><i class="fas fa-home"></i> HOME</a></li>
+          <div class="h-6 w-px bg-gray-100/50"></div>
+          <li class="lg:text-xs xl:text-sm 2xl:text-base text-white hover:text-yellow-300 font-bold tracking-wide"><a href="#">PARLEMEN</a></li>
+          <li class="lg:text-xs xl:text-sm 2xl:text-base text-white hover:text-yellow-300 font-bold tracking-wide"><a href="#">POLITIK</a></li>
+          <li class="lg:text-xs xl:text-sm 2xl:text-base text-white hover:text-yellow-300 font-bold tracking-wide"><a href="#">HUKUM</a></li>
+          <li class="lg:text-xs xl:text-sm 2xl:text-base text-white hover:text-yellow-300 font-bold tracking-wide"><a href="#">EKBIS</a></li>
+          <li class="lg:text-xs xl:text-sm 2xl:text-base text-white hover:text-yellow-300 font-bold tracking-wide"><a href="#">PERISTIWA</a></li>
+          <li class="lg:text-xs xl:text-sm 2xl:text-base text-white hover:text-yellow-300 font-bold tracking-wide"><a href="#">GALERI</a></li>
+          <li class="lg:text-xs xl:text-sm 2xl:text-base text-white hover:text-yellow-300 font-bold tracking-wide"><a href="#">OLAHRAGA</a></li>
+          <li class="lg:text-xs xl:text-sm 2xl:text-base text-white hover:text-yellow-300 font-bold tracking-wide"><a href="#">NUSANTARA</a></li>
+          <li class="lg:text-xs xl:text-sm 2xl:text-base bg-gradient-to-tr from-amber-400 to-yellow-300 hover:text-red-600 py-1 px-2 rounded-md font-bold tracking-wide whitespace-nowrap"><a href="#"><i class="fas fa-play-circle"></i> SINPO TV</a></li>
+          <li class="group relative lg:text-xs xl:text-sm 2xl:text-base text-white hover:text-yellow-300 font-bold tracking-wide">LAINNYA <i class="fas fa-sort-down"></i>
+            <div class="group-hover:block dropdown-menu absolute hidden h-auto">
+            <ul class="z-50 top-0 mt-5 w-auto divide-y divide-gray-100/50 bg-gradient-to-r from-red-700 to-rose-600 shadow px-6 py-4 rounded-md">
+                <li class="py-1.5 block text-white hover:text-yellow-300 font-bold lg:text-xs xl:text-sm 2xl:text-base whitespace-nowrap"><a href="#">DUNIA</a></li>
+                <li class="py-1.5 block text-white hover:text-yellow-300 font-bold lg:text-xs xl:text-sm 2xl:text-base whitespace-nowrap"><a href="#">KEAMANAN</a></li>
+                <li class="py-1.5 block text-white hover:text-yellow-300 font-bold lg:text-xs xl:text-sm 2xl:text-base whitespace-nowrap"><a href="#">GAYA HIDUP</a></li>
+                <li class="py-1.5 block text-white hover:text-yellow-300 font-bold lg:text-xs xl:text-sm 2xl:text-base whitespace-nowrap"><a href="#">BONGKAR</a></li>
+            </ul>
+            </div>
+          </li>
+          <li class="lg:text-xs xl:text-sm 2xl:text-base text-white hover:text-yellow-300 font-bold tracking-wide whitespace-nowrap"><a href="#"><i class="fas fa-list"></i> INDEKS</a></li>
+        </ul>
+
+      </div>   
+    </nav>
+    <!-- /PC Nav -->
+  </header>
+
+  <main class="mx-auto px-4 lg:px-36 2xl:px-[360px] mt-6">
+
+    <div class="md:flex md:flex-row"> <!-- PC Container -->
+      <div class="md:w-8/12 md:flex md:flex-col"> <!-- PC Main Container -->
+
+      {{-- Detail --}}
+      <div class="flex flex-col w-full h-auto">
+      <div class="text-xxs font-semibold"><a href="/">Home</a> / <a href="#"></span class="text-red-600">Politik</span></a></div>
+      {{-- @if($view->sub_judul) --}}
+      {{-- <div class="text-md font-bold mt-4 uppercase text-red-600">ini Sub Judul Atas</div> --}}
+      {{-- @endif --}}
+      <div class="text-2xl md:text-3xl font-black mt-2 leading-snug">Polisi Belum Terima Surat Permohonan Penangguhan Penahanan Ferdinand Hutahaean</div>
+      {{-- <div class="text-lg md:text-xl font-semibold mt-2 text-gray-600 leading-snug">Ini Sub Judul Bawah yang Lumayan Panjang</div> --}}
+
+      <div class="flex mt-3 flex-row items-center">
+          <div class="flex w-10 h-10 md:w-12 md:h-12 rounded-full bg-gray-100 overflow-hidden">
+          <img class="w-full object-cover" src="https://source.unsplash.com/random/800x600/?profile" alt="">
+          </div>
+          <div class="flex flex-col justify-between">
+          {{-- @if($view->oleh !== NULL) --}}
+          <div class="text-sm font-semibold ml-3 text-red-600">Oleh: Redaksi</div>
+          {{-- @else
+          <div class="text-sm font-semibold ml-3 text-red-600">Laporan: Wartawan</div>
+          @endif --}}
+          <div class="text-xxs ml-3">{{ Carbon\Carbon::now()->translatedFormat('l, d F Y | H:i')}} WIB</div>
+          </div>
+      </div>
+
+      {{-- <div class="w-full mt-4">
+          <!-- ShareThis BEGIN --><div class="sharethis-inline-share-buttons"></div><!-- ShareThis END -->
+      </div> --}}
+
+      <div class="mt-4 flex w-full h-56 md:h-64 lg:h-[400px] 2xl:h-[420px] bg-gray-100 rounded-t-md overflow-hidden">
+          {{-- @if($view->url_video == '') --}}
+            <img class="w-full h-full object-cover" src="https://source.unsplash.com/random/800x600/?nature" alt="">
+          {{-- @else
+          <iframe src="{{ $view->url_video }}" width="100%" height="400" frameborder="0" allowfullscreen></iframe>
+          @endif --}}
+      </div>
+      <div class="px-3 py-2 text-xs bg-gray-100 rounded-b-md">Ini Caption Foto Berita Lorem Ipsum Dolor Sit Amet Ini Caption Foto Berita Lorem Ipsum Dolor Sit Amet</div>
+
+      <div class="mt-4 text-base md:leading-relaxed space-y-5"><p><b>SinPo.id - </b>Bareskrim Polri belum menerima surat permohonan penangguhan penahanan Ferdinand Hutahaean (FH). Ferdinand ditahan di Rutan Bareskrim Polri setelah ditetapkan sebagai tersangka kasus dugaan ujaran kebencian bermuatan SARA.</p>
+        <p>"Penjelasan penyidik Ditipid Siber permohonan penangguhan penahanan atas nama tersangka FH sampai saat ini belum diterima," kata Karo Penmas Divisi Humas Polri Brigjen Ahmad Ramadhan kepada awak media, Jakarta, Rabu (19/1).</p>
+        <div class="block float-left w-full md:w-5/12 px-5 mr-5 mb-5 bg-gradient-to-tr from-slate-200 to-slate-100 h-auto rounded-md">
+          <div class="mt-2 font-bold text-sm text-white"><span class="py-2 px-4 bg-red-600 rounded-b-md">BACA JUGA</span></div>
+          <div class="my-3 flex flex-col divide-y divide-red-600">
+            <a href=""><div class="py-2 text-sm font-semibold hover:text-red-600">Lorem Ipsum Dolor Sit Amet, The Lazy Fox is on The News Today</div></a>
+            <a href=""><div class="py-2 text-sm font-semibold hover:text-red-600">Lorem Ipsum Dolor Sit Amet, The Lazy Fox is on The News Today The Lazy Fox is on The News Today</div></a>
+            <a href=""><div class="py-2 text-sm font-semibold hover:text-red-600">Lorem Ipsum Dolor Sit Amet, The Lazy Fox is on The News Today</div></a>
+          </div>
+        </div>
+        <div class="clear-both md:clear-none"></div>
+        <div class="block md:hidden w-full md:w-5/12 h-0.5"></div>
+        <p>Polri tidak serta-merta langsung menangguhkan penahanan Ferdinand jika telah menerima permohonan tersebut. "Yang pasti dipertimbangkan dulu. Tentu akan menjadi pertimbangan apa yang menjadi alasan penangguhan penahanan," ujarnya.</p>
+        <p>Ramadhan menekankan, Bareskrim tidak mau terburu-buru untuk mengabulkan penangguhan penahanan terhadap Ferdinand. Apalagi, saat ini, penyidik sedang mengebut pemberkasan dari perkara itu.</p>
+        <p>"Kita belum cepat-cepat mengambil keputusan. Kita lihat dulu alasannya apa. Proses tuh sedang berjalan menuju pemberkasan," ucap Ramadhan. </p>
+        <p>Sejauh ini, polisi telah memeriksa 38 saksi terkait kasus ujaran kebencian yang menjerat Ferdinand Hutahaean. Jika dirincikan, saksi-saksi tersebut terdiri dari 17 saksi dan 21 saksi ahli. </p>
+        <p>Atas perbuatannya Ferdinand dijerat dengan Pasal 14 ayat (1) dan (2) KUHP dan Pasal 45 ayat (2) jo Pasal 28 ayat (2) Undang-Undang Informasi dan Transaksi Elektronik (ITE). Pasal itu berkaitan dengan pelanggaran tersangka yang diduga bermuatan ujaran kebencian yang berpotensi menimbulkan keonaran.<span class="inline-block ml-1 -mb-0.5 w-4 h-4 bg-red-500 rounded-full"></span></p></div>
+
+      <div class="mt-5 flex flex-row flex-wrap items-center gap-2 ">
+          <div class="font-semibold"><i class="fas fa-tags"></i> TAG:</div>
+          {{-- @foreach($tags as $t) --}}
+          <a href="#"><div class="inline-flex text-xs font-semibold tracking-wide bg-red-600 hover:bg-red-800 text-white py-1 px-2 rounded-md whitespace-pre"><i class="fas fa-hashtag"></i> Politik</div></a>
+          <a href="#"><div class="inline-flex text-xs font-semibold tracking-wide bg-red-600 hover:bg-red-800 text-white py-1 px-2 rounded-md whitespace-pre"><i class="fas fa-hashtag"></i> Hukum</div></a>
+          <a href="#"><div class="inline-flex text-xs font-semibold tracking-wide bg-red-600 hover:bg-red-800 text-white py-1 px-2 rounded-md whitespace-pre"><i class="fas fa-hashtag"></i> Parlemen</div></a>
+          {{-- @endforeach --}}
+      </div>
+
+      <div class="flex w-full my-5 h-0.5 bg-gray-200"></div>
+
+      {{-- Berita Terkait --}}
+      <div class="block w-full">
+        <div class="text-base 2xl:text-lg"><span class="font-bold px-2 py-0.5 text-white bg-red-600 rounded-l-md">BERITA</span><span class="font-semibold py-0.5 px-2 bg-amber-400 rounded-r-md">TERKAIT</span></div>
+        <div class="mt-5 w-full grid grid-cols-2 lg:grid-cols-3 gap-5">
+
+          <div class="flex flex-col">
+            <div class="w-full h-28 md:h-32 2xl:h-44 bg-gray-300 rounded-md overflow-hidden">
+              <a href=""><img class="object-cover" src="https://source.unsplash.com/random/800x600/?girl" alt=""></a>
+            </div>
+            <a href="#"><div class="mt-2 text-sm hover:text-red-600 md:text-base font-semibold leading-snug md:leading-snug">Lorem Ipsum Dolor Sit Amet, The Lazy Fox is on The News Today</div></a>
+            <div class="mt-1 text-xxs font-semibold text-cyan-900">21 Januari 2022</div>
+          </div>
+
+          <div class="flex flex-col">
+            <div class="w-full h-28 md:h-32 2xl:h-44 bg-gray-300 rounded-md overflow-hidden">
+              <a href=""><img class="object-cover" src="https://source.unsplash.com/random/800x600/?girl" alt=""></a>
+            </div>
+            <a href="#"><div class="mt-2 text-sm hover:text-red-600 md:text-base font-semibold leading-snug md:leading-snug">Lorem Ipsum Dolor Sit Amet, The Lazy Fox is on The News</div></a>
+            <div class="mt-1 text-xxs font-semibold text-cyan-900">21 Januari 2022</div>
+          </div>
+
+          <div class="flex flex-col">
+            <div class="w-full h-28 md:h-32 2xl:h-44 bg-gray-300 rounded-md overflow-hidden">
+              <a href=""><img class="object-cover" src="https://source.unsplash.com/random/800x600/?girl" alt=""></a>
+            </div>
+            <a href="#"><div class="mt-2 text-sm hover:text-red-600 md:text-base font-semibold leading-snug md:leading-snug">Lorem Ipsum Dolor Sit Amet, The Lazy Fox is on The News Today The Lazy Fox is on The News Today</div></a>
+            <div class="mt-1 text-xxs font-semibold text-cyan-900">21 Januari 2022</div>
+          </div>
+
+          <div class="flex flex-col">
+            <div class="w-full h-28 md:h-32 2xl:h-44 bg-gray-300 rounded-md overflow-hidden">
+              <a href=""><img class="object-cover" src="https://source.unsplash.com/random/800x600/?girl" alt=""></a>
+            </div>
+            <a href="#"><div class="mt-2 text-sm hover:text-red-600 md:text-base font-semibold leading-snug md:leading-snug">Lorem Ipsum Dolor Sit Amet, The Lazy Fox is on The News Today</div></a>
+            <div class="mt-1 text-xxs font-semibold text-cyan-900">21 Januari 2022</div>
+          </div>
+
+          <div class="flex flex-col">
+            <div class="w-full h-28 md:h-32 2xl:h-44 bg-gray-300 rounded-md overflow-hidden">
+              <a href=""><img class="object-cover" src="https://source.unsplash.com/random/800x600/?girl" alt=""></a>
+            </div>
+            <a href="#"><div class="mt-2 text-sm hover:text-red-600 md:text-base font-semibold leading-snug md:leading-snug">Lorem Ipsum Dolor Sit Amet, The Lazy Fox is on The News Today</div></a>
+            <div class="mt-1 text-xxs font-semibold text-cyan-900">21 Januari 2022</div>
+          </div>
+
+          <div class="flex flex-col">
+            <div class="w-full h-28 md:h-32 2xl:h-44 bg-gray-300 rounded-md overflow-hidden">
+              <a href=""><img class="object-cover" src="https://source.unsplash.com/random/800x600/?girl" alt=""></a>
+            </div>
+            <a href="#"><div class="mt-2 text-sm hover:text-red-600 md:text-base font-semibold leading-snug md:leading-snug">Lorem Ipsum Dolor Sit Amet, The Lazy Fox is on The News Today</div></a>
+            <div class="mt-1 text-xxs font-semibold text-cyan-900">21 Januari 2022</div>
+          </div>
+
+        </div>
+      </div>
+      {{-- /Berita Terkait --}}
+
+      {{-- Berita Terkini --}}
+      <div class="block mt-8 w-full">
+        <div class="text-base 2xl:text-lg"><span class="font-bold px-2 py-0.5 text-white bg-red-600 rounded-l-md">BERITA</span><span class="font-semibold py-0.5 px-2 bg-amber-400 rounded-r-md">TERKINI</span></div>
+        <div class="w-full flex flex-col">
+          
+          <div class="mt-3 flex flex-row w-full h-auto p-3 bg-white border-t border-opacity-40 drop-shadow-md hover:shadow-lg rounded-lg overflow-hidden justify-between">
+            <div class="flex flex-col">
+              <a href="#"><div class="text-base md:text-lg hover:text-red-600 font-semibold leading-snug md:leading-snug">Lorem Ipsum Dolor Sit Amet, The Lazy Fox is on The News Today</div></a>
+              <div class="flex flex-row">
+                <div class="mt-1 text-xs font-semibold text-red-600">Politik</div>
+                <div class="mt-1 ml-2 text-xs"><i class="far fa-clock"></i> 5 jam yang Lalu</div>
+              </div>
+            </div>
+            <div class="w-4/12 md:w-2/12 ml-3">
+              <div class="float-right flex w-20 h-20 bg-gray-500 rounded-md overflow-hidden">
+                <a href="#"><img class="w-full h-full object-cover" src="https://source.unsplash.com/random/800x600/?nude" alt=""></a>
+              </div>
+            </div>
+          </div>
+          
+          <div class="mt-3 flex flex-row w-full h-auto p-3 bg-white border-t border-opacity-40 drop-shadow-md hover:shadow-lg rounded-lg overflow-hidden justify-between">
+            <div class="flex flex-col">
+              <a href="#"><div class=" text-base md:text-lg hover:text-red-600 font-semibold leading-snug md:leading-snug">Lorem Ipsum Dolor Sit Amet, The Lazy Fox is on The News Today Lorem Ipsum Dolor Sit Amet</div></a>
+              <div class="flex flex-row">
+                <div class="mt-1 text-xs font-semibold text-red-600">Politik</div>
+                <div class="mt-1 ml-2 text-xs"><i class="far fa-clock"></i> 5 jam yang Lalu</div>
+              </div>
+            </div>
+            <div class="w-4/12 md:w-2/12 ml-3">
+              <div class="float-right flex w-20 h-20 bg-gray-500 rounded-md overflow-hidden">
+                <a href="#"><img class="w-full h-full object-cover" src="https://source.unsplash.com/random/800x600/?nude" alt=""></a>
+              </div>
+            </div>
+          </div>
+          
+          <div class="mt-3 flex flex-row w-full h-auto p-3 bg-white border-t border-opacity-40 drop-shadow-md hover:shadow-lg rounded-lg overflow-hidden justify-between">
+            <div class="flex flex-col">
+              <a href="#"><div class=" text-base md:text-lg hover:text-red-600 font-semibold leading-snug md:leading-snug">Lorem Ipsum Dolor Sit Amet, The Lazy Fox is on The News Today Lorem Ipsum Dolor Sit Amet</div></a>
+              <div class="flex flex-row">
+                <div class="mt-1 text-xs font-semibold text-red-600">Politik</div>
+                <div class="mt-1 ml-2 text-xs"><i class="far fa-clock"></i> 5 jam yang Lalu</div>
+              </div>
+            </div>
+            <div class="w-4/12 md:w-2/12 ml-3">
+              <div class="float-right flex w-20 h-20 bg-gray-500 rounded-md overflow-hidden">
+                <a href="#"><img class="w-full h-full object-cover" src="https://source.unsplash.com/random/800x600/?nude" alt=""></a>
+              </div>
+            </div>
+          </div>
+          
+          <div class="mt-3 flex flex-row w-full h-auto p-3 bg-white border-t border-opacity-40 drop-shadow-md hover:shadow-lg rounded-lg overflow-hidden justify-between">
+            <div class="flex flex-col">
+              <a href="#"><div class=" text-base md:text-lg hover:text-red-600 font-semibold leading-snug md:leading-snug">Lorem Ipsum Dolor Sit Amet, The Lazy Fox is on The News Today Lorem Ipsum Dolor Sit Amet</div></a>
+              <div class="flex flex-row">
+                <div class="mt-1 text-xs font-semibold text-red-600">Politik</div>
+                <div class="mt-1 ml-2 text-xs"><i class="far fa-clock"></i> 5 jam yang Lalu</div>
+              </div>
+            </div>
+            <div class="w-4/12 md:w-2/12 ml-3">
+              <div class="float-right flex w-20 h-20 bg-gray-500 rounded-md overflow-hidden">
+                <a href="#"><img class="w-full h-full object-cover" src="https://source.unsplash.com/random/800x600/?nude" alt=""></a>
+              </div>
+            </div>
+          </div>
+          
+          <div class="mt-3 flex flex-row w-full h-auto p-3 bg-white border-t border-opacity-40 drop-shadow-md hover:shadow-lg rounded-lg overflow-hidden justify-between">
+            <div class="flex flex-col">
+              <a href="#"><div class=" text-base md:text-lg hover:text-red-600 font-semibold leading-snug md:leading-snug">Lorem Ipsum Dolor Sit Amet, The Lazy Fox is on The News Today Lorem Ipsum Dolor Sit Amet</div></a>
+              <div class="flex flex-row">
+                <div class="mt-1 text-xs font-semibold text-red-600">Politik</div>
+                <div class="mt-1 ml-2 text-xs"><i class="far fa-clock"></i> 5 jam yang Lalu</div>
+              </div>
+            </div>
+            <div class="w-4/12 md:w-2/12 ml-3">
+              <div class="float-right flex w-20 h-20 bg-gray-500 rounded-md overflow-hidden">
+                <a href="#"><img class="w-full h-full object-cover" src="https://source.unsplash.com/random/800x600/?nude" alt=""></a>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+      {{-- /Berita Terkini --}}
+
+      </div>
+      {{-- /Detail --}}
+
+      </div> <!-- /PC Main Container -->
+
+      <div class="md:w-4/12 md:flex md:flex-col md:pl-6"> <!-- /PC Sidebar Container -->
+
+        <!-- Bongkar -->
+        <div class="w-full mt-8 md:mt-0 mb-3">
+          <div class="flex flex-row items-center justify-between">
+            <div class="text-base 2xl:text-lg"><span class="font-bold px-2 py-0.5 text-white bg-red-600 rounded-tr-lg">BONGKAR</span></div>
+            <div class="text-xxs lg:text-xs"><a href="#" class="font-semibold py-0.5 text-gray-500 hover:text-gray-700"><i class="fas fa-list"></i> Indeks</a></div>
+          </div>
+          <div class="block w-full h-0.5 -mt-0.5 mb-1 bg-red-600 rounded-full"></div>
+
+          <div class="mt-3 w-full rounded-lg overflow-hidden">
+            <a href="#">
+              <img src="https://cms.sinpo.id/database-photo/Infografis/Drama-Krisis-Batu-Bara.jpg" alt="" class="object-cover">
+            </a>
+          </div>
+
+        </div>
+        <!-- /Bongkar -->
+
+        <div class="z-0 md:sticky md:top-0"> <!-- Sticky Sidebar -->
+
+          <!-- TV -->
+          <div class="block w-full h-auto mt-5 mb-5 bg-gradient-to-tr from-rose-900 to-indigo-800 rounded-lg">
+            <div class="flex flex-col justify-between mx-4">
+              <div class="font-semibold text-lg 2xl:text-xl text-white mt-2"><i class="fas fa-play-circle"></i> SINPO TV</div>
+              <div class="bg-white h-48 2xl:h-56 my-2 shadow-inner rounded-lg overflow-hidden">
+                <a href="#" class="w-full"><img src="https://source.unsplash.com/random/800x600/?tv" alt="" class="inset-0 w-full h-full object-cover"></a>
+              </div>
+              <a href="" class="mt-2 font-semibold text-lg text-white hover:text-yellow-300">The Lazy Fox Live Stream on The News Today, Check This Out!</a>
+              <p class="text-xs mt-1 mb-4 text-white"><i class="far fa-clock"></i> Some Minutes Ago</p>
+            </div>
+          </div>
+          <!-- TV -->
+
+          {{-- Pojok Sinpo Mobile --}}
+          <div class="md:hidden w-full mt-5 mb-3 px-4 bg-gradient-to-r from-red-700 to-rose-600 rounded-md h-40">
+            <div class="-mt-1 float-right text-sm font-semibold text-red-600"><span class="bg-white py-1 px-3 rounded-b-md">POJOK SINPO</span></div>
+            <div class="pt-6 text-sm font-bold text-white">Lorem Ipsum Dolor</div>
+            <div class="mt-2 text-xs italic text-white">"Seorang menteri dikabarkan tengah kasak-kusuk untuk mengamankan posisinya. Sang Menteri yang strategis itu tengah bermanuver agar tidak di-reshuffle Presiden Jokowi."</div>
+            <div class="mt-2 text-xs font-semibold text-white">Somebody - Some Job Description</div>
+          </div>
+          {{-- /Pojok Sinpo Mobile --}}
+
+          <!-- Populer-->
+          <div class="block w-full mt-5 mb-3">
+            <div class="text-base 2xl:text-lg"><span class="font-bold px-2 py-0.5 text-white bg-red-600 rounded-l-md">BERITA</span><span class="font-semibold py-0.5 px-2 bg-amber-400 rounded-r-md">TERPOPULER</span></div>
+          </div>
+
+          <div class="group flex flex-col w-full mt-4">
+              <div class="flex flex-row w-full items-center">
+                <div class="flex">
+                <div class="text-4xl 2xl:text-5xl font-bold text-gray-300 group-hover:text-red-500">01</div>
+                </div>
+                <div class="flex h-full">
+                  <div class="ml-2 w-px h-auto min-h-25px bg-gray-400"></div>
+                  <div class="flex flex-col">
+                    <a href="" class="ml-3 text-base 2xl:text-lg font-semibold leading-tight hover:text-red-600">The Lazy Fox is on The News! Lorem Ipsum Dolor sit Amet</a>
+                    <p class="pl-3 text-xxs 2xl:text-xs mt-1"><span class="font-bold text-red-600">Politik</span> | Some Time Ago</p>
+                  </div>
+                </div>
+              </div>
+          </div>
+
+          <div class="group flex flex-col w-full mt-4">
+              <div class="flex flex-row w-full items-center">
+                <div class="flex">
+                <div class="text-4xl 2xl:text-5xl font-bold text-gray-300 group-hover:text-red-500">02</div>
+                </div>
+                <div class="flex h-full">
+                  <div class="ml-2 w-px h-auto min-h-25px bg-gray-400"></div>
+                  <div class="flex flex-col">
+                    <a href="" class="ml-3 text-base 2xl:text-lg font-semibold leading-tight hover:text-red-600">The Lazy Fox is on The News! Lorem Ipsum Dolor sit Amet</a>
+                    <p class="pl-3 text-xxs 2xl:text-xs mt-1"><span class="font-bold text-red-600">Politik</span> | Some Time Ago</p>
+                  </div>
+                </div>
+              </div>
+          </div>
+
+          <div class="group flex flex-col w-full mt-4">
+              <div class="flex flex-row w-full items-center">
+                <div class="flex">
+                <div class="text-4xl 2xl:text-5xl font-bold text-gray-300 group-hover:text-red-500">03</div>
+                </div>
+                <div class="flex h-full">
+                  <div class="ml-2 w-px h-auto min-h-25px bg-gray-400"></div>
+                  <div class="flex flex-col">
+                    <a href="" class="ml-3 text-base 2xl:text-lg font-semibold leading-tight hover:text-red-600">The Lazy Fox is on The News! Lorem Ipsum Dolor sit Amet</a>
+                    <p class="pl-3 text-xxs 2xl:text-xs mt-1"><span class="font-bold text-red-600">Politik</span> | Some Time Ago</p>
+                  </div>
+                </div>
+              </div>
+          </div>
+
+          <div class="group flex flex-col w-full mt-4">
+              <div class="flex flex-row w-full items-center">
+                <div class="flex">
+                <div class="text-4xl 2xl:text-5xl font-bold text-gray-300 group-hover:text-red-500">04</div>
+                </div>
+                <div class="flex h-full">
+                  <div class="ml-2 w-px h-auto min-h-25px bg-gray-400"></div>
+                  <div class="flex flex-col">
+                    <a href="" class="ml-3 text-base 2xl:text-lg font-semibold leading-tight hover:text-red-600">The Lazy Fox is on The News! Lorem Ipsum Dolor sit Amet</a>
+                    <p class="pl-3 text-xxs 2xl:text-xs mt-1"><span class="font-bold text-red-600">Politik</span> | Some Time Ago</p>
+                  </div>
+                </div>
+              </div>
+          </div>
+
+          <div class="group flex flex-col w-full mt-4">
+              <div class="flex flex-row w-full items-center">
+                <div class="flex">
+                <div class="text-4xl 2xl:text-5xl font-bold text-gray-300 group-hover:text-red-500">05</div>
+                </div>
+                <div class="flex h-full">
+                  <div class="ml-2 w-px h-auto min-h-25px bg-gray-400"></div>
+                  <div class="flex flex-col">
+                    <a href="" class="ml-3 text-base 2xl:text-lg font-semibold leading-tight hover:text-red-600">The Lazy Fox is on The News! Lorem Ipsum Dolor sit Amet</a>
+                    <p class="pl-3 text-xxs 2xl:text-xs mt-1"><span class="font-bold text-red-600">Politik</span> | Some Time Ago</p>
+                  </div>
+                </div>
+              </div>
+          </div>
+          <!-- /Populer--> 
+          
+        </div> <!-- Sticky Sidebar -->
+      </div> <!-- /PC Sidebar Container -->
+
+    </div> <!-- /PC Container -->
+    
+  </main>
+
+  <footer>
+    <div class="flex flex-col w-full h-auto mt-10 bg-gray-800 items-center">
+      <div class="flex py-5">
+        <a href="#">
+          <img src="https://sinpo.id/assets2/images/logo-putih.png" alt="" class="w-48">
+        </a>
+      </div>
+      <div class="font-bold 2xl:text-lg text-white">FOLLOW US</div>
+      <div class="flex flex-row mt-3 items-center justify-center">
+        <div class="text-3xl 2xl:text-4xl text-gray-200 hover:text-white"><a href="#"><i class="fab fa-facebook-square"></i></a></div>
+        <div class="text-3xl 2xl:text-4xl text-gray-200 hover:text-white ml-3"><a href="#"><i class="fab fa-instagram-square"></i></a></div>
+        <div class="text-3xl 2xl:text-4xl text-gray-200 hover:text-white ml-3"><a href="#"><i class="fab fa-twitter-square"></i></a></div>
+        <div class="text-3xl 2xl:text-4xl text-gray-200 hover:text-white ml-3"><a href="#"><i class="fab fa-youtube-square"></i></a></div>
+      </div>
+      <div class="px-10 mt-5 text-xxs 2xl:text-xs text-white text-center">Gedung Graha Senatama, Lt. 5 Jl. Kramat Kwitang No.8, RT.1/RW.7, Kwitang, Kec. Senen, Kota Jakarta Pusat, Daerah Khusus Ibukota Jakarta 10420.</div>
+      <div class="px-10 flex flex-row mt-5 items-center flex-wrap justify-center">
+        <div class="block text-sm 2xl:text-base pr-2 font-semibold text-gray-200 hover:text-white text-center"><a href="#">Redaksi</a></div>
+        <div class="block text-sm 2xl:text-base pl-2 pr-2 font-semibold text-gray-200 hover:text-white text-center"><a href="#">Kontak</a></div>
+        <div class="block text-sm 2xl:text-base pl-2 pr-2 font-semibold text-gray-200 hover:text-white text-center"><a href="#">Tentang Kami</a></div>    
+        <div class="inline-flex 2xl:text-base text-sm pl-2 pr-2 font-semibold text-gray-200 hover:text-white text-center"><a href="#">Disclaimer</a></div>
+        <div class="inline-flex 2xl:text-base text-sm pl-2 pr-2 font-semibold text-gray-200 hover:text-white text-center"><a href="#">Privacy Policy</a></div>
+        <div class="inline-flex 2xl:text-base text-sm pl-2 pr-2 font-semibold text-gray-200 hover:text-white text-center"><a href="#">Pedoman Media Siber</a></div>
+      </div>
+      <div class="w-full h-auto bg-gray-300 mt-5">
+        <div class="text-xxs 2xl:text-xs text-center py-3">Copyright @ 2021 Sinpo.id</div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
