@@ -12,6 +12,20 @@
 @endif
 {{-- /Iklan Sidebar A--}}
 
+{{-- Calon Dewan --}}
+@if($CalonDewan)
+<div class="relative w-full mt-5 mb-3 px-4 py-6 bg-gray-300 h-auto rounded-lg">
+    <div class="mr-5 absolute top-0 right-0 z-0 text-sm font-semibold text-red-600 dark:text-white"><span class="bg-white dark:bg-slate-800 py-1 px-3 rounded-b-md">CALON DEWAN</span></div>
+    <div class="mt-2">
+    @foreach($CalonDewan as $cd)
+    <a href="{{ url('/') . $cd->slug }}" class="my-2 text-sm font-semibold hover:text-red-600 "><p class="leading-snug">{{ $cd->judul }}</p></a>
+    <div class="my-1 w-full h-px {{ $loop->last ? '' : 'bg-red-600' }}"></div>
+    @endforeach
+    </div>
+</div>
+@endif
+{{-- /Calon Dewan --}}
+
 <!-- Opini -->
 @if($Opini)
 <div class="block w-full mt-5 mb-3">
@@ -67,17 +81,6 @@
 </div>
 @endif
 {{-- /Corong Rakyat --}}
-
-{{-- Calon Dewan --}}
-@if($corongRakyat)
-<div class="relative w-full mt-5 mb-3 px-4 py-6 bg-gradient-to-r from-red-600 to-orange-500 h-auto rounded-lg">
-    <div class="mr-5 absolute top-0 right-0 z-0 text-sm font-semibold text-red-600 dark:text-amber-500"><span class="bg-white dark:bg-slate-800 py-1 px-3 rounded-b-md">CALON DEWAN</span></div>
-    <div class="pt-4 text-base font-bold text-white">{{ $corongRakyat->nama }}</div>
-    <div class="mt-2 text-xs italic text-white">{{ $corongRakyat->kode }}</div>
-    <div class="mt-2 text-xs font-semibold text-white">{{ $corongRakyat->AE }}</div>
-</div>
-@endif
-{{-- /Calon Dewan --}}
 
 <!-- ePaper -->
 {{-- @if($epaper)

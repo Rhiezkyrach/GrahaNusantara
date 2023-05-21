@@ -60,6 +60,7 @@ class BeritaController extends Controller
             'Daerah' => Berita::beranda('Daerah')->limit(3)->get(),
             'Keamanan' => Berita::beranda('Keamanan')->limit(3)->get(),
             'GayaHidup' => Berita::beranda('Gaya Hidup')->limit(3)->get(),
+            'CalonDewan' => Berita::beranda('Calon Dewan')->limit(3)->get(),
             //IKLAN
             "iklanHeader" => Iklan::showIklan('Header')->orderBy('created_at', 'desc')->first(),
             "iklanHeadline" => Iklan::showIklan('Headline')->get(),
