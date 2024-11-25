@@ -2,33 +2,73 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Iklan;
-use App\Models\Setting;
 
+use App\Models\Setting;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Traits\NetworkAccessTrait;
 use Illuminate\Support\Facades\Storage;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class AdminIklanController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        $setting = Setting::first();
+    use NetworkAccessTrait;
 
-        if(session('success')){
-            Alert::success('Success!', session('success'));
+    public $setting;
+    public $user_network;
+
+    public function __construct()
+    {
+        $this->setting = Setting::where('id_network', auth()->user()->id_network)->first();
+        $this->user_network = auth()->user()->id_network;
+    }
+
+    // index
+    public function index(Request $request)
+    {
+
+        if (session()->has('success')) {
+            Alert::toast(session('success'), 'success');
         }
 
+        if (session()->has('error')) {
+            Alert::toast(session('error'), 'error');
+        }
+
+        $data = Iklan::getIklan($this->user_network);
+
+        if ($request->ajax()) {
+            return datatables()->of($data)
+                ->editColumn('id_network', function (Iklan $iklan) {
+                    return $iklan->Network ? $iklan->Network->nama : $iklan->id_network;
+                })
+                ->editColumn('awal_tayang', function (Iklan $iklan) {
+                    return Carbon::parse($iklan->awal_tayang)->translatedFormat('d F Y');
+                })
+                ->editColumn('akhir_tayang', function (Iklan $iklan) {
+                    return Carbon::parse($iklan->akhir_tayang)->translatedFormat('d F Y');
+                })
+                ->editColumn('status', function (Iklan $iklan) {
+                    return $iklan->status == '0'
+                        ? "<td><span class='px-3 py-1 text-xs rounded-full bg-rose-200'>TIDAK AKTIF</span></td>"
+                        : ($iklan->akhir_tayang < Carbon::today()
+                            ? "<td><span class='px-3 py-1 text-xs bg-green-200 rounded-full'>AKTIF</span></td>"
+                            : "<td><span class='px-3 py-1 text-xs bg-sky-200 rounded-full'>SELESAI</span></td>");
+                })
+                ->addColumn('action', function (Iklan $iklan) {
+                    return view('admin.iklan.iklan-action', ['data' => $iklan])->render();
+                })
+                ->rawColumns(['status', 'action'])
+                ->toJson();
+        };
+
         return view('admin.iklan.iklan',[
-            'judul' => 'Management Iklan' . ' - ' . $setting->judul_situs,
-            'iklan' => Iklan::orderBy('awal_tayang', 'DESC')->get(),
-            "setting" => $setting,
+            'judul' => 'Management Iklan' . ' - ' . $this->setting->judul_situs,
+            'list_tayang' => $this->list_tayang(),
+            'id_setting' => $this->setting->id,
+            'setting' => $this->setting,
         ]);
     }
 
@@ -37,19 +77,20 @@ class AdminIklanController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        $setting = Setting::first();
-        $jenisIklan = 'Banner, Google Ads, Corong Rakyat';
-        $posisiIklan = 'Header, Headline, Home A, Home B, Home C, 
-                        Sidebar A, Sidebar B, Sidebar C, News A, News B, News C, Footer';
+        if ($request->ajax()) {
 
-        return view('admin.iklan.tambah_iklan',[
-            'judul' => 'Tambah Iklan' . ' - ' . $setting->judul_situs,
-            "setting" => $setting,
-            'jenisIklan' => explode(',', $jenisIklan),
-            'posisiIklan' => explode(',', $posisiIklan),
-        ]);
+            $jenisIklan = 'Banner, Google Ads, Corong Rakyat';
+            $posisiIklan = 'Header, Headline, Home A, Home B, Home C, 
+                            Sidebar A, Sidebar B, Sidebar C, News A, News B, News C, Footer';
+
+            return view('admin.iklan.tambah_iklan',[
+                'judul' => 'Tambah Iklan' . ' - ' . $this->setting->judul_situs,
+                'jenisIklan' => explode(',', $jenisIklan),
+                'posisiIklan' => explode(',', $posisiIklan),
+            ]);
+        }
     }
 
     /**
@@ -72,17 +113,18 @@ class AdminIklanController extends Controller
             'akhir_tayang' => 'required',
         ]);
 
+        $validatedData['id_network'] = $this->user_network;
         $validatedData['kode'] = $request->kode;
         $validatedData['link'] = $request->link;
 
-        // Upload Avatar
+        // Upload Foto
         if($request->file('foto')){
             $ekstensiGambar = $request->file('foto')->extension();
 
             $date = \Carbon\Carbon::now()->translatedFormat('dmY-His');
             
             $namaGambarBaru = Str::slug($request->nama) . '-' . $date . '.' .$ekstensiGambar;
-            $lokasiGambar = 'gambar/iklan';
+            $lokasiGambar = $this->user_network . '/gambar/iklan';
                 
             $validatedData['foto'] = $request->file('foto')->storeAs($lokasiGambar, $namaGambarBaru);
         }
@@ -98,9 +140,14 @@ class AdminIklanController extends Controller
      * @param  \App\Models\Iklan  $iklan
      * @return \Illuminate\Http\Response
      */
-    public function show(Iklan $iklan)
+    public function show(Request $request, Iklan $iklan)
     {
-        //
+        if ($request->ajax()) {
+            return view('admin.iklan.show_iklan', [
+                'judul' => 'Detail Iklan' . ' - ' . $this->setting->judul_situs,
+                'iklan' => $iklan,
+            ]);
+        }
     }
 
     /**
@@ -109,20 +156,20 @@ class AdminIklanController extends Controller
      * @param  \App\Models\Iklan  $iklan
      * @return \Illuminate\Http\Response
      */
-    public function edit(Iklan $iklan)
+    public function edit(Request $request, Iklan $iklan)
     {
-        $setting = Setting::first();
-        $jenisIklan = 'Banner, Google Ads, Corong Rakyat';
-        $posisiIklan = 'Header, Headline, Home A, Home B, Home C, 
-                        Sidebar A, Sidebar B, Sidebar C, News A, News B, News C, Footer';
+        if ($request->ajax()) {
+            $jenisIklan = 'Banner, Google Ads, Corong Rakyat';
+            $posisiIklan = 'Header, Headline, Home A, Home B, Home C, 
+                            Sidebar A, Sidebar B, Sidebar C, News A, News B, News C, Footer';
 
-       return view('admin.iklan.edit_iklan',[
-            'judul' => 'Edit Iklan' . ' - ' . $setting->judul_situs,
-            'iklan' => $iklan,
-            "setting" => $setting,
-            'jenisIklan' => explode(',', $jenisIklan),
-            'posisiIklan' => explode(',', $posisiIklan),
-        ]);
+            return view('admin.iklan.edit_iklan',[
+                'judul' => 'Edit Iklan' . ' - ' . $this->setting->judul_situs,
+                'iklan' => $iklan,
+                'jenisIklan' => explode(',', $jenisIklan),
+                'posisiIklan' => explode(',', $posisiIklan),
+            ]);
+        }
     }
 
     /**
@@ -149,14 +196,14 @@ class AdminIklanController extends Controller
         $validatedData['kode'] = $request->kode;
         $validatedData['link'] = $request->link;
 
-        // Upload Avatar
+        // Upload Foto
         if($request->file('foto')){
             $ekstensiGambar = $request->file('foto')->extension();
 
             $date = \Carbon\Carbon::now()->translatedFormat('dmY-His');
             
             $namaGambarBaru = Str::slug($request->nama) . '-' . $date . '.' .$ekstensiGambar;
-            $lokasiGambar = 'gambar/iklan';
+            $lokasiGambar = $this->user_network . '/gambar/iklan';
 
             //Hapus Gambar Lama
             if($request->fotoLama){

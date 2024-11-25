@@ -1,238 +1,112 @@
-@extends('admin.layouts.header')
+<form id="forms" method="post" action="/admin/iklan/{{ $iklan->id }}" enctype="multipart/form-data">
+  @csrf
+  @method('put')
 
-@section('admincontent')
+  <div class="w-full h-auto px-2 py-2 border border-amber-500 rounded-md itemrow bg-amber-100/25">
+    <div class="-mt-1.5 mb-2.5 text-center font-semibold"><span class="px-4 py-1 rounded-b-lg bg-amber-500 text-white">EDIT IKLAN</span></div>
 
-<!-- main Container -->
-<div class="w-full h-auto bg-white px-5 my-20 md:mx-8 md:mt-5 md:mb-14">
-  <div class="flex flex-row items-center justify-between">
-    <div class="md:text-2xl font-semibold">Edit Iklan</div>
-    <a href="/" target="_blank">
-      <div class="text-xxs -mt-px font-semibold text-white bg-red-500 hover:bg-red-600 py-2 px-3 rounded-full inline-block align-middle">Kunjungi Situs <i class="fas fa-external-link-alt"></i></div>
-    </a>
-  </div>
-  <div class="mt-5 w-full h-px bg-gray-200 rounded-full"></div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
 
-  {{-- main content --}}
+      {{-- NAMA IKLAN --}}
+      <div class="md:col-span-2 bg-gradient-to-b from-slate-300 rounded-lg">
+          <label class="mb-1" for="inputnama"><span class="text-xs uppercase py-1 pl-2.5 font-semibold">NAMA IKLAN</span></label>
+          <input type="text" id="inputnama" name="nama" class="main_input_md"
+              value="{{ old('nama', $iklan->nama) }}" auto-complete="off" required>
+      </div>
 
-  <div class="flex flex-col mt-5 bg-gray-100 p-4 h-auto w-full rounded-lg">
-
-    <form method="post" action="/admin/iklan/{{ $iklan->id }}" enctype="multipart/form-data">
-    @method('put')
-    @csrf
-
-    {{-- Nama Iklan --}}
-    <div class="flex flex-col md:flex-row mt-3 items-center">
-      <div class="w-full md:w-2/12 font-semibold">Nama Iklan</div>
-      <div class="flex flex-col w-full md:w-5/12">
-        <input type="text" id="nama" name="nama" class="mt-1 md:mt-0 w-full p-2 border border-gray-400 rounded-md" placeholder="Nama Iklan" value="{{ old('nama', $iklan->nama) }}" autocomplete="off" required>
-          @error('nama')
-          <div class="text-red-500 text-xs mt-1 font-semibold">{{ $message }}</div>
-          @enderror
-      </div>     
-    </div>
-    {{-- /Nama Iklan --}}
-
-    {{-- Jenis --}}
-    <div class="flex flex-col md:flex-row mt-3 items-center">
-      <div class="w-full md:w-2/12 font-semibold">Jenis Iklan</div>
-      <div class="flex flex-col w-full md:w-5/12">
-        <select id="jenis" name="jenis" class="mt-1 md:mt-0 w-full p-2 border border-gray-400 rounded-md" required>
-          @if(old('status', $iklan->jenis) == $iklan->jenis)
-            <option class="text-white/0" value="{{ $iklan->jenis }}" selected>{{ $iklan->jenis }}</option>
-            @foreach($jenisIklan as $jenis)
-            <option value="{{ $jenis }}">{{ $jenis }}</option>
-            @endforeach
-          @else
-            @foreach($jenisIklan as $jenis)
-            <option value="{{ $jenis }}">{{ $jenis }}</option>
-            @endforeach
-          @endif  
+      {{-- JENIS --}}
+      <div class="bg-gradient-to-b from-slate-300 rounded-lg">
+        <label class="mb-1" for="inputjenis"><span class="text-xs uppercase py-1 pl-2.5 font-semibold">JENIS IKLAN</span></label>
+        <select id="inputjenis" name="jenis" class="main_input_md" required>
+          @foreach($jenisIklan as $jenis)
+          <option value="{{ $jenis }}" @selected($jenis == $iklan->jenis)>{{ $jenis }}</option>
+          @endforeach
         </select>
-          @error('jenis')
-          <div class="text-red-500 text-xs mt-1 font-semibold">{{ $message }}</div>
-          @enderror
-      </div>     
-    </div>
-    {{-- /Jenis --}}
+      </div>
 
-    {{-- Posisi --}}
-    <div class="flex flex-col md:flex-row mt-3 items-center">
-      <div class="w-full md:w-2/12 font-semibold">Posisi Iklan <a href="{{ asset('images/guide_iklan.jpg') }}" target="_blank"><i class="fa-solid fa-circle-question text-blue-500 hover:text-blue-700"></i></a></div>
-      <div class="flex flex-col w-full md:w-5/12">
-        <select id="posisi" name="posisi" class="mt-1 md:mt-0 w-full p-2 border border-gray-400 rounded-md" required>
-          @if(old('posisi', $iklan->posisi) == $iklan->posisi)
-          <option class="text-white/0" value="{{ $iklan->posisi }}" selected>{{ $iklan->posisi }}</option>
+      {{-- POSISI --}}
+      <div class="bg-gradient-to-b from-slate-300 rounded-lg">
+        <label class="mb-1" for="inputposisi"><span class="text-xs uppercase py-1 pl-2.5 font-semibold">POSISI <a href="{{ asset('images/guide_iklan.jpg') }}" target="_blank"><i class="fa-solid fa-circle-question text-blue-500 hover:text-blue-700"></i></a></span></label>
+        <select id="inputposisi" name="posisi" class="main_input_md" required>
             @foreach($posisiIklan as $posisi)
-            <option value="{{ $posisi }}">{{ $posisi }}</option>
+            <option value="{{ $posisi }}" @selected($posisi == $iklan->posisi)>{{ $posisi }}</option>
             @endforeach
-          @else
-            @foreach($posisiIklan as $posisi)
-            <option value="{{ $posisi }}">{{ $posisi }}</option>
-            @endforeach
-          @endif
         </select>
-          @error('posisi')
-          <div class="text-red-500 text-xs mt-1 font-semibold">{{ $message }}</div>
-          @enderror
-      </div>     
-    </div>
-    {{-- /Posisi --}}
+      </div>
 
-    {{-- Status --}}
-    <div class="flex flex-col md:flex-row mt-3 items-center">
-      <div class="w-full md:w-2/12 font-semibold">Status</div>
-      <div class="flex flex-col w-full md:w-5/12">
-        <select id="status" name="status" class="mt-1 md:mt-0 w-full p-2 border border-gray-400 rounded-md" required>
-          @if(old('publish', $iklan->status == 1))
-          <option value="1" selected>Aktif</option>
-          <option value="0">Tidak Aktif</option>
-          @else
-          <option value="1">Aktif</option>
-          <option value="0" selected>Tidak Aktif</option>
-          @endif
+      {{-- FOTO --}}
+      <div class="bg-gradient-to-b from-slate-300 rounded-lg">
+          <label class="mb-1" for="inputfoto"><span class="text-xs uppercase py-1 pl-2.5 font-semibold">FOTO</span></label>
+          <div class="flex w-full h-48 mb-2 p-2 overflow-hidden rounded-md">
+              @if($iklan->foto)
+                  <input name="fotoLama" type="file" class="hidden" value="{{ $iklan->foto }}">
+                  <img src="{{ asset('storage/'. $iklan->foto) }}" class="foto-preview w-full h-full my-auto object-cover overflow-hidden rounded">
+              @else
+                  <img class="object-cover w-full h-full foto-preview rounded" src="{{ asset('images/img-default.png') }}" alt="">
+              @endif
+          </div>
+          <input name="foto" id="inputfoto" type="file" class="w-full file-input file-input-bordered" accept="image/*">
+          @error('image')
+              <div class="text-xs text-red-600">{{ $message }}</div>
+          @enderror
+      </div>
+          
+      {{-- KODE --}}
+      <div class="bg-gradient-to-b from-slate-300 rounded-lg">
+        <label class="mb-1" for="inputkode"><span class="text-xs uppercase py-1 pl-2.5 font-semibold">KODE</span></label>
+        <textarea id="inputkode" name="kode" class="w-full main_input_textarea" rows="11">{{ old('kode', $iklan->kode) }}</textarea>
+      </div>
+
+      {{-- LINK --}}
+      <div class="bg-gradient-to-b from-slate-300 rounded-lg">
+          <label class="mb-1" for="inputlink"><span class="text-xs uppercase py-1 pl-2.5 font-semibold">LINK</span></label>
+          <input type="text" id="inputlink" name="link" class="main_input_md"
+              value="{{ old('link', $iklan->link) }}" auto-complete="off">
+      </div>
+
+      {{-- AE --}}
+      <div class="bg-gradient-to-b from-slate-300 rounded-lg">
+          <label class="mb-1" for="inputAE"><span class="text-xs uppercase py-1 pl-2.5 font-semibold">AE</span></label>
+          <input type="text" id="inputAE" name="AE" class="main_input_md"
+              value="{{ old('AE', $iklan->AE) }}" auto-complete="off">
+      </div>
+
+      {{-- URUTAN --}}
+      <div class="bg-gradient-to-b from-slate-300 rounded-lg">
+        <label class="mb-1" for="inputurutan"><span class="text-xs uppercase py-1 pl-2.5 font-semibold">URUTAN</span></label>
+        <select id="inputurutan" name="urutan" class="main_input_md" required>
+          @for($i=1; $i <=10; $i++)
+          <option value="{{ $i }}" @selected($i == $iklan->urutan)>{{  $i }}</option>
+          @endfor
         </select>
-          @error('status')
-          <div class="text-red-500 text-xs mt-1 font-semibold">{{ $message }}</div>
-          @enderror
-      </div>     
-    </div>
-    {{-- /Status --}}
-
-    {{-- Foto --}}
-    <div class="flex flex-col md:flex-row mt-2 items-center">
-      <div class="w-full md:w-2/12 font-semibold">Gambar</div>
-      <div class="flex flex-col w-full md:w-5/12">
-        <input type="hidden" name="fotoLama" value="{{ $iklan->foto }}">
-        @if($iklan->foto)
-        <img src="{{ asset('storage/'. $iklan->foto) }}" class="img-preview mb-2 w-full max-h-auto object-cover overflow-hidden">
-        @else
-        <img class="img-preview mb-2 w-full max-h-auto object-cover overflow-hidden">
-        @endif
-        <input type="file" id="foto" name="foto" class="mt-1 md:mt-0 w-full p-2 border border-gray-400 rounded-md" onchange="previewGambar()">
-        @error('foto')
-          <div class="text-red-500 text-xs mt-1 font-semibold">{{ $message }}</div>
-        @enderror
       </div>
-    </div>
-    {{-- /Foto --}}
 
-    {{-- Kode --}}
-    <div class="flex flex-col md:flex-row mt-3 items-center">
-      <div class="w-full md:w-2/12 font-semibold">Kode</div>
-      <div class="flex flex-col w-full md:w-10/12">
-          <textarea id="kode" name="kode" class="my-1 p-2 w-full md:w-6/12 h-28 border border-gray-400 rounded-md">{{ old('kode', $iklan->kode) }}</textarea>
-        @error('kode')
-          <div class="text-red-500 text-xs mt-1 font-semibold">{{ $message }}</div>
-        @enderror
+      {{-- STATUS --}}
+      <div class="bg-gradient-to-b from-slate-300 rounded-lg">
+        <label class="mb-1" for="inputstatus"><span class="text-xs uppercase py-1 pl-2.5 font-semibold">STATUS</span></label>
+        <select id="inputstatus" name="status" class="main_input_md" required>
+          <option value="1" @selected($iklan->status == '1')>Aktif</option>
+          <option value="0" @selected($iklan->status == '0')>Tidak Aktif</option>
+        </select>  
       </div>
-    </div>
-    {{-- /Kode --}}
 
-    {{--Link --}}
-    <div class="flex flex-col md:flex-row mt-3 items-center">
-      <div class="w-full md:w-2/12 font-semibold">Link</div>
-      <div class="flex flex-col w-full md:w-5/12">
-        <input type="text" id="link" name="link" class="mt-1 md:mt-0 w-full p-2 border border-gray-400 rounded-md" placeholder="Link" value="{{ old('link', $iklan->link) }}" autocomplete="off">
-          @error('link')
-          <div class="text-red-500 text-xs mt-1 font-semibold">{{ $message }}</div>
-          @enderror
-      </div>     
-    </div>
-    {{-- /Link --}}
-
-    {{--AE --}}
-    <div class="flex flex-col md:flex-row mt-3 items-center">
-      <div class="w-full md:w-2/12 font-semibold">AE</div>
-      <div class="flex flex-col w-full md:w-5/12">
-        <input type="text" id="AE" name="AE" class="mt-1 md:mt-0 w-full p-2 border border-gray-400 rounded-md" placeholder="Account Executive" value="{{ old('AE', $iklan->AE) }}" autocomplete="off">
-          @error('AE')
-          <div class="text-red-500 text-xs mt-1 font-semibold">{{ $message }}</div>
-          @enderror
-      </div>     
-    </div>
-    {{-- /AE --}}
-
-    {{-- Urutan --}}
-    <div class="flex flex-col md:flex-row mt-3 items-center">
-      <div class="w-full md:w-2/12 font-semibold">Urutan</div>
-      <div class="flex flex-col w-full md:w-5/12">
-        <select id="urutan" name="urutan" class="mt-1 md:mt-0 w-full p-2 border border-gray-400 rounded-md" required>
-          @if(old('urutan', $iklan->urutan == $iklan->urutan))
-            <option class="text-white/0" value="{{ $iklan->urutan }}" selected>{{  $iklan->urutan }}</option>
-              @for($i=1; $i <=10; $i++)
-                <option value="{{ $i }}">{{  $i }}</option>
-              @endfor
-            @else
-              @for($i=1; $i <=10; $i++)
-                <option value="{{ $i }}">{{  $i }}</option>
-              @endfor
-            @endif 
-        </select>
-          @error('urutan')
-          <div class="text-red-500 text-xs mt-1 font-semibold">{{ $message }}</div>
-          @enderror
-      </div>     
-    </div>
-    {{-- /Urutan --}}
-
-    {{-- Awal Tayang --}}
-    <div class="flex flex-col md:flex-row mt-3 items-center">
-      <div class="w-full md:w-2/12 font-semibold">Awal Tayang</div>
-      <div class="flex flex-col w-full md:w-5/12">
-        <input type="date" id="awal_tayang" name="awal_tayang" class="mt-1 md:mt-0 w-full p-2 border border-gray-400 rounded-md" value="{{ old('awal_tayang', Carbon\Carbon::parse($iklan->awal_tayang)->translatedFormat('Y-m-d')) }}" autocomplete="off" required>
-        @error('awal_tayang')
-          <div class="text-red-500 text-xs mt-1 font-semibold">{{ $message }}</div>
-        @enderror
+      {{-- AWAL TAYANG --}}
+      <div class="bg-gradient-to-b from-slate-300 rounded-lg">
+        <label class="mb-1" for="inputawal_tayang"><span class="text-xs uppercase py-1 pl-2.5 font-semibold">AWAL TAYANG</span></label>
+          <input type="date" id="inputawal_tayang" name="awal_tayang" class="main_input_md" value="{{ Carbon\Carbon::parse($iklan->awal_tayang)->translatedFormat('Y-m-d') }}" autocomplete="off" required>
       </div>
-    </div>
-    {{-- /Awal Tayang --}}
 
-    {{-- Akhir Tayang --}}
-    <div class="flex flex-col md:flex-row mt-3 items-center">
-      <div class="w-full md:w-2/12 font-semibold">Akhir Tayang</div>
-      <div class="flex flex-col w-full md:w-5/12">
-        <input type="date" id="akhir_tayang" name="akhir_tayang" class="mt-1 md:mt-0 w-full p-2 border border-gray-400 rounded-md" value="{{ old('akhir_tayang', Carbon\Carbon::parse($iklan->akhir_tayang)->translatedFormat('Y-m-d')) }}" autocomplete="off" required>
-        @error('awal_tayang')
-          <div class="text-red-500 text-xs mt-1 font-semibold">{{ $message }}</div>
-        @enderror
+      {{-- AKHIR TAYANG --}}
+      <div class="bg-gradient-to-b from-slate-300 rounded-lg">
+        <label class="mb-1" for="inputakhir_tayang"><span class="text-xs uppercase py-1 pl-2.5 font-semibold">AKHIR TAYANG</span></label>
+          <input type="date" id="inputakhir_tayang" name="akhir_tayang" class="main_input_md" value="{{ Carbon\Carbon::parse($iklan->akhir_tayang)->translatedFormat('Y-m-d') }}" autocomplete="off" required>
       </div>
-    </div>
-    {{-- /Akhir Tayang --}}
 
-    {{-- Submit --}}
-    <div class="flex flex-col md:flex-row mt-3 items-center">
-      <div class="w-full md:w-2/12 font-semibold"></div>
-      <div class="flex flex-col md:flex-row w-full md:w-5/12 divide-x gap-2">
-        <button type="submit" class="bg-green-600 hover:bg-green-700 py-2 w-full md:w-1/2 text-white text-center font-semibold rounded-lg"><i class="fas fa-save"></i> Simpan</button>
-        <a href="/admin/iklan" class="bg-red-500 hover:bg-red-700 py-2 w-full md:w-1/2 text-white text-center font-semibold rounded-lg"><i class="far fa-list-alt"></i> Kembali ke Tabel</a>
-      </div>
     </div>
-    {{-- /Submit --}}
-
-    </form>
 
   </div>
 
-  {{-- /main content --}}
-
-</div>
-<!-- /Main Container -->
-
-<script>
-  function previewGambar(){
-      const image = document.querySelector('#foto');
-      const imgPreview = document.querySelector('.img-preview');
-      
-      imgPreview.style.display = 'block';
-
-      const oFReader = new FileReader();
-      oFReader.readAsDataURL(image.files[0]);
-
-      oFReader.onload = function(oFREvent){
-        imgPreview.src = oFREvent.target.result;
-      }
-
-  }
-</script>
-
-@endsection
+  <x-close-modal-button>
+      <x-slot:submit></x-slot:submit>
+  </x-close-modal-button>
+</form>

@@ -3,102 +3,145 @@
 @section('admincontent')
 
 <!-- main Container -->
-<div class="w-full h-auto bg-white px-5 my-20 md:mx-8 md:mt-5 md:mb-14">
-  <div class="flex flex-row items-center justify-between">
-    <div class="md:text-2xl font-semibold">List Tayang Berita</div>
-    <a href="/" target="_blank">
-      <div class="text-xxs -mt-px font-semibold text-white bg-red-500 hover:bg-red-600 py-2 px-3 rounded-full inline-block align-middle">Kunjungi Situs <i class="fas fa-external-link-alt"></i></div>
-    </a>
+<x-main-container title="List Tayang" url="{{ $setting && $setting->Network ? $setting->Network->url : url('/') }}">
+  {{-- table --}}
+  <div class="mt-5 w-full">
+    {{-- Table Controls --}}
+    {{-- <x-table-controls addurl="{{ url('admin/berita/create') }}"/> --}}
+
+    <table id="datatable" class="display w-full order-column">
+      <thead class="bg-slate-300">
+        <tr>
+          <th>NETWORK</th>
+          <th>TANGGAL</th>
+          <th>JUDUL BERITA</th>
+          <th>HL</th>
+          <th>KATEGORI</th>
+          <th>REDAKTUR</th>
+          <th>WARTAWAN</th>
+          <th>STATUS</th>
+          <th>DILIHAT</th>
+          <th>LINK</th>
+          <th class="w-28 noExport !text-center" data-priority="2">Aksi</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{-- Datatable Ajax--}}
+      </tbody>                   
+    </table>
+
   </div>
-  <div class="mt-5 w-full h-px bg-gray-200 rounded-full"></div>
+  {{-- /table --}}
 
-  {{-- main content --}}
+</x-main-container>
 
-    {{-- table --}}
-    <div class="mt-5 h-auto w-full">
-
-      <div class="mt-4 flex flex-col">
-        <div class="overflow-x-auto">
-          <div class="align-middle inline-block min-w-full px-px">
-          <div class="shadow overflow-hidden border-b h-auto border-gray-200 rounded-lg">
-
-            <table class="min-w-full">
-              <thead class="bg-gradient-to-r from-slate-600 to-gray-600">
-                <tr class="divide-x divide-gray-200">
-                  <th class="px-2 py-2 text-xs text-center uppercase font-bold text-white whitespace-nowrap tracking-wide">No</th>
-                  <th class="px-3 py-2 text-xs text-left uppercase font-bold text-white whitespace-nowrap tracking-wide">Tanggal</th>
-                  <th class="px-3 py-2 text-xs text-left uppercase font-bold text-white whitespace-nowrap tracking-wide">Judul</th>
-                  <th class="px-3 py-2 text-xs text-left uppercase font-bold text-white whitespace-nowrap tracking-wide">Kategori</th>
-                  <th class="px-3 py-2 text-xs text-left uppercase font-bold text-white whitespace-nowrap tracking-wide">Editor</th>
-                  <th class="px-3 py-2 text-xs text-left uppercase font-bold text-white whitespace-nowrap tracking-wide">Wartawan</th>
-                  <th class="px-2 py-2 text-xs text-center uppercase font-bold text-white whitespace-nowrap tracking-wide">HL</th>
-                  <th class="px-3 py-2 text-xs text-center uppercase font-bold text-white whitespace-nowrap tracking-wide">Status</th>
-                  <th class="px-2 py-2 text-xs text-center uppercase font-bold text-white whitespace-nowrap tracking-wide">Dilihat</th>
-                  <th class="px-3 py-2 text-xs text-left uppercase font-bold text-white whitespace-nowrap tracking-wide">Link</th>
-                  <th class="px-3 py-2 text-xs text-center uppercase font-bold text-white whitespace-nowrap tracking-wide">Aksi</th>
-                </tr>
-              </thead>
-              <tbody>
-                
-                @if($berita->count())
-                @foreach($berita as $b)
-                <tr class="divide-x divide-gray-200 {{ $loop->even ? 'bg-sky-100' : '' }}">
-                  <td class="px-2 py-2 text-xs text-center whitespace-nowrap">{{ $loop->iteration }}</td>
-                  <td class="px-3 py-2 text-xs text-left whitespace-nowrap md:whitespace-normal">{{ Carbon\Carbon::parse($b->tanggal_tayang . $b->waktu)->translatedFormat('d-m-Y H:i') }} WIB</td>
-                  <td class="px-3 py-2 text-xs text-left font-semibold whitespace-nowrap md:whitespace-normal">{{ $b->judul }}</td>
-                  <td class="px-3 py-2 text-xs text-left whitespace-nowrap md:whitespace-normal">{{ $b->kategori->nama }}</td>
-                  <td class="px-3 py-2 text-xs text-left whitespace-nowrap md:whitespace-normal">{{ $b->penulis }}</td>
-                  <td class="px-3 py-2 text-xs text-left whitespace-nowrap md:whitespace-normal">{{ $b->wartawan }}</td>
-                  <td class="px-2 py-2 text-xs text-center whitespace-nowrap">
-                    @if($b->headline == 1)
-                    <div class="text-sm text-green-800"><i class="fas fa-check-circle"></i></div>
-                    @endif 
-                  </td>
-                  <td class="px-3 py-2 text-xs text-center whitespace-nowrap">
-                    @if($b->publish == 0)
-                    <div class="inline-flex text-xxs font-semibold text-red-800 bg-red-200 px-2 py-1 rounded-full">Draf</div>
-                    @elseif($b->publish == 1 && Carbon\Carbon::parse($b->tanggal_tayang . $b->waktu)->translatedFormat('Y-m-d H:i') >= Carbon\Carbon::now())
-                    <div class="inline-flex text-xxs font-semibold text-yellow-800 bg-yellow-200 px-2 py-1 rounded-full">Terjadwal</div>
-                    @elseif($b->publish == 1 && Carbon\Carbon::parse($b->tanggal_tayang . $b->waktu)->translatedFormat('Y-m-d H:i') <= Carbon\Carbon::now())
-                    <div class="inline-flex text-xxs font-semibold text-green-800 bg-green-200 px-2 py-1 rounded-full">Tayang</div>                    
-                    @endif  
-                  </td>
-                  <td class="px-2 py-2 text-xs text-center whitespace-nowrap">{{ $b->counter }}</td>
-                  <td class="px-3 py-2 text-xs text-left whitespace-nowrap select-all"><input class="placeholder-gray-500 w-28 p-1 border border-blue-300 rounded-md" value="{{ URL::to('/') }}/detail/{{ $b->id_berita }}/{{ Str::slug($b->judul, '-') }}"></td>
-                  <td class="px-3 py-2 text-xs text-center whitespace-nowrap">
-                      <div class="flex flex-row gap-1 ">
-                          <a href="{{ URL::to('/') }}/detail/{{ $b->id_berita }}/{{ Str::slug($b->judul, '-') }}" target="_blank"><div class="text-xxs text-white bg-sky-600 hover:bg-sky-700 p-1.5 rounded-md"><i class="fas fa-eye"></i></div></a>
-                          <a href="/admin/berita/{{ $b->id_berita }}/edit"><div class="text-xxs text-white bg-amber-500 hover:bg-amber-600 p-1.5 rounded-md"><i class="fas fa-pen-alt"></i></div></a>
-                          <form action="/admin/berita/{{ $b->id_berita }}" method="post">
-                            @method('delete')
-                            @csrf
-                            <button class="text-xxs text-white bg-red-600 hover:bg-red-700 p-1.5 rounded-md" onclick="return confirm('Yakin ingin menghapus video?')"><i class="fas fa-trash-alt"></i></button>
-                          </form>
-                      </div>
-                  </td>
-                </tr>
-                @endforeach
-
-                @else
-                <tr class="w-full">
-                  <td class="px-6 py-2 text-left">Tidak ada berita</td>
-                </tr>
-                @endif
-
-              </tbody>                   
-            </table>
-
-          </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-    {{-- /table --}}
-
-  {{-- /main content --}}
-
-</div>
 <!-- /Main Container -->
+
+@push('js')
+<script>
+//Ajax CSRF
+$.ajaxSetup({
+    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}
+});
+
+$(document).ready(function () {
+    let dataDatatable = $('#datatable').DataTable({
+        'processing': true,
+        'serverSide': true,
+        'serverMethod': 'get',
+        'responsive': false,
+        'searching': true,
+        'autoWidth': false,
+        'ordering': true,
+        'info': true,
+        'scrollX': true,
+        'scrollY': '400px',
+        'scrollCollapse': true,
+        'fixedColumns':{ left: 0, right: 1 },
+        'dom': 'rtip',
+        // 'search': { search: searchTerm },
+        'columnDefs': [{ targets: '_all', className: 'whitespace-nowrap'}],
+        'order': [[0, 'desc']],
+        'buttons': [
+            {
+            extend: 'excel',
+            footer: false,
+            exportOptions: {
+                    columns: "thead th:not(.noExport)"
+                }
+            },
+            {
+            extend: 'pdf',
+            footer: false,
+            exportOptions: {
+                    columns: "thead th:not(.noExport)"
+                }
+            },
+            {
+            extend: 'print',
+            footer: false,
+            exportOptions: {
+                    columns: "thead th:not(.noExport)"
+                }
+            },
+        ],
+        'ajax': {
+            'url': '/admin/list-tayang',
+        },
+        'columns':[
+            { data: 'id_network' },
+            { data: 'tanggal_tayang' },
+            { data: 'judul' },
+            { data: 'headline' },
+            { data: 'kategori' },
+            { data: 'penulis' },
+            { data: 'wartawan' },
+            { data: 'publish' },
+            { data: 'counter' },
+            { data: 'link' },
+            { data: 'action' },
+        ],
+
+    });
+
+    // row per page
+    $('#rowsPerPage').on('change', function() {
+        let row = $("#rowsPerPage").val()
+        dataDatatable.page.len(row).draw();
+    });
+
+    //search
+    $('#searchData').on( 'keyup', function () {
+        dataDatatable.search( this.value ).draw();
+    });
+
+    //exports
+    $("#printButton").on( "click", () => dataDatatable.button( '.buttons-print' ).trigger() );
+    $("#excelButton").on("click", () => dataDatatable.button( '.buttons-excel' ).trigger() );
+    $("#pdfButton").on("click", () => dataDatatable.button( '.buttons-pdf' ).trigger() );
+
+    // Confirm Delete
+    $(document).on('click', '.deleteButton', function (event) {
+      event.preventDefault();
+      let slug = $(this).data('slug');
+      Swal.fire({
+          title: 'Hapus Berita?',
+          text: "Data akan dihapus permanen!",
+          icon: 'question',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Ya, hapus!',
+          cancelButtonText: 'Batal'
+      }).then((result) => {
+          if (result.isConfirmed) {
+              $(this).closest("form").submit();
+          }
+      })
+    });
+
+});
+</script>
+@endpush
 
 @endsection

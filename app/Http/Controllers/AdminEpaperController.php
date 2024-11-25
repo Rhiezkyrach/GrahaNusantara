@@ -2,35 +2,67 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Epaper;
+
 use App\Models\Setting;
 
 use Illuminate\Support\Str;
-
 use Illuminate\Http\Request;
+use App\Traits\NetworkAccessTrait;
 use Illuminate\Support\Facades\Storage;
 use RealRashid\SweetAlert\Facades\Alert;
-use Intervention\Image\ImageManagerStatic as Image;
+use Intervention\Image\ImageManager as Image;
 
 class AdminEpaperController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        $setting = Setting::first();
+    use NetworkAccessTrait;
 
-        if(session('success')){
-            Alert::success('Success!', session('success'));
+    public $setting;
+    public $user_network;
+
+    public function __construct()
+    {
+        $this->setting = Setting::where('id_network', auth()->user()->id_network)->first();
+        $this->user_network = auth()->user()->id_network;
+    }
+
+    // Index
+    public function index(Request $request)
+    {
+        if (session()->has('success')) {
+            Alert::toast(session('success'), 'success');
         }
 
+        if (session()->has('error')) {
+            Alert::toast(session('error'), 'error');
+        }
+
+        $data = Epaper::showAllePaper($this->user_network);
+
+        if ($request->ajax()) {
+            return datatables()->of($data)
+                ->editColumn('id_network', function (Epaper $epaper) {
+                    return $epaper->Network ? $epaper->Network->nama : $epaper->id_network;
+                })
+                ->editColumn('tanggal_tayang', function (Epaper $epaper) {
+                    return Carbon::parse($epaper->edisi)->translatedFormat('d F Y');
+                })
+                ->addColumn('link', function (Epaper $epaper) {
+                    return '<input class="w-40 px-1 py-0.5 border border-gray-600 rounded" value="' . url('epaper/' . $epaper->slug) . '"/>';
+                })
+                ->addColumn('action', function (Epaper $epaper) {
+                    return view('admin.epaper.epaper-action', ['data' => $epaper])->render();
+                })
+                ->rawColumns(['action', 'headline', 'publish', 'link'])
+                ->toJson();
+        };
+
         return view('admin.epaper.epaper',[
-            "judul" => 'Management ePaper' . ' - ' . $setting->judul_situs,
-            "epaper" => Epaper::showAllePaper()->filterepaper(request(['cari']))->paginate(10),
-            "setting" => $setting
+            "judul" => 'Management ePaper' . ' - ' . $this->setting->judul_situs,
+            'list_tayang' => $this->list_tayang(),
+            'id_setting' => $this->setting->id,
+            'setting' => $this->setting,
         ]);
     }
 
@@ -41,11 +73,8 @@ class AdminEpaperController extends Controller
      */
     public function create()
     {
-        $setting = Setting::first();
- 
        return view('admin.epaper.tambah_epaper',[
-           "judul" => 'Tambah ePaper' . ' - ' . $setting->judul_situs,
-           "setting" => $setting
+           "judul" => 'Tambah ePaper' . ' - ' . $this->setting->judul_situs,
        ]);
     }
 
@@ -57,13 +86,14 @@ class AdminEpaperController extends Controller
      */
     public function store(Request $request)
     {
-
         $validatedData = $request->validate([
             'edisi' => 'required',
             'cover' => 'image|file|max:1024',
             'pdf' => 'mimes:pdf|max:20000',
         ]);
 
+        $validatedData['id_network'] = $this->user_network;
+        
         // Upload Gambar
         $ekstensiGambar = $request->file('cover')->extension();
 
@@ -72,7 +102,7 @@ class AdminEpaperController extends Controller
         $getWaktu = \Carbon\Carbon::now()->translatedFormat('dmY-His');
 
         $namaGambarBaru = 'epaper-edisi-'. Str::slug($request->edisi) . '-'. $getWaktu. '.' .$ekstensiGambar;
-        $lokasiGambar = 'epaper/cover/' . $getTahun . '/' . $getBulan;
+        $lokasiGambar = $this->user_network . '/epaper/cover/' . $getTahun . '/' . $getBulan;
         $lokasiThumbnail = 'thumbnail/' . $lokasiGambar . '/';
 
         //Check jika ada folder thumbnail
@@ -84,9 +114,7 @@ class AdminEpaperController extends Controller
             //Simpan Gambar Cover
             $validatedData['cover'] = $request->file('cover')->storeAs($lokasiGambar, $namaGambarBaru);
             //Buat Thumbnail
-            $thumbnail = Image::make($request->file('cover'))->resize(720, null, function ($constraint) {
-                            $constraint->aspectRatio();
-                        });
+            $thumbnail = Image::gd()->read($request->file('cover'))->scaleDown(width: 720);
 
             $thumbnail->save($lokasiThumbnail . $namaGambarBaru, 80);
         }
@@ -113,9 +141,14 @@ class AdminEpaperController extends Controller
      * @param  \App\Models\Epaper  $epaper
      * @return \Illuminate\Http\Response
      */
-    public function show(Epaper $epaper)
+    public function show(Request $request, Epaper $epaper)
     {
-        //
+        if ($request->ajax()) {
+            return view('admin.epaper.show_epaper', [
+                "judul" => 'Detail ePaper' . ' - ' . $this->setting->judul_situs,
+                "epaper" => $epaper
+            ]);
+        }
     }
 
     /**
@@ -124,15 +157,14 @@ class AdminEpaperController extends Controller
      * @param  \App\Models\Epaper  $epaper
      * @return \Illuminate\Http\Response
      */
-    public function edit(Epaper $epaper)
-    {
-        $setting = Setting::first();
- 
-       return view('admin.epaper.edit_epaper',[
-           "judul" => 'Edit ePaper' . ' - ' . $setting->judul_situs,
-           "setting" => $setting,
-           "epaper" => $epaper
-       ]);
+    public function edit(Request $request, Epaper $epaper)
+    {   
+        if($request->ajax()){
+            return view('admin.epaper.edit_epaper',[
+                "judul" => 'Edit ePaper' . ' - ' . $this->setting->judul_situs,
+                "epaper" => $epaper
+            ]);
+        }
     }
 
     /**
@@ -168,7 +200,7 @@ class AdminEpaperController extends Controller
             $getWaktu = \Carbon\Carbon::now()->translatedFormat('dmY-His');
 
             $namaGambarBaru = 'epaper-edisi-'. Str::slug($request->edisi) . '-'. $getWaktu. '.' .$ekstensiGambar;
-            $lokasiGambar = 'epaper/cover/' . $getTahun . '/' . $getBulan;
+            $lokasiGambar = $this->user_network . '/epaper/cover/' . $getTahun . '/' . $getBulan;
             $lokasiThumbnail = 'thumbnail/' . $lokasiGambar . '/';
 
             //Check jika ada folder thumbnail
@@ -179,9 +211,7 @@ class AdminEpaperController extends Controller
             //Simpan Gambar Cover
             $validatedData['cover'] = $request->file('cover')->storeAs($lokasiGambar, $namaGambarBaru);
             //Buat Thumbnail
-            $thumbnail = Image::make($request->file('cover'))->resize(720, null, function ($constraint) {
-                            $constraint->aspectRatio();
-                        });
+            $thumbnail = Image::gd()->read($request->file('cover'))->scaleDown(width: 720);
 
             $thumbnail->save($lokasiThumbnail . $namaGambarBaru, 80);
         }

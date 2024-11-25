@@ -10,7 +10,7 @@
     {{-- Tailwind CSS 3.0.12 --}}
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
-    <title>Halaman Tidak Ditemukan - SinPo.id</title>
+    <title>Halaman Tidak Ditemukan</title>
 </head>
 <body>
     <div class="flex flex-col w-full px-10 py-auto min-h-screen bg-gray-100/50 items-center justify-center">

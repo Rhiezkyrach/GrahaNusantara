@@ -3,17 +3,9 @@
 @section('admincontent')
 
 <!-- main Container -->
-<div class="w-full h-auto bg-white px-5 my-20 md:mx-8 md:mt-5 md:mb-14">
-  <div class="flex flex-row items-center justify-between">
-    <div class="md:text-2xl font-semibold">Laporan</div>
-    <a href="/" target="_blank">
-      <div class="text-xxs -mt-px font-semibold text-white bg-red-500 hover:bg-red-600 py-2 px-3 rounded-full inline-block align-middle">Kunjungi Situs <i class="fas fa-external-link-alt"></i></div>
-    </a>
-  </div>
-  <div class="mt-5 w-full h-px bg-gray-200 rounded-full"></div>
+<x-main-container title="Laporan" url="{{ $setting && $setting->Network ? $setting->Network->url : url('/') }}">
 
   {{-- main content --}}
-
     {{-- table --}}
     <div class="mt-5 h-auto w-full">
       
@@ -52,8 +44,10 @@
                   <th class="px-3 py-2 text-xs text-left uppercase font-bold text-white whitespace-nowrap tracking-wide">Tanggal</th>
                   <th class="px-3 py-2 text-xs text-left uppercase font-bold text-white whitespace-nowrap tracking-wide">Judul</th>
                   <th class="px-3 py-2 text-xs text-left uppercase font-bold text-white whitespace-nowrap tracking-wide">Kategori</th>
+                  <th class="px-3 py-2 text-xs text-left uppercase font-bold text-white whitespace-nowrap tracking-wide">Fokus</th>
                   <th class="px-3 py-2 text-xs text-left uppercase font-bold text-white whitespace-nowrap tracking-wide">Redaktur</th>
                   <th class="px-3 py-2 text-xs text-left uppercase font-bold text-white whitespace-nowrap tracking-wide">Wartawan</th>
+                  <th class="px-3 py-2 text-xs text-left uppercase font-bold text-white whitespace-nowrap tracking-wide">URL</th>
                 </tr>
               </thead>
               <tbody>
@@ -64,9 +58,11 @@
                   <td class="px-2 py-2 text-xs text-center whitespace-nowrap">{{ $loop->iteration }}</td>
                   <td class="px-3 py-2 text-xs text-left whitespace-nowrap md:whitespace-normal">{{ Carbon\Carbon::parse($b->tanggal_tayang . $b->waktu)->translatedFormat('d-m-Y H:i') }} WIB</td>
                   <td class="px-3 py-2 text-xs text-left font-semibold whitespace-nowrap md:whitespace-normal">{{ $b->judul }}</td>
-                  <td class="px-3 py-2 text-xs text-left whitespace-nowrap md:whitespace-normal">{{ $b->kategori->nama }}</td>
+                  <td class="px-3 py-2 text-xs text-left whitespace-nowrap md:whitespace-normal">{{ $b->Kategori->nama }}</td>
+                  <td class="px-3 py-2 text-xs text-left whitespace-nowrap md:whitespace-normal">{{ $b->Fokus ? $b->Fokus->nama : '' }}</td>
                   <td class="px-3 py-2 text-xs text-left whitespace-nowrap md:whitespace-normal">{{ $b->penulis }}</td>
                   <td class="px-3 py-2 text-xs text-left whitespace-nowrap md:whitespace-normal">{{ $b->wartawan }}</td>
+                  <td class="px-3 py-2 text-xs text-left whitespace-nowrap md:whitespace-normal">{{ $setting && $setting->Network ? $setting->Network->url . '/berita/' . $b->slug : ''}}</td>
                 </tr>
                 @endforeach
 
@@ -89,7 +85,7 @@
 
   {{-- /main content --}}
 
-</div>
+</x-main-container>
 <!-- /Main Container -->
 
 @endsection

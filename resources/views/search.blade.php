@@ -7,7 +7,7 @@
 
 @foreach($terkini as $kn)
 <div class="relative flex flex-col mt-3 w-full h-auto overflow-hidden">
-    <div class="absolute top-0 z-10 px-3 py-1 bg-gradient-to-r from-rose-600 to-orange-500 text-xxxs md:text-xxs text-white font-semibold rounded-br-md rounded-tl-md">{{ $kn->kategori->nama }}</div>
+    <div class="absolute top-0 z-10 px-3 py-1 main_color text-xxxs md:text-xxs text-white font-semibold rounded-br-md rounded-tl-md">{{ $kn->kategori->nama }}</div>
     <div class="w-full flex flex-row">
         <div class="w-3/12 h-20 md:h-24 lg:h-28 bg-gray-500 rounded-md overflow-hidden">
             <a href="/berita/{{ $kn->slug }}"><img class="w-full h-full object-cover hover:scale-105 duration-300 ease-in-out" src="{{ asset('thumbnail/' . $kn->gambar_detail) }}" alt="{{ $kn->caption }}"></a>

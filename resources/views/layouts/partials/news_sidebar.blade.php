@@ -41,49 +41,58 @@
 @endif
 {{-- /Iklan Sidebar B--}}
 
+{{-- Google News --}}
+<a href="{{ $setting->google_news }}" class="mt-4 md:mt-0 flex flex-row px-3 py-2 gap-2 bg-slate-200 hover:bg-slate-300 border borde-slate-500 rounded items-center justify-between">
+    <div class="text-2xl text-gray-800"><i class="fa-regular fa-bell"></i></div>
+    <div class="w-full text-sm text-gray-800">Jangan lewatkan Informasi terbaru, subscribe <span class="text-slate-800 font-bold">Google News {{ $setting->judul_situs }}</span></div>
+</a>
+{{-- /Google News --}}
+
 <!-- Populer-->
-<div class="mt-5 flex flex-row items-center justify-between">
-    <div class="flex flex-row items-center">
+<div class="mt-5 pb-2 flex flex-col bg-gray-200 dark:bg-gray-600 rounded-lg border border-teal-300 overflow-hidden">
+    {{-- <div class="flex flex-row items-center">
         <div class="h-8 w-1.5 bg-gradient-to-tr from-rose-600 to-orange-500 rounded-full rotate-12"></div>
         <div class="text-lg lg:text-xl ml-2 italic text-slate-700 dark:text-gray-100 whitespace-nowrap"><span class="font-bold">BERITA</span> <i class="fa-solid fa-fire-flame-curved text-rose-600"></i> POPULER</div>
     </div>
-    <div class="text-xs lg:text-sm"><a href="/indeks" class="font-semibold py-0.5 text-gray-500 hover:text-gray-700"><i class="fa-solid fa-arrow-right-long"></i></a></div>
-</div>
+    <div class="text-xs lg:text-sm"><a href="/indeks" class="font-semibold py-0.5 text-gray-500 hover:text-gray-700"><i class="fa-solid fa-arrow-right-long"></i></a></div> --}}
 
-{{-- 1st Polpuler --}}
-@foreach($populer->slice(0, 1) as $pop1)
-<div class="mt-3 flex flex-col justify-between group relative h-auto rounded-xl overflow-hidden">         
-    <div class="absolute top-0 z-10 px-4 py-1 bg-gradient-to-r from-rose-600 to-orange-500 text-4xl text-white font-bold rounded-br-xl">01</div>
-    <div class="absolute bottom-5 group-hover:mb-2 px-2 flex flex-col items-start transition-all duration-300 ease-in-out">
-        <a href="/berita/{{ $pop1->slug }}" class="z-10 mx-2 text-sm lg:text-base font-semibold leading-tight text-white antialiased">{!! $pop1->judul !!}</a>
-        <p class="z-10 mx-2 text-xxs mt-3 text-white antialiased"><span class="font-bold bg-gradient-to-r from-rose-600 to-orange-500 px-2 py-1 text-white rounded-full">{{ $pop1->kategori->nama }}</span> {{ Carbon\Carbon::parse($pop1->tanggal_tayang . ' ' .$pop1->waktu)->diffForHumans() }}</p>
+    <div class=" w-full text-center px-5 py-1.5 main_color text-white italic whitespace-nowrap">
+        <span class="font-bold">BERITA</span> <i class="fa-solid fa-fire-flame-curved text-amber-300"></i> TERPOPULER</span>
     </div>
 
-    <a href="/berita/{{ $pop1->slug }}" class="w-full">
-    <div class="flex w-full h-52 md:h-40 lg:h-52 z-1 bg-gradient-to-t from-gray-900 rounded-xl overflow-hidden">
-        <img class="w-full h-full object-cover mix-blend-overlay group-hover:brightness-75 transition-all duration-300 ease-in-out" src="{{ asset('storage/' . $pop1->gambar_detail) }}" alt="{{ $pop1->caption }}">
-    </div>
-    </a>
-</div>
-@endforeach
-{{-- 1st Populer --}}
-
-@foreach($populer->skip(1) as $pop)
-<div class="group flex flex-col w-full mt-4">
-    <div class="flex flex-row w-full items-center">
-    <div class="flex">
-    <div class="text-4xl font-bold text-gray-300 group-hover:text-red-500 dark:group-hover:text-amber-300">{{  sprintf('%02d', $loop->iteration+1) }}</div>
-    </div>
-    <div class="flex h-full">
-        <div class="ml-2 w-px h-auto min-h-25px bg-gray-400"></div>
-        <div class="flex flex-col">
-        <a href="/berita/{{ $pop->slug }}" class="ml-3 text-sm lg:text-base font-semibold leading-tight dark:text-white hover:text-red-600 dark:hover:text-amber-300">{!! $pop->judul !!}</a>
-        <p class="pl-3 text-xxs mt-1 dark:text-gray-200"><span class="font-bold text-red-600">{{ $pop->kategori->nama }}</span> | {{ Carbon\Carbon::parse($pop->tanggal_tayang . ' ' . $pop->waktu)->diffForHumans() }}</p>
+    {{-- 1st Polpuler --}}
+    @foreach($populer->slice(0, 1) as $pop1)
+    <div class="flex flex-col justify-between group relative h-auto overflow-hidden">         
+        {{-- <div class="absolute top-0 z-10 px-4 py-1 bg-gradient-to-r from-rose-600 to-orange-500 text-4xl text-white font-bold rounded-br-xl">01</div> --}}
+        <div class="absolute bottom-5 group-hover:mb-2 px-2 flex flex-col items-start transition-all duration-300 ease-in-out">
+            <a href="/berita/{{ $pop1->slug }}" class="z-10 mx-2 text-sm lg:text-base font-semibold leading-none text-white antialiased">{!! $pop1->judul !!}</a>
+            <p class="z-10 mx-2 text-xxs mt-3 text-white antialiased"><span class="mr-1 font-bold main_color px-1.5 py-0.5 text-white rounded">{{ $pop1->kategori->nama }}</span> {{ Carbon\Carbon::parse($pop1->tanggal_tayang . ' ' .$pop1->waktu)->diffForHumans() }}</p>
         </div>
+        
+        <a href="/berita/{{ $pop1->slug }}" class="w-full">
+            <div class="flex w-full h-52 md:h-40 lg:h-52 z-1 bg-gradient-to-t from-30% from-gray-900 rounded-b-xl  transition-all duration-300 ease-in-out overflow-hidden">
+                <img class="w-full h-full object-cover mix-blend-overlay" src="{{ asset('storage/' . $pop1->gambar_detail) }}" alt="{{ $pop1->caption }}">
+            </div>
+        </a>
     </div>
+    @endforeach
+    {{-- 1st Populer --}}
+    
+    <div class="mt-4 mb-2 flex flex-col px-2 gap-4 items-start">
+        @foreach($populer->skip(1) as $pop)
+            <div class="group flex flex-row w-full gap-1">
+                <div class="flex flex-grow-0 w-10 h-10 bg-gradient-to-t from-indigo-600 to-teal-400 group-hover:text-red-500 dark:group-hover:text-amber-300 rounded-md">
+                    <div class="text-2xl font-bold text-gray-200 text-center mx-auto">{{  sprintf('%02d', $loop->iteration + 1) }}</div>
+                </div>
+                {{-- <div class="ml-2 w-px h-auto min-h-25px bg-gray-400"></div> --}}
+                <div class="md:-mt-1 w-full flex flex-col">
+                    <a href="/berita/{{ $pop->slug }}" class="ml-3 text-sm lg:text-base font-semibold leading-snug dark:text-white hover:text-red-600 dark:hover:text-amber-300">{!! $pop->judul !!}</a>
+                    <p class="pl-3 mt-px text-xxs dark:text-gray-200"><span class="font-bold text-red-600">{{ $pop->kategori->nama }}</span> | {{ Carbon\Carbon::parse($pop->tanggal_tayang . ' ' . $pop->waktu)->diffForHumans() }}</p>
+                </div>
+            </div>
+        @endforeach
     </div>
 </div>
-@endforeach
 <!-- /Populer-->
 
 {{-- Iklan Sidebar C--}}

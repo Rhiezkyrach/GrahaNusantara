@@ -2,24 +2,20 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\User;
-use App\Models\Berita;
+// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Setting;
-use App\Models\kategori;
+use App\Models\Kategori;
 use App\Models\Reporter;
+use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
     /**
      * Seed the application's database.
-     *
-     * @return void
      */
-    public function run()
+    public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
-
         User::create([
             'nama' => 'admin',
             'username' => 'admin',

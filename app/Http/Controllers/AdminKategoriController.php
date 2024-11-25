@@ -7,27 +7,60 @@ use App\Models\Setting;
 use App\Models\Kategori;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Traits\NetworkAccessTrait;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class AdminKategoriController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        $setting = Setting::first();
+    use NetworkAccessTrait;
 
-        if(session('success')){
-            Alert::success('Success!', session('success'));
+    public $setting;
+    public $user_network;
+
+    public function __construct()
+    {
+        $this->setting = Setting::where('id_network', auth()->user()->id_network)->first();
+        $this->user_network = auth()->user()->id_network;
+    }
+
+    // index
+    public function index(Request $request)
+    {
+        if (session()->has('success')) {
+            Alert::toast(session('success'), 'success');
         }
 
+        if (session()->has('error')) {
+            Alert::toast(session('error'), 'error');
+        }
+
+        $data = Kategori::showKategori($this->user_network);
+
+        if ($request->ajax()) {
+            return datatables()->of($data)
+                ->editColumn('id_network', function (Kategori $kategori) {
+                    return $kategori->Network ? $kategori->Network->nama : $kategori->id_network;
+                })
+                ->editColumn('navigasi', function (Kategori $kategori) {
+                    return $kategori->navigasi == '1' ? '<div class="text-sm text-green-800"><i class="fas fa-check-circle"></i></div>' : '';
+                })
+                ->editColumn('status', function (Kategori $kategori) {
+                    return $kategori->status == '0'
+                        ? "<td><span class='px-3 py-1 text-xs rounded-full bg-rose-200'>TIDAK AKTIF</span></td>"
+                        : "<td><span class='px-3 py-1 text-xs bg-green-200 rounded-full'>AKTIF</span></td>";
+                })
+                ->addColumn('action', function (Kategori $kategori) {
+                    return view('admin.kategori.kategori-action', ['data' => $kategori])->render();
+                })
+                ->rawColumns(['action', 'navigasi', 'status'])
+                ->toJson();
+        };
+
         return view('admin.kategori.kategori',[
-            'judul' => 'Management Kategori' . ' - ' . $setting->judul_situs,
-            'kategori' => Kategori::showAllKategori(),
-            "setting" => $setting
+            'judul' => 'Management Kategori' . ' - ' . $this->setting->judul_situs,
+            'list_tayang' => $this->list_tayang(),
+            'id_setting' => $this->setting->id,
+            'setting' => $this->setting,
         ]);
     }
 
@@ -38,11 +71,8 @@ class AdminKategoriController extends Controller
      */
     public function create()
     {
-        $setting = Setting::first();
-
         return view('admin.kategori.tambah_kategori',[
-            'judul' => 'Tambah Kategori' . ' - ' . $setting->judul_situs,
-            "setting" => $setting
+            'judul' => 'Tambah Kategori' . ' - ' . $this->setting->judul_situs,
         ]);
     }
 
@@ -60,6 +90,7 @@ class AdminKategoriController extends Controller
             'navigasi' => 'required'
         ]);
 
+        $validatedData['id_network'] = $this->user_network;
         $validatedData['urutan'] = $request->urutan;
 
         Kategori::create($validatedData);
@@ -73,9 +104,14 @@ class AdminKategoriController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, Kategori $kategori)
     {
-        //
+        if ($request->ajax()) {
+            return view('admin.kategori.show_kategori', [
+                'judul' => 'Detail Kategori' . ' - ' . $this->setting->judul_situs,
+                'kategori' => $kategori,
+            ]);
+        }
     }
 
     /**
@@ -84,15 +120,14 @@ class AdminKategoriController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Kategori $kategori)
-    {
-       $setting = Setting::first();
-
-        return view('admin.kategori.edit_kategori',[
-            'judul' => 'Edit Kategori' . ' - ' . $setting->judul_situs,
-            'kategori' => $kategori,
-            "setting" => $setting
-        ]);
+    public function edit(Request $request, Kategori $kategori)
+    {   
+        if($request->ajax()){
+            return view('admin.kategori.edit_kategori',[
+                'judul' => 'Edit Kategori' . ' - ' . $this->setting->judul_situs,
+                'kategori' => $kategori,
+            ]);
+        }
     }
 
     /**
@@ -129,8 +164,10 @@ class AdminKategoriController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Kategori $kategori)
     {
-        //
+        Kategori::destroy($kategori->id);
+
+        return redirect('/admin/kategori')->with('success', 'Kategori Berhasil Dihapus');
     }
 }

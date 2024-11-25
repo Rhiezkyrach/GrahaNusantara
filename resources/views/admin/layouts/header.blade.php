@@ -6,25 +6,22 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
   {{-- Google Font --}}
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
-  {{-- Tailwind CSS 3.0.24 --}}
-  <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-  {{-- Font Awesome 6.1.1 --}}
+  {{-- Font Awesome 6.2.1 --}}
   <link href="{{ asset('plugin/fontawesome/css/all.css') }}" rel="stylesheet">
-  {{-- CKEditor 4.19 --}}
-  <script src="{{ asset('plugin/ckeditor/ckeditor.js') }}"></script>
-  {{-- Jquery --}}
-  <script src="{{ asset('plugin/jquery/jquery-3.6.0.min.js') }}"></script>
-
+  {{-- DataTables --}}
+  <link rel="stylesheet" type="text/css" href="{{ asset('plugin/datatables/datatables.min.css') }}"/>
   {{-- SweetAlert 2 --}}
   <link rel="stylesheet" href="{{ asset('plugin/sweetalert/dist/sweetalert2.min.css') }}">
-  <script src="{{ asset('plugin/sweetalert/dist/sweetalert2.all.min.js') }}"></script>
+  {{-- Select2 --}}
+  <link rel="stylesheet" href="{{ asset('plugin/select2/select2.min.css') }}">
 
   {{-- Favicon --}}
-  <link rel="shortcut icon" href="{{ asset('favicon.ico') }}">
+  <link rel="shortcut icon" href="{{ $setting ? asset('storage/' . $setting->favicon) : asset('favicon.ico') }}">
 
   @stack('css')
+  @vite(['resources/css/app.css', 'resources/css/select2.css'])
 
   <title>{{ $judul }}</title>
 
@@ -35,13 +32,13 @@
 </head>
 <body>
 
-<div class="flex flex-row">
+<div class="relative flex flex-row">
 
   @if(!Request::is('cmslogin'))
     @include('admin.layouts.sidebar')
     @include('admin.layouts.navbar')
 
-  <div class="relative flex w-full md:w-10/12">
+  <div class="relative flex w-full md:w-10/12 flex-shrink-0 flex-grow-0">
     
     @yield('admincontent')
 
@@ -55,10 +52,22 @@
 
 </div>
 
-<script src="{{ asset('/js/cms.js') }}"></script>
 @include('sweetalert::alert')
-@stack('js')
 
+{{-- Jquery --}}
+<script src="{{ asset('plugin/jquery/jquery-3.6.0.min.js') }}"></script>
+{{-- CKEditor 4.19 --}}
+{{-- <script src="{{ asset('plugin/ckeditor/ckeditor.js') }}"></script> --}}
+{{-- CKEditor 5.41 --}}
+<script src="{{ asset('plugin/ckeditor5/build/ckeditor.js') }}"></script>
+{{-- DataTables --}}
+<script src="{{ asset('plugin/datatables/datatables.min.js') }}"></script>
+{{-- SweetAlert 2 --}}
+<script src="{{ asset('plugin/sweetalert/dist/sweetalert2.all.min.js') }}"></script>
+{{-- Select2 --}}
+<script src="{{ asset('plugin/select2/select2.min.js') }}"></script>
+
+@stack('js')
 
 </body>
 </html>

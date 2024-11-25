@@ -1,159 +1,80 @@
-@extends('admin.layouts.header')
-
-@section('admincontent')
-
-<!-- main Container -->
-<div class="w-full h-auto bg-white px-5 my-20 md:mx-8 md:mt-5 md:mb-14">
-  <div class="flex flex-row items-center justify-between">
-    <div class="md:text-2xl font-semibold">Edit Berita</div>
-    <a href="/" target="_blank">
-      <div class="text-xxs -mt-px font-semibold text-white bg-red-500 hover:bg-red-600 py-2 px-3 rounded-full inline-block align-middle">Kunjungi Situs <i class="fas fa-external-link-alt"></i></div>
-    </a>
-  </div>
-  <div class="mt-5 w-full h-px bg-gray-200 rounded-full"></div>
-
-  {{-- main content --}}
-  <div class="flex flex-col mt-5 bg-gray-100 p-4 h-auto w-full rounded-lg">
-
-    <form method="post" action="/admin/network/{{ $network->slug }}" enctype="multipart/form-data">
-    @method('put')
+<form id="forms" method="post" action="/admin/network/{{ $network->slug }}" enctype="multipart/form-data">
     @csrf
+    @method('put')
 
-    {{-- Nama Network --}}
-    <div class="flex flex-col md:flex-row mt-3 items-center">
-      <div class="w-full md:w-2/12 font-semibold">Nama</div>
-      <div class="flex flex-col w-full md:w-5/12">
-        <input type="text" id="nama" name="nama" class="mt-1 md:mt-0 w-full p-2 border border-gray-400 rounded-md" value="{{ old('nama', $network->nama) }}" autocomplete="off" required>
-        @error('nama')
-          <div class="text-red-500 text-xs mt-1 font-semibold">{{ $message }}</div>
-        @enderror
-      </div>
+    <div class="w-full h-auto px-2 py-2 border border-amber-500 rounded-md itemrow bg-amber-100/25">
+        <div class="-mt-1.5 mb-2.5 text-center font-semibold"><span class="px-4 py-1 rounded-b-lg bg-amber-500 text-white">EDIT NETWORK</span></div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+
+            <div class="grid grid-cols-1 gap-1">
+                {{-- NAMA NETWORK --}}
+                <div class="bg-gradient-to-b from-slate-300 rounded-lg">
+                    <label class="mb-1" for="inputnama"><span class="text-xs uppercase py-1 pl-2.5 font-semibold">NAMA NETWORK</span></label>
+                    <input type="text" id="inputnama" name="nama" class="main_input_md"
+                        value="{{ old('nama', $network->nama) }}" auto-complete="off" required>
+                </div>
+
+                {{-- TAGLINE --}}
+                <div class="bg-gradient-to-b from-slate-300 rounded-lg">
+                    <label class="mb-1" for="inputtagline"><span class="text-xs uppercase py-1 pl-2.5 font-semibold">TAGLINE</span></label>
+                    <input type="text" id="inputtagline" name="tagline" class="main_input_md"
+                        value="{{ old('tagline', $network->Setting ? $network->Setting->tagline : '') }}" auto-complete="off" required>
+                </div>
+
+                {{-- URL --}}
+                <div class="bg-gradient-to-b from-slate-300 rounded-lg">
+                    <label class="mb-1" for="inputurl"><span class="text-xs uppercase py-1 pl-2.5 font-semibold">URL</span></label>
+                    <input type="url" id="inputurl" name="url" class="main_input_md" pattern="https://.*" placeholder="https://contoh.com"
+                        value="{{ old('url', $network->url) }}" auto-complete="off" required>
+                </div>
+
+            </div>
+
+            {{-- LOGO --}}
+            <div class="bg-gradient-to-b from-slate-300 rounded-lg">
+                <label class="mb-1" for="inputlogo"><span class="text-xs uppercase py-1 pl-2.5 font-semibold">LOGO</span></label>
+                <div class="flex w-full h-32 mb-1 p-2 overflow-hidden rounded-md">
+                    @if($network->logo)
+                        <input name="logoLama" type="file" class="hidden" value="{{ $network->logo }}">
+                        <img src="{{ asset('storage/'. $network->logo) }}" class="logo-preview w-full h-full my-auto object-cover overflow-hidden rounded">
+                    @else
+                        <img class="object-cover w-full h-full logo-preview rounded" src="{{ asset('images/img-default.png') }}" alt="">
+                    @endif
+                </div>
+                <input name="logo" id="inputlogo" type="file" class="w-full file-input file-input-bordered" accept="image/*">
+                @error('image')
+                    <div class="text-xs text-red-600">{{ $message }}</div>
+                @enderror
+            </div>
+        
+        </div>
+
+        <div class="mt-2 grid grid-cols-1 md:grid-cols-2 gap-2">
+
+            {{-- URUTAN --}}
+            <div class="bg-gradient-to-b from-slate-300 rounded-lg">
+                <label class="mb-1" for="inputurutan"><span class="text-xs uppercase py-1 pl-2.5 font-semibold">URUTAN</span></label>
+                <select id="inputurutan" name="urutan" class="main_input_md" required>
+                    @for($i=1; $i <=10; $i++)
+                    <option value="{{ $i }}" @selected($network->urutan == $i)>{{  $i }}</option>
+                    @endfor
+                </select>
+            </div>
+
+            {{-- STATUS --}}
+            <div class="bg-gradient-to-b from-slate-300 rounded-lg">
+                <label class="mb-1" for="inputstatus"><span class="text-xs uppercase py-1 pl-2.5 font-semibold">STATUS</span></label>
+                <select id="inputstatus" name="status" class="main_input_md" required>
+                <option value="1" @selected($network->status == '1')>Aktif</option>
+                <option value="0" @selected($network->status == '0')>Tidak Aktif</option>
+                </select>  
+            </div>
+        </div>
+
     </div>
-    {{-- /Nama Network --}}
 
-    {{-- URL --}}
-    <div class="flex flex-col md:flex-row mt-3 items-center">
-      <div class="w-full md:w-2/12 font-semibold">URL</div>
-      <div class="flex flex-col w-full md:w-5/12">
-        <input type="text" id="url" name="url" class="mt-1 md:mt-0 w-full p-2 border border-gray-400 rounded-md" value="{{ old('url' , $network->url) }}" autocomplete="off" required>
-        @error('url')
-          <div class="text-red-500 text-xs mt-1 font-semibold">{{ $message }}</div>
-        @enderror
-      </div>
-    </div>
-    {{-- /URL --}}
-
-    {{-- Logo--}}
-    <div class="flex flex-col md:flex-row mt-3 items-center">
-      <div class="w-full md:w-2/12 font-semibold">Logo</div>
-      <div class="flex flex-col w-full md:w-5/12">
-        <input type="hidden" name="logoLama" value="{{ $network->logo }}">
-        @if($network->logo)
-        <img src="{{ asset('storage/'. $network->logo) }}" class="img-preview mb-2 w-full object-cover overflow-hidden">
-        @else
-        <img class="img-preview mb-2 w-full object-cover overflow-hidden">
-        @endif
-        <input type="file" id="logo" name="logo" class="mt-1 md:mt-0 w-full p-2 border border-gray-400 rounded-md" onchange="previewGambar()">
-        @error('logo')
-          <div class="text-red-500 text-xs mt-1 font-semibold">{{ $message }}</div>
-        @enderror
-      </div>
-    </div>
-    {{-- /Logo--}}
-
-    {{-- Urutan --}}
-    <div class="flex flex-col md:flex-row mt-3 items-center">
-      <div class="w-full md:w-2/12 font-semibold">Urutan</div>
-      <div class="flex flex-col w-full md:w-5/12">
-        <select id="urutan" name="urutan" class="mt-1 md:mt-0 w-full p-2 border border-gray-400 rounded-md" required>
-          @if(old('urutan', $network->urutan == $network->urutan))
-            <option class="text-white/0" value="{{ $network->urutan }}" selected>{{  $network->urutan }}</option>
-              @for($i=1; $i <=10; $i++)
-                <option value="{{ $i }}">{{  $i }}</option>
-              @endfor
-            @else
-              @for($i=1; $i <=10; $i++)
-                <option value="{{ $i }}">{{  $i }}</option>
-              @endfor
-            @endif 
-        </select>
-          @error('urutan')
-          <div class="text-red-500 text-xs mt-1 font-semibold">{{ $message }}</div>
-          @enderror
-      </div>     
-    </div>
-    {{-- /Urutan --}}
-
-    {{-- Submit --}}
-    <div class="flex flex-col md:flex-row mt-3 items-center">
-      <div class="w-full md:w-2/12 font-semibold"></div>
-      <div class="flex flex-col md:flex-row w-full md:w-10/12 divide-x gap-2">
-        <button type="submit" class="bg-green-600 hover:bg-green-700 py-2 w-full md:w-1/2 text-white text-center font-semibold rounded-lg"><i class="fas fa-save"></i> Simpan</button>
-        <a href="/admin/network" class="bg-red-500 hover:bg-red-700 py-2 w-full md:w-1/2 text-white text-center font-semibold rounded-lg"><i class="far fa-list-alt"></i> Kembali ke Tabel</a>
-      </div>
-    </div>
-    {{-- /Submit --}}
-
-    </form>
-
-  </div>
-
-  {{-- /main content --}}
-
-</div>
-<!-- /Main Container -->
-<script>
-// Editor
-CKEDITOR.replace('isi', {
-    filebrowserUploadUrl: "{{route('upload', ['_token' => csrf_token() ])}}",
-    filebrowserUploadMethod: 'form',
-    forcePasteAsPlainText : true,
-    removePlugins: 'pastefromword',
-    allowedContent: {
-            script: true,
-            div: true,
-            $1: {
-                // This will set the default set of elements
-                elements: CKEDITOR.dtd,
-                attributes: true,
-                styles: true,
-                classes: true
-            }
-        }
-});
-
-function previewGambar(){
-  const image = document.querySelector('#cover');
-  const imgPreview = document.querySelector('.img-preview');
-  
-  imgPreview.style.display = 'block';
-
-  const oFReader = new FileReader();
-  oFReader.readAsDataURL(image.files[0]);
-
-  oFReader.onload = function(oFREvent){
-    imgPreview.src = oFREvent.target.result;
-  }
-
-}
-
-$(function() {
-// Multiple images preview with JavaScript
-var previewImages = function(input, imgPreviewPlaceholder) {
-if (input.files) {
-var filesAmount = input.files.length;
-for (i = 0; i < filesAmount; i++) {
-var reader = new FileReader();
-reader.onload = function(event) {
-$($.parseHTML('<img>')).attr('src', event.target.result).attr('class', 'py-2 w-full max-h-64 object-cover overflow-hidden').appendTo(imgPreviewPlaceholder);
-}
-reader.readAsDataURL(input.files[i]);
-}
-}
-};
-$('#nama_photo').on('change', function() {
-previewImages(this, 'div.images-preview');
-});
-});
-</script>
-@endsection
+    <x-close-modal-button>
+        <x-slot:submit></x-slot:submit>
+    </x-close-modal-button>
+</form>

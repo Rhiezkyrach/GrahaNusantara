@@ -8,78 +8,115 @@
     {{-- Google Font --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;0,900;1,400;1,500;1,700;1,900&display=swap" as="style">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;0,900;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    {{-- Google Font: Figtree --}}
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
 
-    {{-- Tailwind CSS 3.0.24 --}}
-    <link href="{{ asset('css/app.css?v=') . filemtime('css/app.css') }}" rel="stylesheet">
-    {{-- Swiper CSS 8.2.2 --}}
-    <link href="{{ asset('plugin/swiper/swiper-bundle.min.css') }}" rel="stylesheet">
-    {{-- Font Awesome 6.1.1 --}}
-    <link href="{{ asset('plugin/fontawesome/css/all.min.css') }}" rel="stylesheet">
-    {{-- Style CSS --}}
-    <link href="{{ asset('css/style.css?v=') . filemtime('css/style.css') }}" rel="stylesheet">
-    {{-- Jquery --}}
-    <script src="{{ asset('plugin/jquery/jquery-3.6.0.min.js') }}"></script>
+    {{-- Splide 4.1.3 --}}
+    <link rel="stylesheet" href="{{ asset('plugin/splide/dist/css/splide.min.css') }}"></link>
+    {{-- Font Awesome 6.2.1 --}}
+    <link href="{{ asset('plugin/fontawesome/css/all.css') }}" rel="stylesheet">
+
+    @stack('css')
+    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/script.js'])
 
     <!-- PWA  -->
     <meta name="theme-color" content="#d10010"/>
-    <link rel="apple-touch-icon" href="{{ asset('raja_media.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('idisnews.png') }}">
     <link rel="manifest" href="{{ asset('/manifest.json') }}">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
     {{-- Favicon --}}
-    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}">
+    <link rel="shortcut icon" href="{{ $setting ? asset('storage/' . $setting->favicon) : asset('favicon.ico') }}">
 
-    <title>{!! $judul !!}</title>
+    <title>{!! isset($berita) ? $berita->judul : $judul !!}</title>
 
     @if($setting->headcode)
       {!! $setting->headcode !!}
     @endif
 
-    <link rel="canonical" href="{{ url()->current() }}">
 
+    {{-- BEGIN: META TAG SEO --}}
+    <link rel="canonical" href="{{ request()->fullUrl() }}">
     <meta name="robots" content="index,follow" />
-    <meta name="googlebot" content="index,follow" />
+    {{-- <meta name="googlebot" content="index,follow" />
     <meta name="googlebot-news" content="index,follow" />
     <meta name="msnbot" content="index,follow" />
     <meta name="webcrawlers" content="index,follow" />
     <meta name="spiders" content="index,follow" />
-    <meta name="rating" content="general" />
+    <meta name="rating" content="general" /> --}}
 
-    <meta name="description" content="{{ $deskripsi }}" />
-    <meta name="keywords" content="{{ $keyword }}" />
-    <meta name="news_keywords" content="{{ $keyword }}" />
-    <meta name="author" content="{{ $author }}" />
+    @if(isset($berita))
+        @php
+            $paragraphs = explode('</p>', $berita->isi);
+            $deskripsi = html_entity_decode(strip_tags($paragraphs[0]));
+        @endphp
 
-    {{-- Open Graph --}}
-    <meta property="fb:pages" content="1380957078884401" />
-    <meta property="og:url" content="https://{{  $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']; }}" />
-    <meta property="og:type" content="article" />
-    <meta property="og:title" content="{{ $judul }}" />
-    <meta property="og:description" content="{{ $deskripsi }}" />
-    <meta property="og:image" content="{{ $foto }}" />
-    <meta property="og:site_name" content="{{ $setting->judul_situs }}" />
-    <meta property="article:author" content="{{ $author }}" />
-    <meta property="article:publisher" content="https://web.facebook.com/profile.php?id=100076537295731" />
-    <meta property="fb:app_id" content="559785848921682" />
+        <meta name="description" content="{{ substr($deskripsi, 0, 150) }}" />
+        <meta name="keywords" content="{{ $berita->tag }}" />
+        <meta name="news_keywords" content="{{ $berita->tag }}" />
+        <meta name="author" content="{{ $berita->wartawan }}" />
 
-    {{-- Twitter Card --}}
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@RM_RajaMedia" />
-    <meta name="twitter:creator" content="@RM_RajaMedia" />
-    <meta name="twitter:title" content="{{ $judul }}">
-    <meta name="twitter:description" content="{{ $deskripsi }}"/>
-    <meta name="twitter:image" content="{{ $foto }}"/>
+        {{-- Open Graph --}}
+        <meta property="fb:pages" content="1380957078884401" />
+        <meta property="og:url" content="{{ request()->fullUrl() }}" />
+        <meta property="og:type" content="article" />
+        <meta property="og:title" content="{{ $berita->judul }}" />
+        <meta property="og:description" content="{{ substr($deskripsi, 0, 150) }}" />
+        <meta property="og:image" content="{{ asset('storage/' . $berita->gambar_detail) }}" />
+        <meta property="og:image:secure_url" content="{{ asset('storage/' . $berita->gambar_detail) }}" />
+        <meta property="og:site_name" content="{{ $setting->judul_situs }}" />
+        <meta property="article:author" content="{{ $berita->wartawan }}" />
+        <meta property="article:publisher" content="https://web.facebook.com/profile.php?id=100076537295731" />
+        <meta property="fb:app_id" content="1488921425167603" />
+        
+        {{-- Twitter Card --}}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@Idisnews" />
+        <meta name="twitter:creator" content="@Idisnews" />
+        <meta name="twitter:title" content="{{ $berita->judul }}">
+        <meta name="twitter:description" content="{{ substr($deskripsi, 0, 150) }}"/>
+        <meta name="twitter:image" content="{{ asset('storage/' . $berita->gambar_detail) }}"/>
+
+        {{-- Schema Markup JSON-LD --}}
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "NewsArticle",
+            "headline": "{{ $berita->judul }}",
+            "description": "{{ strip_tags(substr($deskripsi, 0, 150)) }}",
+            "datePublished": "{{ Carbon\Carbon::parse($berita->tanggal_tayang)->toISOString() }}",
+            "author": {
+                "@type": "Person",
+                "name": "{{ $berita->wartawan }}"
+            },
+            "publisher": {
+                "@type": "Organization",
+                "name": "{{ $setting->judul_situs }}",
+                "logo": {
+                    "@type": "ImageObject",
+                    "url": "{{ $setting ? asset('storage/' . $setting->logo) : asset('images/idis_news.png') }}"
+                }
+            },
+            "image": ["{{ asset('storage/' . $berita->gambar_detail) }}"]
+        }
+        </script>
+        
+    @else
+        <meta name="description" content="{{ $deskripsi }}" />
+        <meta name="keywords" content="{{ $keyword }}" />
+        <meta name="news_keywords" content="{{ $keyword }}" />
+        <meta name="author" content="{{ $author }}" />
+    @endif
+    {{-- END: META TAG SEO --}}
 
     {{-- Facebook --}}
     <div id="fb-root"></div>
-    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/id_ID/sdk.js#xfbml=1&version=v14.0&appId=559785848921682&autoLogAppEvents=1" nonce="qMPcSAt9"></script>
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/id_ID/sdk.js#xfbml=1&version=v14.0&appId=1488921425167603&autoLogAppEvents=1" nonce="qMPcSAt9"></script>
 
     {{-- Sharethis --}}
-    <script type='text/javascript' src='https://platform-api.sharethis.com/js/sharethis.js#property=62b153cc17626600191f44a5&product=sop' async='async'></script>
+    {{-- <script type='text/javascript' src='https://platform-api.sharethis.com/js/sharethis.js#property=62b153cc17626600191f44a5&product=sop' async='async'></script> --}}
 
     {{-- Dark Mode Check --}}
     <script>

@@ -13,14 +13,16 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('epapers', function (Blueprint $table) {
+        Schema::create('tbl_epapers', function (Blueprint $table) {
             $table->id();
+            $table->string('id_network', 4)->nullable();
             $table->date('edisi');
             $table->string('slug')->unique();
             $table->string('cover');
             $table->string('pdf');
             $table->bigInteger('counter')->default(0);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -31,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('epapers');
+        Schema::dropIfExists('tbl_epapers');
     }
 };

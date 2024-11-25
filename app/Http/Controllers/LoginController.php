@@ -20,18 +20,6 @@ class LoginController extends Controller
 
     public function authenticate(Request $request){
 
-        // $credentials = User::where([
-        // 'username' => $request->username,
-        // 'password' => md5($request->password)
-        // ])->first();
-
-        // if ($credentials) {
-        // Auth::login($credentials);
-        // // $request->session()->regenerate();
-
-        // return redirect()->intended('admin/dashboard');
-        // }
-
         $credentials = $request->validate([
             'username' => 'required',
             'password' => 'required',    

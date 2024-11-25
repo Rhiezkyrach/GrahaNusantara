@@ -15,12 +15,15 @@ return new class extends Migration
     {
         Schema::create('tbl_statis', function (Blueprint $table) {
             $table->id('id_statis');
+            $table->string('id_network', 4)->nullable();
             $table->integer('urutan');
             $table->longText('isi');
             $table->string('judul');
             $table->string('slug')->unique();
             $table->string('gambar_detail')->nullable();
+            $table->boolean('status')->default(true);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

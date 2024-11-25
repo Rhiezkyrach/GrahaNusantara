@@ -1,177 +1,99 @@
-@extends('admin.layouts.header')
+<form id="forms" method="post" action="/admin/user/{{ $user->id }}" enctype="multipart/form-data">
+  @csrf
+  @method('put')
 
-@section('admincontent')
+  <div class="w-full h-auto px-2 py-2 border border-amber-500 rounded-md itemrow bg-amber-100/25">
+    <div class="-mt-1.5 mb-2.5 text-center font-semibold"><span class="px-4 py-1 rounded-b-lg bg-amber-500 text-white">EDIT USER</span></div>
 
-<!-- main Container -->
-<div class="w-full h-auto bg-white px-5 my-20 md:mx-8 md:mt-5 md:mb-14">
-  <div class="flex flex-row items-center justify-between">
-    <div class="md:text-2xl font-semibold">Edit User</div>
-    <a href="/" target="_blank">
-      <div class="text-xxs -mt-px font-semibold text-white bg-red-500 hover:bg-red-600 py-2 px-3 rounded-full inline-block align-middle">Kunjungi Situs <i class="fas fa-external-link-alt"></i></div>
-    </a>
-  </div>
-  <div class="mt-5 w-full h-px bg-gray-200 rounded-full"></div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
 
-  {{-- main content --}}
-
-  <div class="flex flex-col mt-5 bg-gray-100 p-4 h-auto w-full rounded-lg">
-
-    <form method="post" action="/admin/user/{{ $user->id }}" enctype="multipart/form-data">
-    @method('put')
-    @csrf
-
-    {{-- Nama User --}}
-    <div class="flex flex-col md:flex-row mt-3 items-center">
-      <div class="w-full md:w-2/12 font-semibold">Nama</div>
-      <div class="flex flex-col w-full md:w-5/12">
-        <input type="text" id="nama" name="nama" class="mt-1 md:mt-0 w-full p-2 border border-gray-400 rounded-md" placeholder="Nama" value="{{ old('nama', $user->nama) }}" autocomplete="off" required>
-          @error('nama')
-          <div class="text-red-500 text-xs mt-1 font-semibold">{{ $message }}</div>
-          @enderror
-      </div>     
-    </div>
-    {{-- /Nama User --}}
-
-    {{-- Inisial --}}
-    <div class="flex flex-col md:flex-row mt-3 items-center">
-      <div class="w-full md:w-2/12 font-semibold">Inisal</div>
-      <div class="flex flex-col w-full md:w-5/12">
-        <input type="text" id="inisial" name="inisial" class="mt-1 md:mt-0 w-full p-2 border border-gray-400 rounded-md" placeholder="Inisial" value="{{ old('inisial', $user->inisial) }}" autocomplete="off" required>
-          @error('inisial')
-          <div class="text-red-500 text-xs mt-1 font-semibold">{{ $message }}</div>
-          @enderror
-      </div>     
-    </div>
-    {{-- /Inisial --}}
-
-    {{-- Username --}}
-    <div class="flex flex-col md:flex-row mt-3 items-center">
-      <div class="w-full md:w-2/12 font-semibold">Username</div>
-      <div class="flex flex-col w-full md:w-5/12">
-        <input type="text" id="username" name="username" class="mt-1 md:mt-0 w-full p-2 border border-gray-400 rounded-md" placeholder="Username (digunakan untuk login)" value="{{ old('username', $user->username) }}" autocomplete="off" required>
-          @error('username')
-          <div class="text-red-500 text-xs mt-1 font-semibold">{{ $message }}</div>
-          @enderror
-      </div>     
-    </div>
-    {{-- /Username --}}
-
-    {{-- Password --}}
-    <div class="flex flex-col md:flex-row mt-3 items-center">
-      <div class="w-full md:w-2/12 font-semibold">Password</div>
-      <div class="flex flex-col w-full md:w-5/12">
-        <input type="password" id="password" name="password" class="mt-1 md:mt-0 w-full p-2 border border-gray-400 rounded-md" placeholder="Password (kosongkan jika tidak diubah)" value="{{ old('password') }}" autocomplete="off">
-          @error('password')
-          <div class="text-red-500 text-xs mt-1 font-semibold">{{ $message }}</div>
-          @enderror
-      </div>     
-    </div>
-    {{-- /Password --}}
-
-    {{-- Email --}}
-    {{-- <div class="flex flex-col md:flex-row mt-3 items-center">
-      <div class="w-full md:w-2/12 font-semibold">Email</div>
-      <div class="flex flex-col w-full md:w-5/12">
-        <input type="email" id="email" name="email" class="mt-1 md:mt-0 w-full p-2 border border-gray-400 rounded-md" placeholder="Email (boleh kosong)" value="{{ old('email', $user->email) }}" autocomplete="off">
-          @error('email')
-          <div class="text-red-500 text-xs mt-1 font-semibold">{{ $message }}</div>
-          @enderror
-      </div>     
-    </div> --}}
-    {{-- /Email --}}
-
-    {{-- Level --}}
-    <div class="flex flex-col md:flex-row mt-3 items-center">
-      <div class="w-full md:w-2/12 font-semibold">Level</div>
-      <div class="flex flex-col w-full md:w-5/12">
-        <select id="level" name="level" class="mt-1 md:mt-0 w-full p-2 border border-gray-400 rounded-md" required>
-          @if(old('status', $user->level) == "admin")
-            <option value="admin" Selected>Admin</option>
-            <option value="superadmin">Superadmin</option>
-          @else
-            <option value="superadmin" Selected>Superadmin</option>
-            <option value="admin">Admin</option>
-          @endif
-        </select>
-          @error('level')
-          <div class="text-red-500 text-xs mt-1 font-semibold">{{ $message }}</div>
-          @enderror
-      </div>     
-    </div>
-    {{-- /Level --}}
-
-    {{-- Status --}}
-    <div class="flex flex-col md:flex-row mt-3 items-center">
-      <div class="w-full md:w-2/12 font-semibold">Status</div>
-      <div class="flex flex-col w-full md:w-5/12">
-        <select id="status" name="status" class="mt-1 md:mt-0 w-full p-2 border border-gray-400 rounded-md" required>
-          @if(old('status', $user->status) == 1)
-            <option value="1" Selected>Aktif</option>
-            <option value="0">Tidak Aktif</option>
-          @else
-            <option value="0" Selected>Tidak Aktif</option>
-            <option value="1">Aktif</option>
-          @endif  
-        </select>
-          @error('status')
-          <div class="text-red-500 text-xs mt-1 font-semibold">{{ $message }}</div>
-          @enderror
-      </div>     
-    </div>
-    {{-- /Status --}}
-
-    {{-- Foto --}}
-    <div class="flex flex-col md:flex-row mt-2 items-center">
-      <div class="w-full md:w-2/12 font-semibold">Foto</div>
-      <div class="flex flex-col w-full md:w-5/12">
-        <input type="hidden" name="fotoLama" value="{{ $user->foto }}">
-        @if($user->foto)
-        <img src="{{ asset('storage/'. $user->foto) }}" class="img-preview mb-2 w-32 max-h-32 rounded-full object-cover overflow-hidden">
-        @else
-        <img class="img-preview mb-2 w-32 max-h-32 rounded-full object-cover overflow-hidden">
-        @endif
-        <input type="file" id="foto" name="foto" class="mt-1 md:mt-0 w-full p-2 border border-gray-400 rounded-md" onchange="previewGambar()">
-        @error('foto')
-          <div class="text-red-500 text-xs mt-1 font-semibold">{{ $message }}</div>
-        @enderror
+      {{-- USERNAME --}}
+      <div class="bg-gradient-to-b from-slate-300 rounded-lg">
+          <label class="mb-1" for="inputusername"><span class="text-xs uppercase py-1 pl-2.5 font-semibold">USERNAME</span></label>
+          <input type="text" id="inputusername" name="username" class="main_input_md"
+              value="{{ old('username', $user->username) }}" auto-complete="off" required>
       </div>
-    </div>
-    {{-- /Foto --}}
 
-    {{-- Submit --}}
-    <div class="flex flex-col md:flex-row mt-3 items-center">
-      <div class="w-full md:w-2/12 font-semibold"></div>
-      <div class="flex flex-col md:flex-row w-full md:w-5/12 divide-x gap-2">
-        <button type="submit" class="bg-green-600 hover:bg-green-700 py-2 w-full md:w-1/2 text-white text-center font-semibold rounded-lg"><i class="fas fa-save"></i> Simpan</button>
-        <a href="/admin/user" class="bg-red-500 hover:bg-red-700 py-2 w-full md:w-1/2 text-white text-center font-semibold rounded-lg"><i class="far fa-list-alt"></i> Kembali ke Tabel</a>
+      {{-- PASSWORD --}}
+      <div class="bg-gradient-to-b from-slate-300 rounded-lg">
+          <label class="mb-1" for="inputpassword"><span class="text-xs uppercase py-1 pl-2.5 font-semibold">PASSWORD</span></label>
+          <input type="password" id="inputpassword" name="password" class="main_input_md" placeholder="Kosongkan jika tidak diubah" 
+            value="{{ old('password') }}" autocomplete="off">
       </div>
-    </div>
-    {{-- /Submit --}}
-
-    </form>
-
-  </div>
-
-  {{-- /main content --}}
-
-</div>
-<!-- /Main Container -->
-
-<script>
-  function previewGambar(){
-      const image = document.querySelector('#foto');
-      const imgPreview = document.querySelector('.img-preview');
       
-      imgPreview.style.display = 'block';
+      <div class="md:col-span-2 divider my-1"></div>
 
-      const oFReader = new FileReader();
-      oFReader.readAsDataURL(image.files[0]);
+      {{-- NAMA --}}
+      <div class="md:col-span-2 bg-gradient-to-b from-slate-300 rounded-lg">
+          <label class="mb-1" for="inputname"><span class="text-xs uppercase py-1 pl-2.5 font-semibold">NAMA</span></label>
+          <input type="text" id="inputname" name="name" class="main_input_md"
+              value="{{ old('name', $user->name) }}" auto-complete="off" required>
+      </div>
 
-      oFReader.onload = function(oFREvent){
-        imgPreview.src = oFREvent.target.result;
-      }
+      <div class="grid grid-cols-1 gap-2">
+        {{-- INISIAL --}}
+        <div class="bg-gradient-to-b from-slate-300 rounded-lg">
+            <label class="mb-1" for="inputinisial"><span class="text-xs uppercase py-1 pl-2.5 font-semibold">INISIAL</span></label>
+            <input type="text" id="inputinisial" name="inisial" class="main_input_md"
+                value="{{ old('inisial', $user->inisial) }}" auto-complete="off" required>
+        </div>
 
-  }
-</script>
+        {{-- EMAIL --}}
+        <div class="bg-gradient-to-b from-slate-300 rounded-lg">
+            <label class="mb-1" for="inputemail"><span class="text-xs uppercase py-1 pl-2.5 font-semibold">EMAIL</span></label>
+            <input type="email" id="inputemail" name="email" class="main_input_md"
+                value="{{ old('email', $user->email) }}" auto-complete="off" required>
+        </div>
 
-@endsection
+        {{-- LEVEL --}}
+        <div class="bg-gradient-to-b from-slate-300 rounded-lg">
+            <label class="mb-1" for="inputlevel"><span class="text-xs uppercase py-1 pl-2.5 font-semibold">LEVEL</span></label>
+            <select id="inputlevel" name="level" class="select2 main_input_md" required>
+              <option value="owner" @selected($user->level == 'owner')>Owner</option>
+              <option value="admin" @selected($user->level == 'admin')>Admin</option>
+              <option value="redaktur" @selected($user->level == 'redaktur')>Redaktur</option>
+              <option value="wartawan" @selected($user->level == 'wartawan')>Wartawan</option>
+            </select>
+        </div>
+
+        {{-- MASA BERLAKU IDCARD --}}
+        <div class="bg-gradient-to-b from-slate-300 rounded-lg">
+            <label class="mb-1" for="inputvalid_to"><span class="text-xs uppercase py-1 pl-2.5 font-semibold">MASA BERLAKU IDCARD</span></label>
+            <input type="date" id="inputvalid_to" name="valid_to" class="main_input_md"
+                min="{{ Carbon\Carbon::now()->translatedFormat('Y-m-d') }}"
+                value="{{ old('valid_to', Carbon\Carbon::parse($user->valid_to)->translatedFormat('Y-m-d')) }}" auto-complete="off" required>
+        </div>
+
+        {{-- STATUS --}}
+        <div class="bg-gradient-to-b from-slate-300 rounded-lg">
+            <label class="mb-1" for="inputstatus"><span class="text-xs uppercase py-1 pl-2.5 font-semibold">STATUS</span></label>
+            <select id="inputstatus" name="status" class="main_input_md" required>
+              <option value="1" @selected($user->status == '1')>Aktif</option>
+              <option value="0" @selected($user->status == '0')>Tidak Aktif</option>
+            </select>
+        </div>
+      </div>
+
+      {{-- FOTO --}}
+      <div class="bg-gradient-to-b from-slate-300 rounded-lg">
+          <label class="mb-1" for="inputfoto"><span class="text-xs uppercase py-1 pl-2.5 font-semibold">FOTO</span></label>
+          <div class="flex w-full h-64 mb-1 p-2 overflow-hidden rounded-md">
+              @if($user->profile_photo_path)
+                <input name="fotoLamaUser" type="file" class="hidden" value="{{ $user->profile_photo_path }}">
+                <input name="fotoLamaWartawan" type="file" class="hidden" value="{{ $user->Reporter ? $user->Reporter->foto : '' }}">
+                <img src="{{ asset('storage/'. $user->profile_photo_path) }}" class="foto-preview w-full h-full my-auto object-cover overflow-hidden rounded">
+              @else
+                  <img class="object-cover w-full h-full foto-preview rounded" z src="{{ asset('images/img-default.png') }}" alt="">
+              @endif
+          </div>
+          <input name="foto" id="inputfoto" type="file" class="w-full file-input file-input-bordered" accept="image/*">
+      </div>
+
+    </div>
+
+  </div>
+
+  <x-close-modal-button>
+        <x-slot:submit></x-slot:submit>
+    </x-close-modal-button>
+</form>

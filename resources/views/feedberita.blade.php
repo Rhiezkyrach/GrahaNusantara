@@ -10,13 +10,14 @@
         <atom:link href="{{ url('/feedberita') }}" rel="self" type="application/rss+xml" />
         <description>{{ $setting->deskripsi }}</description>
         <language>id</language>
+        <lastBuildDate>{{ now()->format(DATE_RFC2822) }}</lastBuildDate>
 
         @foreach($berita as $b)
             <item>
                 <title><![CDATA[{!! strip_tags($b->judul) !!}]]></title>
                 <link>{{ url('/berita/' . $b->slug ) }}</link>
-                <description><![CDATA[{!! Str::words($b->isi, 25) !!}]]></description>
-                <category>{{ $b->kategori->nama }}</category>
+                <description><![CDATA[{!! Str::limit(strip_tags($b->isi), 150) !!}]]></description>
+                <category>{{ optional($b->kategori)->nama }}</category>
                 <author>{{ $b->wartawan }}</author>
                 <guid>{{ url('/berita/' . $b->slug ) }}</guid>
                 <pubDate>{{ date(DATE_RFC2822, strtotime($b->tanggal_tayang . $b->waktu)) }}</pubDate>

@@ -1,3 +1,139 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+[x-cloak] {
+    display: none;
+}
+
+/* MAIN COLOR */
+.main_color {
+    @apply bg-gradient-to-r from-teal-500 to-indigo-500;
+}
+
+.secondary_color {
+    @apply bg-gradient-to-r from-cyan-500 to-blue-600;
+}
+
+/* INPUT */
+.main_input {
+    @apply bg-gray-50 border border-slate-400 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 placeholder:text-slate-300 read-only:bg-gray-100;
+}
+
+.main_input_sm {
+    @apply bg-gray-50 border border-slate-400 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2 placeholder:text-slate-300 read-only:bg-gray-100;
+}
+
+.main_input_md {
+    @apply bg-gray-50 border border-slate-400 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-[9px] placeholder:text-slate-300 read-only:bg-gray-100;
+}
+
+.main_input_color {
+    @apply bg-gray-50 border border-slate-400 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full placeholder:text-slate-300 read-only:bg-gray-100;
+}
+
+.main_file_input {
+    @apply block w-full text-sm text-gray-900 bg-gray-100 rounded-lg border border-slate-400 hover:border-slate-500 cursor-pointer p-2 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-sky-200 file:text-sky-800 hover:file:bg-sky-300;
+}
+
+.main_file_input_sm {
+    @apply block w-full text-xs text-gray-900 bg-gray-100 rounded-lg border border-slate-400 hover:border-slate-500 cursor-pointer p-1 file:mr-2 file:py-1 file:px-2 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-sky-200 file:text-sky-800 hover:file:bg-sky-300;
+}
+
+.main_file_input_md {
+    @apply block w-full text-xs text-gray-900 bg-gray-100 rounded-lg border border-slate-400 hover:border-slate-500 cursor-pointer p-1.5 file:mr-2 file:py-1.5 file:px-2.5 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-sky-200 file:text-sky-800 hover:file:bg-sky-300;
+}
+
+.main_input_table {
+    @apply bg-gray-50 border border-slate-400 text-gray-900 text-xs focus:ring-blue-500 focus:border-blue-500 block p-1.5 placeholder:text-slate-300 read-only:bg-gray-100;
+}
+
+.main_input_textarea {
+    @apply block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500;
+}
+/* END:INPUT */
+
+/* BUTTON */
+.btn_primary {
+    @apply btn btn-xs border-0 hover:bg-blue-500 btn-primary shadow-md shadow-blue-300/75 rounded py-1 px-2;
+}
+
+.btn_secondary {
+    @apply btn btn-xs border-0 hover:bg-purple-500 btn-secondary shadow-md shadow-purple-300/75 rounded py-1 px-2;
+}
+
+.btn_success {
+    @apply btn btn-xs border-0 hover:bg-cyan-500 btn-success shadow-md shadow-emerald-500/50 rounded py-1 px-2;
+}
+
+.btn_info {
+    @apply btn btn-xs border-0 hover:bg-cyan-500 btn-info shadow-md shadow-cyan-500/50 rounded py-1 px-2;
+}
+
+.btn_edit {
+    @apply btn btn-xs border-0 hover:bg-amber-500 btn-warning shadow-md shadow-amber-400/75 rounded py-1 px-2;
+}
+
+.btn_copy {
+    @apply btn btn-xs border-0 hover:bg-emerald-500 btn-success shadow-md shadow-emerald-400/75 rounded py-1 px-2;
+}
+
+.btn_delete {
+    @apply btn btn-xs border-0 hover:bg-red-500 btn-error shadow-md shadow-rose-500/75 rounded py-1 px-2;
+}
+
+.btn_more {
+    @apply btn btn-xs border-0 hover:bg-gray-200 btn-ghost rounded-sm py-1 px-2;
+}
+/* END:BUTTON */
+
+/* DATATABLE */
+.dataTables_wrapper {
+    @apply text-sm;
+}
+
+div.dataTables_wrapper div.dataTables_info {
+    @apply pt-0;
+}
+
+#tableOverview>tbody>tr>td,
+#tableP>tbody>tr>th,
+#tableP>tfoot>tr>td,
+#tableP>tfoot>tr>th,
+#tableP>thead>tr>td,
+#tableP>thead>tr>th {
+    @apply py-1.5;
+    /* padding-top: 4px;
+    padding-bottom: 4px; */
+}
+/* END:DATATABLE */
+
+/* SCROLL BAR */
+/* Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+.no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+}
+/* END:SCROLLBAR */
+
+#navlinks {
+    animation: translate 0.25s ease-out;
+}
+
+@keyframes translate {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(0);
+    }
+}
+
+figcaption {
+    font-size: 12px;
+    color: #696969;
+}

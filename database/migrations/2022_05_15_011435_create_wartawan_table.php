@@ -15,12 +15,17 @@ return new class extends Migration
     {
         Schema::create('tbl_wartawan', function (Blueprint $table) {
             $table->id('id_wartawan');
+            $table->string('id_network', 4)->nullable();
+            $table->foreignId('id_user')->nullable();
             $table->string('nama_wartawan');
-            $table->string('email')->nullable();
+            $table->string('alamat')->nullable();
+            $table->date('tanggal_lahir')->nullable();
+            $table->string('kontak')->nullable();
             $table->string('foto')->nullable();
-            $table->string('quotes')->nullable();
+            $table->text('about_me')->nullable();
             $table->boolean('status')->default(true);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

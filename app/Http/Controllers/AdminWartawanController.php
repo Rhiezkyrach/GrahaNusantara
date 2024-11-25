@@ -7,28 +7,58 @@ use App\Models\Reporter;
 
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Traits\NetworkAccessTrait;
 use Illuminate\Support\Facades\Storage;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class AdminWartawanController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        $setting = Setting::first();
+    use NetworkAccessTrait;
 
-        if(session('success')){
-            Alert::success('Success!', session('success'));
+    public $setting;
+    public $user_network;
+
+    public function __construct()
+    {
+        $this->setting = Setting::where('id_network', auth()->user()->id_network)->first();
+        $this->user_network = auth()->user()->id_network;
+    }
+
+    // index
+    public function index(Request $request)
+    {
+        if (session()->has('success')) {
+            Alert::toast(session('success'), 'success');
         }
 
+        if (session()->has('error')) {
+            Alert::toast(session('error'), 'error');
+        }
+
+        $data = Reporter::showWartawan($this->user_network);
+
+        if ($request->ajax()) {
+            return datatables()->of($data)
+                ->editColumn('id_network', function (Reporter $wartawan) {
+                    return $wartawan->Network ? $wartawan->Network->nama : $wartawan->id_network;
+                })
+                ->editColumn('status', function (Reporter $wartawan) {
+                    return $wartawan->status == '0'
+                    ? "<td><span class='px-3 py-1 text-xs rounded-full bg-rose-200'>TIDAK AKTIF</span></td>"
+                    : "<td><span class='px-3 py-1 text-xs bg-green-200 rounded-full'>AKTIF</span></td>";
+                })
+                ->addColumn('action', function (Reporter $wartawan) {
+                    return view('admin.wartawan.wartawan-action', ['data' => $wartawan])->render();
+                })
+                ->rawColumns(['action', 'status'])
+                ->toJson();
+        };
+
         return view('admin.wartawan.wartawan',[
-            'judul' => 'Management Wartawan' . ' - ' . $setting->judul_situs,
-            'wartawan' => Reporter::showAllWartawan(),
-            "setting" => $setting
+            'judul' => 'Management Wartawan' . ' - ' . $this->setting->judul_situs,
+            'list_tayang' => $this->list_tayang(),
+            'id_setting' => $this->setting->id,
+            'setting' => $this->setting,
         ]);
     }
 
@@ -37,14 +67,14 @@ class AdminWartawanController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        $setting = Setting::first();
 
-        return view('admin.wartawan.tambah_wartawan',[
-            'judul' => 'Tambah Wartawan' . ' - ' . $setting->judul_situs,
-            "setting" => $setting
-        ]);
+        if ($request->ajax()) {
+            return view('admin.wartawan.tambah_wartawan',[
+                'judul' => 'Tambah Wartawan' . ' - ' . $this->setting->judul_situs,
+            ]);
+        }
     }
 
     /**
@@ -53,30 +83,30 @@ class AdminWartawanController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        $validatedData = $request->validate([
-            'nama_wartawan' => 'required|max:255',
-            'status' => 'required',
-            'foto' => 'image'
-        ]);
+    // public function store(Request $request)
+    // {
+    //     $validatedData = $request->validate([
+    //         'nama_wartawan' => 'required|max:255',
+    //         'status' => 'required',
+    //         'foto' => 'image'
+    //     ]);
 
-        // Upload Avatar
-        if($request->file('foto')){
-            $ekstensiGambar = $request->file('foto')->extension();
+    //     // Upload Avatar
+    //     if($request->file('foto')){
+    //         $ekstensiGambar = $request->file('foto')->extension();
 
-            $date = \Carbon\Carbon::now()->translatedFormat('dmY-His');
+    //         $date = \Carbon\Carbon::now()->translatedFormat('dmY-His');
             
-            $namaGambarBaru = Str::slug($request->nama_wartawan) . '-' . $date . '.' .$ekstensiGambar;
-            $lokasiGambar = 'gambar/foto/wartawan';
+    //         $namaGambarBaru = Str::slug($request->nama_wartawan) . '-' . $date . '.' .$ekstensiGambar;
+    //         $lokasiGambar = 'gambar/foto/wartawan';
                 
-            $validatedData['foto'] = $request->file('foto')->storeAs($lokasiGambar, $namaGambarBaru);
-        }
+    //         $validatedData['foto'] = $request->file('foto')->storeAs($lokasiGambar, $namaGambarBaru);
+    //     }
 
-        Reporter::create($validatedData);
+    //     Reporter::create($validatedData);
 
-        return redirect('/admin/wartawan')->with('success', 'Wartawan Berhasil Ditambahkan');
-    }
+    //     return redirect('/admin/wartawan')->with('success', 'Wartawan Berhasil Ditambahkan');
+    // }
 
     /**
      * Display the specified resource.
@@ -84,9 +114,14 @@ class AdminWartawanController extends Controller
      * @param  \App\Models\Reporter  $reporter
      * @return \Illuminate\Http\Response
      */
-    public function show(Reporter $reporter)
+    public function show(Request $request, Reporter $wartawan)
     {
-        //
+        if ($request->ajax()) {
+            return view('admin.wartawan.show_wartawan', [
+                'judul' => 'Edit Wartawan' . ' - ' . $this->setting->judul_situs,
+                'wartawan' => $wartawan,
+            ]);
+        }
     }
 
     /**
@@ -95,15 +130,14 @@ class AdminWartawanController extends Controller
      * @param  \App\Models\Reporter  $reporter
      * @return \Illuminate\Http\Response
      */
-    public function edit(Reporter $wartawan)
+    public function edit(Request $request, Reporter $wartawan)
     {
-        $setting = Setting::first();
-
-        return view('admin.wartawan.edit_wartawan',[
-            'judul' => 'Edit Wartawan' . ' - ' . $setting->judul_situs,
-            'wartawan' => $wartawan,
-            "setting" => $setting
-        ]);
+        if ($request->ajax()) {
+            return view('admin.wartawan.edit_wartawan',[
+                'judul' => 'Edit Wartawan' . ' - ' . $this->setting->judul_situs,
+                'wartawan' => $wartawan,
+            ]);
+        }
     }
 
     /**
@@ -128,7 +162,7 @@ class AdminWartawanController extends Controller
             $date = \Carbon\Carbon::now()->translatedFormat('dmY-His');
             
             $namaGambarBaru = Str::slug($request->nama_wartawan) . '-' . $date . '.' .$ekstensiGambar;
-            $lokasiGambar = 'gambar/foto/wartawan';
+            $lokasiGambar = $this->user_network . '/gambar/foto/wartawan';
 
             if($request->fotoLama){
                     Storage::delete($request->fotoLama);

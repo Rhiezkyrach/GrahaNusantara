@@ -2,48 +2,63 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Berita;
-use App\Models\Kategori;
-use App\Models\Statis;
-use App\Models\Epaper;
-use App\Models\Setting;
 use App\Models\Iklan;
+use App\Models\Berita;
+use App\Models\Epaper;
+use App\Models\Statis;
 use App\Models\Network;
+use App\Models\Setting;
+use App\Models\Kategori;
 
+use App\Enum\MyNetworkID;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Traits\GetFrontEndSettingTrait;
 
 
 class StatisController extends Controller
 {
+    use GetFrontEndSettingTrait;
+    
+    public $host;
+    public $network_utama;
+    public $current_setting;
+    public $current_network;
+
+    public function __construct(Request $request)
+    {
+        $this->host = $request->getHost();
+        $this->network_utama = Network::where('id_network', '001')->first();
+        $this->current_network = MyNetworkID::ID->value;
+        $this->current_setting = $this->get_network_setting();
+    }
+
     public function index(Statis $statis){
 
-        $setting = Setting::first();
-        $wcorona = DB::table('widget_corona')->where('id', 1)->first();
-
         return view('statis', [
-            "judul" => $statis->judul . " - " . $setting->judul_situs,
+            'network_utama' => $this->network_utama,
+            "judul" => $statis->judul . " - " . $this->current_setting->judul_situs,
             "statis" => $statis,
-            "foto" => asset('storage/' . $setting->logo),
-            "deskripsi" => $setting->deskripsi,
+            "foto" => $this->network_utama->url . '/storage/' . $this->current_setting->logo,
+            "deskripsi" => $this->current_setting->deskripsi,
             "keyword" => "berita politik, video politik",
-            "author" => $setting->judul_situs,
-            'navKategori' => Kategori::navKategori(),
-            'extraNavKategori' => Kategori::extraNavKategori(),
-            'headline' => Berita::headlines(),
-            'populer' => Berita::populer(),
-            'epaper' => Epaper::showAllePaper()->first(),
-            "setting" => $setting,
-            "halstatis" => Statis::getStatis(),
-            "wcorona" => $wcorona,
-            "Network" => Network::showAllNetwork()->get(),
+            "author" => $this->current_setting->judul_situs,
+            'navKategori' => Kategori::navKategori($this->current_network),
+            'extraNavKategori' => Kategori::extraNavKategori($this->current_network),
+            'headline' => Berita::headlines($this->current_network),
+            'populer' => Berita::populer($this->current_network),
+            'epaper' => Epaper::showAllePaper($this->current_network)->first(),
+            "halstatis" => Statis::getStatis($this->current_network),
+            "Network" => Network::showAllActiveNetwork(),
+            'beritaNetwork' => Berita::beritaNetwork($this->current_network),
+            
             //IKLAN
-            "iklanHeader" => Iklan::showIklan('Header')->orderBy('created_at', 'desc')->first(),
-            "iklanSidebarA" => Iklan::showIklan('Sidebar A')->get(),
-            "iklanSidebarB" => Iklan::showIklan('Sidebar B')->get(),
-            "iklanSidebarC" => Iklan::showIklan('Sidebar C')->get(),
-            "iklanFooter" => Iklan::showIklan('Footer')->get(),
-            "corongRakyat" => Iklan::showTypeIklan('Corong Rakyat')->first(),
+            "iklanHeader" => Iklan::showIklan($this->current_network, 'Header')->orderBy('created_at', 'desc')->first(),
+            "iklanSidebarA" => Iklan::showIklan($this->current_network, 'Sidebar A')->get(),
+            "iklanSidebarB" => Iklan::showIklan($this->current_network, 'Sidebar B')->get(),
+            "iklanSidebarC" => Iklan::showIklan($this->current_network, 'Sidebar C')->get(),
+            "iklanFooter" => Iklan::showIklan($this->current_network, 'Footer')->get(),
+            "corongRakyat" => Iklan::showTypeIklan($this->current_network, 'Corong Rakyat')->first(),
         ]);
     }
 }

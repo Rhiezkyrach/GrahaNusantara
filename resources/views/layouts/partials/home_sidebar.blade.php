@@ -12,29 +12,61 @@
 @endif
 {{-- /Iklan Sidebar A--}}
 
-{{-- Calon Dewan --}}
-@if($CalonDewan)
-<div class="relative w-full mt-5 mb-3 px-4 py-6 bg-gray-300 h-auto rounded-lg">
-    <div class="mr-5 absolute top-0 right-0 z-0 text-sm font-semibold text-red-600 dark:text-white"><span class="bg-white dark:bg-slate-800 py-1 px-3 rounded-b-md">CALON DEWAN</span></div>
-    <div class="mt-2">
-    @foreach($CalonDewan as $cd)
-    <a href="{{ url('/') . $cd->slug }}" class="my-2 text-sm font-semibold hover:text-red-600 "><p class="leading-snug">{{ $cd->judul }}</p></a>
-    <div class="my-1 w-full h-px {{ $loop->last ? '' : 'bg-red-600' }}"></div>
-    @endforeach
+{{-- Popular Tag --}}
+@if($trending)
+<div class="block w-full mb-3">
+    <div class="flex flex-row items-center justify-between px-2 py-1 bg-teal-100 dark:bg-teal-200 border border-teal-300 rounded">
+        <div class="flex flex-row items-center">
+            <div class="h-8 w-8 bg-gradient-to-tr text-white text-center text-lg from-teal-400 to-indigo-500 rounded"><i class="mt-1.5 fa-solid fa-hashtag"></i></div>
+            <div class="text-lg ml-2 text-teal-600 dark:text-teal-700 whitespace-nowrap"><span class="font-bold">TAG POPULER</span></div>    
+        </div>
+        <div class="text-xs lg:text-sm"><a href="/indeks" class="py-0.5 text-gray-500 hover:text-gray-700"><i class="fa-solid fa-arrow-right-long"></i></a></div>
+    </div>
+
+    <div class="flex flex-col gap-2">
+        <div class="mt-1"></div>
+        @foreach($trending as $tr)
+            @php
+                $tag = explode(',', $tr->tag);
+            @endphp
+            
+            <a href="{{ $tag[0] ? url('/search?tag=' . $tag[0]) : ''}}" class="group flex flex-row text-sm text-teal-600 font-semibold ">
+                <span class="px-1 py-0.5 text-white bg-teal-500 group-hover:bg-teal-600 border border-gray-300 rounded-l">#</span>
+                <span class="-ml-px px-1 py-0.5 bg-gray-100 group-hover:bg-gray-200 border border-gray-300 rounded-r">{{ $tag[0] ? $tag[0] : '' }}</span>
+            </a>
+        @endforeach
     </div>
 </div>
 @endif
-{{-- /Calon Dewan --}}
+{{-- /Popular Tag --}}
+
+{{-- Fokus --}}
+@foreach($Fokus as $key => $d)
+<div class="mt-5 w-full flex-flex-row">
+    <img class="object-cover rounded-t-lg" src="{{ asset('storage/' . $d->foto) }}" alt="Dewan Perwakilan Rakyat">
+    
+    <div class="relative w-full mb-3 p-4 bg-gray-200 h-auto rounded-b-lg">
+        {{-- <div class="mr-5 absolute top-0 right-0 z-0 text-sm font-semibold text-red-600"><span class="bg-white py-1 px-3 rounded-b-md">CALON DEWAN</span></div> --}}
+        <div class="">
+        @foreach($d->Berita->slice(0, 3) as $b)
+        <a href="/berita/{{ $b->slug }}" class="my-2 text-sm font-semibold hover:text-red-600 "><p class="leading-snug">{{ $b->judul }}</p></a>
+        <div class="my-1 w-full h-px {{ $loop->last ? '' : 'bg-red-600' }}"></div>
+        @endforeach
+        </div>
+    </div>
+</div>
+@endforeach
+{{-- /Fokus --}}
 
 <!-- Opini -->
 @if($Opini)
 <div class="block w-full mt-5 mb-3">
-    <div class="flex flex-row items-center justify-between">
+    <div class="flex flex-row items-center justify-between px-2 py-1 bg-teal-100 dark:bg-teal-200 border border-teal-300 rounded">
         <div class="flex flex-row items-center">
-            <div class="h-8 w-1.5 bg-gradient-to-tr from-rose-600 to-orange-500 rounded-full rotate-12"></div>
-            <div class="text-lg lg:text-xl ml-2 italic text-slate-700 dark:text-gray-100 whitespace-nowrap"><span class="font-bold">OPINI</span></div>
+            <div class="h-8 w-8 bg-gradient-to-tr text-white text-center text-lg from-teal-400 to-indigo-500 rounded"><i class="mt-1.5 fa-regular fa-comments"></i></div>
+            <div class="text-lg ml-2 text-teal-600 dark:text-teal-700 whitespace-nowrap"><span class="font-bold">KOLOM</span></div>    
         </div>
-        <div class="text-xs lg:text-sm"><a href="/indeks" class="font-semibold py-0.5 text-gray-500 hover:text-gray-700"><i class="fa-solid fa-arrow-right-long"></i></a></div>
+        <div class="text-xs lg:text-sm"><a href="/indeks" class="py-0.5 text-gray-500 hover:text-gray-700"><i class="fa-solid fa-arrow-right-long"></i></a></div>
     </div>
 
     <div class="flex flex-col gap-3 divide-y divide-gray-200 rounded-full">
@@ -55,9 +87,9 @@
         </div>
         <div class="flex flex-col w-9/12">
         @if($op->oleh !== '')
-        <p class="pl-3 text-xs 2xl:text-sm font-bold text-red-600 dark:text-amber-500">{{ strtoupper($op->oleh) }}</p>
+        <p class="pl-3 text-xs 2xl:text-sm font-bold text-teal-600 dark:text-teal-500">{{ strtoupper($op->oleh) }}</p>
         @else
-        <p class="pl-3 text-xs 2xl:text-sm font-bold text-red-600 dark:text-amber-500">{{ strtoupper($op->wartawan) }}</p>
+        <p class="pl-3 text-xs 2xl:text-sm font-bold text-teal-600 dark:text-teal-500">{{ strtoupper($op->wartawan) }}</p>
         @endif
         <a href="/berita/{{ $op->slug }}" class="pl-3 text-base 2xl:text:lg mt-0.5 font-semibold leading-tight dark:text-white hover:text-red-600 dark:hover:text-amber-300">{!! $op->judul !!}</a>
         <p class="pl-3 text-xxs 2xl:text-xs mt-1 dark:text-gray-200"><i class="far fa-clock"></i> {{ Carbon\Carbon::parse($op->tanggal_tayang . ' ' . $op->waktu)->diffForHumans() }}</p>
@@ -72,14 +104,14 @@
 <!-- /Opini -->
 
 {{-- Corong Rakyat --}}
-@if($corongRakyat)
+{{-- @if($corongRakyat)
 <div class="relative w-full mt-5 mb-3 px-4 py-6 bg-gradient-to-r from-red-600 to-orange-500 h-auto rounded-lg">
     <div class="mr-5 absolute top-0 right-0 z-0 text-sm font-semibold text-red-600 dark:text-amber-500"><span class="bg-white dark:bg-slate-800 py-1 px-3 rounded-b-md">CORONG RAKYAT</span></div>
     <div class="pt-4 text-base font-bold text-white">{{ $corongRakyat->nama }}</div>
     <div class="mt-2 text-xs italic text-white">{{ $corongRakyat->kode }}</div>
     <div class="mt-2 text-xs font-semibold text-white">{{ $corongRakyat->AE }}</div>
 </div>
-@endif
+@endif --}}
 {{-- /Corong Rakyat --}}
 
 <!-- ePaper -->
@@ -112,48 +144,54 @@
 {{-- /Iklan Sidebar B--}}
 
 <!-- Populer-->
-<div class="mt-5 flex flex-row items-center justify-between">
-    <div class="flex flex-row items-center">
+<div class="mt-5 pb-2 flex flex-col bg-gray-200 dark:bg-gray-600 rounded-lg border border-teal-300 overflow-hidden">
+    {{-- <div class="flex flex-row items-center">
         <div class="h-8 w-1.5 bg-gradient-to-tr from-rose-600 to-orange-500 rounded-full rotate-12"></div>
         <div class="text-lg lg:text-xl ml-2 italic text-slate-700 dark:text-gray-100 whitespace-nowrap"><span class="font-bold">BERITA</span> <i class="fa-solid fa-fire-flame-curved text-rose-600"></i> POPULER</div>
     </div>
-    <div class="text-xs lg:text-sm"><a href="/indeks" class="font-semibold py-0.5 text-gray-500 hover:text-gray-700"><i class="fa-solid fa-arrow-right-long"></i></a></div>
-</div>
+    <div class="text-xs lg:text-sm"><a href="/indeks" class="font-semibold py-0.5 text-gray-500 hover:text-gray-700"><i class="fa-solid fa-arrow-right-long"></i></a></div> --}}
 
-{{-- 1st Polpuler --}}
-@foreach($populer->slice(0, 1) as $pop1)
-<div class="mt-3 flex flex-col justify-between group relative h-auto rounded-xl overflow-hidden">         
-    <div class="absolute top-0 z-10 px-4 py-1 bg-gradient-to-r from-rose-600 to-orange-500 text-4xl text-white font-bold rounded-br-xl">01</div>
-    <div class="absolute bottom-5 group-hover:mb-2 px-2 flex flex-col items-start transition-all duration-300 ease-in-out">
-        <a href="/berita/{{ $pop1->slug }}" class="z-10 mx-2 text-sm lg:text-base font-semibold leading-tight text-white antialiased">{!! $pop1->judul !!}</a>
-        <p class="z-10 mx-2 text-xxs mt-3 text-white antialiased"><span class="font-bold bg-gradient-to-r from-rose-600 to-orange-500 px-2 py-1 text-white rounded-full">{{ $pop1->kategori->nama }}</span> {{ Carbon\Carbon::parse($pop1->tanggal_tayang . ' ' .$pop1->waktu)->diffForHumans() }}</p>
+    <div class=" w-full text-center px-5 py-1.5 main_color text-white italic whitespace-nowrap">
+        <span class="font-bold">BERITA</span> <i class="fa-solid fa-fire-flame-curved text-amber-300"></i> TERPOPULER</span>
     </div>
 
-    <a href="/berita/{{ $pop1->slug }}" class="w-full">
-    <div class="flex w-full h-52 md:h-40 lg:h-52 z-1 bg-gradient-to-t from-gray-900 rounded-xl overflow-hidden">
-        <img class="w-full h-full object-cover mix-blend-overlay group-hover:brightness-75 transition-all duration-300 ease-in-out" src="{{ asset('storage/' . $pop1->gambar_detail) }}" alt="{{ $pop1->caption }}">
-    </div>
-    </a>
-</div>
-@endforeach
-{{-- 1st Populer --}}
-
-@foreach($populer->skip(1) as $pop)
-<div class="group flex flex-col w-full mt-4">
-    <div class="flex flex-row w-full items-center">
-    <div class="flex">
-    <div class="text-4xl font-bold text-gray-300 group-hover:text-red-500 dark:group-hover:text-amber-300">{{  sprintf('%02d', $loop->iteration+1) }}</div>
-    </div>
-    <div class="flex h-full">
-        <div class="ml-2 w-px h-auto min-h-25px bg-gray-400"></div>
-        <div class="flex flex-col">
-        <a href="/berita/{{ $pop->slug }}" class="ml-3 text-sm lg:text-base font-semibold leading-tight dark:text-white hover:text-red-600 dark:hover:text-amber-300">{!! $pop->judul !!}</a>
-        <p class="pl-3 text-xxs mt-1 dark:text-gray-200"><span class="font-bold text-red-600">{{ $pop->kategori->nama }}</span> | {{ Carbon\Carbon::parse($pop->tanggal_tayang . ' ' . $pop->waktu)->diffForHumans() }}</p>
+    {{-- 1st Polpuler --}}
+    @foreach($populer->slice(0, 1) as $pop1)
+    <div class="flex flex-col justify-between group relative h-auto overflow-hidden">         
+        {{-- <div class="absolute top-0 z-10 px-4 py-1 bg-gradient-to-r from-rose-600 to-orange-500 text-4xl text-white font-bold rounded-br-xl">01</div> --}}
+        <div class="absolute bottom-5 group-hover:mb-2 px-2 flex flex-col items-start transition-all duration-300 ease-in-out">
+            <a href="/berita/{{ $pop1->slug }}" class="z-10 mx-2 text-sm lg:text-base font-semibold leading-none text-white antialiased">{!! $pop1->judul !!}</a>
+            <p class="z-10 mx-2 text-xxs mt-3 text-white antialiased"><span class="mr-1 font-bold main_color px-1.5 py-0.5 text-white rounded">{{ $pop1->kategori->nama }}</span> {{ Carbon\Carbon::parse($pop1->tanggal_tayang . ' ' .$pop1->waktu)->diffForHumans() }}</p>
         </div>
+        
+        <a href="/berita/{{ $pop1->slug }}" class="w-full">
+            <div class="flex w-full h-52 md:h-40 lg:h-52 z-1 bg-gradient-to-t from-30% from-gray-900 rounded-b-xl transition-all duration-300 ease-in-out overflow-hidden">
+                @if($pop1->gambar_detail && Storage::exists($pop1->gambar_detail))
+                    <img class="w-full h-full object-cover mix-blend-overlay" src="{{ asset('storage/' . $pop1->gambar_detail) }}" alt="{{ $pop1->caption }}">
+                @else
+                    <div class="w-full h-full rounded-b-xl skeleton"></div>
+                @endif
+            </div>
+        </a>
     </div>
+    @endforeach
+    {{-- 1st Populer --}}
+    
+    <div class="mt-4 mb-2 flex flex-col px-2 gap-4 items-start">
+        @foreach($populer->skip(1) as $pop)
+            <div class="group flex flex-row w-full gap-1">
+                <div class="flex flex-grow-0 w-10 h-10 bg-gradient-to-tr from-indigo-600 to-teal-400 group-hover:text-red-500 dark:group-hover:text-amber-300 rounded-md">
+                    <div class="text-2xl font-bold text-gray-200 text-center mx-auto">{{  sprintf('%02d', $loop->iteration + 1) }}</div>
+                </div>
+                {{-- <div class="ml-2 w-px h-auto min-h-25px bg-gray-400"></div> --}}
+                <div class="md:-mt-1 w-full flex flex-col">
+                    <a href="/berita/{{ $pop->slug }}" class="ml-3 text-sm lg:text-base font-semibold leading-snug dark:text-white hover:text-red-600 dark:hover:text-amber-300">{!! $pop->judul !!}</a>
+                    <p class="pl-3 text-xxs dark:text-gray-200"><span class="font-bold text-red-600">{{ $pop->kategori->nama }}</span> | {{ Carbon\Carbon::parse($pop->tanggal_tayang . ' ' . $pop->waktu)->diffForHumans() }}</p>
+                </div>
+            </div>
+        @endforeach
     </div>
 </div>
-@endforeach
 <!-- /Populer-->
 
 <!-- Olahraga -->

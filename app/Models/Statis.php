@@ -2,18 +2,18 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Cviebrock\EloquentSluggable\Sluggable;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Statis extends Model
 {
-    use HasFactory, Sluggable;
+    use HasFactory, Sluggable, SoftDeletes;
 
     protected $table = 'tbl_statis';
     protected $primaryKey = 'id_statis';
     protected $guarded = ['id_statis'];
-    public $timestamps = false;
 
     public function getRouteKeyName()
     {
@@ -29,8 +29,22 @@ class Statis extends Model
         ];
     }
 
-    static public function getStatis(){
-        $q = Statis::orderBy('urutan', 'ASC')
+    // Eloquent Relations
+    public function Network(){
+        return $this->belongsTo(Network::class, 'id_network');
+    }
+
+    static public function getStatis($id_network){
+        $q = Statis::where('id_network', $id_network)
+                    ->orderBy('urutan', 'asc')
+                    ->get();
+
+        return $q;
+    }
+
+    static public function showStatis($id_network){
+        $q = Statis::where('id_network', $id_network)
+                    ->orderBy('urutan', 'asc')
                     ->get();
 
         return $q;

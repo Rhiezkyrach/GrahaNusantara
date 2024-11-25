@@ -1,7 +1,7 @@
 {{-- Iklan Headline --}}
-{{-- @if($iklanHeadline)
+@if($iklanHeadline)
 @foreach($iklanHeadline as $iHeadline)
-<div class="flex mx-auto lg:w-[1024px] 2xl:w-[1280px] h-auto -mt-1 mb-4 overflow-hidden">
+<div class="flex mx-auto lg:w-[1080px] h-auto -mt-1 mb-4 overflow-hidden">
     <div class="w-full">
         @if($iHeadline->jenis == "Banner")
         <a href="{{ $iHeadline->link }}"><img class="w-full h-full object-contain"
@@ -12,83 +12,79 @@
     </div>
 </div>
 @endforeach
-@endif --}}
+@endif
 {{-- /Iklan Headline --}}
 
 <!-- Headline Swiper-->
-<div class="block w-full md:w-8/12 h-full">
-    <div class="swiper mySwiper w-full">
-        <div class="swiper-wrapper">
+<div class="flex w-full md:w-8/12 h-72 md:h-full md:flex-shrink-0">
+    <section id="splide_headline" class="splide w-full h-full" aria-label="Headline News">
+        <div class="splide__track">
+            <div class="splide__list">
 
-            @foreach($headline as $hl)
-            <div class="swiper-slide">
-                <div class="flex flex-col justify-between group relative h-auto rounded-xl overflow-hidden">
+                @foreach($headline as $hl)
+                <div class="splide__slide">
+                    <div class="flex flex-col justify-between group relative h-auto rounded-xl overflow-hidden">
 
-                    <div
-                        class="absolute top-0 z-10 px-5 py-1.5 bg-gradient-to-r from-rose-600 to-orange-500 text-sm text-white font-semibold rounded-br-xl">
-                        {{ $hl->kategori->nama }}</div>
-                    <div
-                        class="absolute bottom-6 group-hover:mb-2 px-4 flex flex-col items-start transition-all duration-300 ease-in-out">
-                        <a href="/berita/{{ $hl->slug }}"
-                            class="z-10 mx-2 lg:mx-4 text-lg lg:text-2xl font-bold text-white tracking-wide antialiased">{!!
-                            $hl->judul !!}</a>
-                        <p class="z-10 mx-2 lg:mx-4 text-xs 2xl:text-base mt-2 text-white antialiased"><i
-                                class="far fa-clock"></i> {{ Carbon\Carbon::parse($hl->tanggal_tayang . ' '
-                            .$hl->waktu)->diffForHumans() }}</p>
-                    </div>
+                        {{-- <div class="absolute top-0 z-10 px-5 py-1.5 bg-gradient-to-r from-rose-600 to-orange-500 text-sm text-white font-semibold rounded-br-xl">{{ $hl->kategori->nama }}</div> --}}
+                        <div class="absolute bottom-8 group-hover:mb-2 px-4 flex flex-col items-start transition-all duration-300 ease-in-out">
+                            <a href="/berita/{{ $hl->slug }}" class="z-10 mx-2 lg:mx-4 text-base md:text-xl font-bold text-white leading-snug antialiased">{!! $hl->judul !!}</a>
 
-                    <a href="/berita/{{ $hl->slug }}" class="w-full">
-                        <div
-                            class="flex w-full h-72 lg:h-96 z-1 bg-gradient-to-t from-gray-900 rounded-xl overflow-hidden">
-                            <img class="w-full h-full object-cover mix-blend-overlay group-hover:brightness-75 transition-all duration-300 ease-in-out"
-                                src="{{ asset('storage/' . $hl->gambar_detail) }}" alt="{{ $hl->caption }}">
+                            <div class="z-10 mx-2 lg:mx-4 mt-2 flex flex-row gap-2 items-center">
+                                <div class="px-1.5 py-0.5 text-xs 2xl:text-sm bg-gradient-to-r from-teal-500 to-indigo-500 text-white font-semibold rounded tracking-wide">{{ $hl->kategori->nama }}</div>
+                                <p class="text-xs 2xl:text-sm text-white antialiased"><i class="far fa-clock"></i> {{ Carbon\Carbon::parse($hl->tanggal_tayang . ' ' . $hl->waktu)->diffForHumans() }}</p>
+                            </div>
                         </div>
-                    </a>
 
+                        <a href="/berita/{{ $hl->slug }}" class="group w-full h-72 lg:h-96 rounded-lg overflow-hidden">
+                            <div class="w-full h-full bg-gradient-to-t from-gray-900 to-80%">
+                                @if($hl->gambar_detail && Storage::exists($hl->gambar_detail))
+                                    <img class="w-full h-full object-cover mix-blend-overlay group-hover:brightness-75 transition-all duration-300 ease-in-out"src="{{ asset('storage/' . $hl->gambar_detail) }}" alt="{{ $hl->caption }}">
+                                @else
+                                    <div class="w-full h-full rounded-lg skeleton"></div>
+                                @endif
+                            </div>
+                        </a>
+
+                    </div>
                 </div>
+                @endforeach
             </div>
-            @endforeach
-
         </div>
-        <div class="mt-8">
-            <div class="swiper-pagination"></div>
-        </div>
-    </div>
+    </section>
 </div>
 <!-- /Headline Swiper-->
 
 {{-- Headline Side --}}
 
 <!-- Today's Trending -->
-<div
-    class="relative hidden md:flex md:flex-col w-4/12 bg-gray-200 dark:bg-gray-600 rounded-xl h-72 lg:h-96 overflow-y-auto no-scrollbar">
-    <div
-        class="absolute top-0 px-5 py-1.5 bg-gradient-to-r from-sky-500 to-blue-600 text-white italic whitespace-nowrap rounded-br-xl">
-        <span class="font-bold">TODAY'S </span><i class="fa-solid fa-arrow-trend-up text-amber-300"></i>
-        <span>TRENDING</span>
+<div class="hidden md:flex md:flex-col w-4/12 flex-grow-0 bg-gray-200 dark:bg-gray-600 rounded-lg h-72 lg:h-96 border border-teal-300 overflow-y-auto no-scrollbar">
+    <div class="w-full text-center top-0 px-5 py-1.5 bg-gradient-to-r from-teal-500 to-indigo-500 text-white italic whitespace-nowrap">
+        <span class="font-bold">TRENDING </span><i class="fa-solid fa-arrow-trend-up text-amber-300"></i>
+        <span>HARI INI</span>
     </div>
-    <div class="mt-8 mb-5 flex flex-col divide-y gap-4 divide-gray-400/70">
+    <div class="mt-1 mb-4 flex flex-col divide-y gap-3 divide-gray-400/70">
 
         @foreach($trending as $tr)
-        <div class="pt-4 mx-4 flex flex-row gap-5 justify-between">
+        <div class="pt-3 mx-4 flex flex-row gap-5 justify-between">
             <div class="flex flex-col">
-                <div class="flex flex-row items-center">
-                    <div
-                        class="hidden lg:block px-2 py-1 bg-gradient-to-r from-rose-600 to-orange-500 text-xxs font-semibold text-white rounded-full">
-                        {{ $tr->kategori->nama }}</div>
-                    <div class="lg:ml-2 text-xxs text-gray-800 dark:text-gray-300"><i class="far fa-clock"></i> {{
-                        Carbon\Carbon::parse($tr->tanggal_tayang . ' ' .$tr->waktu)->diffForHumans() }}</div>
-                </div>
+
                 <a href="/berita/{{ $tr->slug }}">
-                    <div
-                        class="dark:text-white mt-1.5 text-xs lg:text-sm font-semibold hover:text-red-600 dark:hover:text-amber-300">
-                        {!! $tr->judul !!}</div>
+                    <div  class="dark:text-white mt-1.5 text-sm lg:text-lg font-semibold hover:text-red-600 dark:hover:text-amber-300">{!! $tr->judul !!}</div>
                 </a>
+
+                <div class="mt-0.5 flex flex-row items-center">
+                    <div class="hidden lg:block px-1 py-0.5 bg-gradient-to-r from-teal-500 to-indigo-500 text-xxs text-white rounded">{{ $tr->kategori->nama }}</div>
+                    <div class="lg:ml-2 text-xxs text-gray-800 dark:text-gray-300"><i class="far fa-clock"></i> {{ Carbon\Carbon::parse($tr->tanggal_tayang . ' ' .$tr->waktu)->diffForHumans() }}</div>
+                </div>
             </div>
-            <div class="w-16 lg:w-20">
-                <div class="flex w-16 h-16 lg:w-20 lg:h-20 bg-gray-500 rounded-md overflow-hidden">
-                    <a href="/berita/{{ $tr->slug }}"><img class="w-full h-full object-cover"
-                            src="{{ asset('thumbnail/' . $tr->gambar_detail) }}" alt="{{ $tr->caption }}"></a>
+
+            <div class="w-16">
+                <div class="flex w-12 h-12 lg:w-16 lg:h-16 bg-gray-500 rounded-md overflow-hidden">
+                    @if($tr->gambar_detail)
+                        <a href="/berita/{{ $tr->slug }}"><img class="w-full h-full object-cover" src="{{ asset('thumbnail/' . $tr->gambar_detail) }}" alt="{{ $tr->caption }}"></a>
+                    @else
+                        <div class="w-full h-full rounded-md skeleton"></div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -99,3 +95,16 @@
 <!-- /Today's Trending -->
 
 {{-- /Headline Side --}}
+
+@push('js')
+<script>
+$( document ).ready(function() {
+  let splide_headline = new Splide( '#splide_headline', {
+    type   : 'loop',
+    autoplay: true,
+    interval: 3000,
+    gap: 2,
+  }).mount();
+});
+</script>
+@endpush

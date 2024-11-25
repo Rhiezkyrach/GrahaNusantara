@@ -15,11 +15,12 @@
   {{-- Ajax --}}
 </div>
 
-<div id="loading" class="hidden mt-4 w-full">
-  <div class="text-center font-semibold whitespace-nowrap">
-  <span id="spinner" class="inline-block animate-spin rounded-full text-red-600 text-xl"><i class="fas fa-spinner"></i></span>
-  <p class="ml-1 inline-block dark:text-gray-200">Memuat Berita...</p>
-  </div>
+<div class="mt-4 w-auto text-center mx-auto">
+    <button id="load-more" class="block w-36 py-2 px-3 text-teal-600 dark:text-teal-400 ring-2 ring-teal-600 ring-inset hover:ring-0 bg-teal-100 dark:bg-teal-800 hover:bg-teal-600 hover:text-white rounded-md whitespace-nowrap mx-auto" data-paginate="2">
+        <span id="spinner" class="hidden animate-spin rounded-full text-lg"><i class="fa-regular fa-circle-notch"></i></span>
+        <span id="text" class="text-sm font-semibold">Muat Lagi...</span>
+        <p id="nopost" class="hidden mt-2 text-xs font-semibold">Tidak Ada Berita...</p>
+    </button>
 </div>
 
 {{-- @else
@@ -28,38 +29,42 @@
 
 <!-- /Kategori Terkini --> 
 
+@push('js')
 <script type="text/javascript">
-  var paginate = 1;
-  loadMoreData(paginate);
-  $(window).scroll(function() {
-      if($(window).scrollTop() + $(window).height() >= $(document).height()) {
-          paginate++;
-          loadMoreData(paginate);
-        }
-  });
-  // run function when user reaches to end of the page
-  function loadMoreData(paginate) {
-      $.ajax({
-          url: '?page=' + paginate,
-          type: 'get',
-          datatype: 'html',
-          beforeSend: function() {
-              $('#loading').show();
-          }
-      })
-      .done(function(data) {
-          if(data.length == 0) {
-              $('#loading').html('Tidak Ada Berita.');
-              return;
-            } else {
-              $('#loading').hide();
-              $('#post').append(data);
-            }
-      })
-          .fail(function(jqXHR, ajaxOptions, thrownError) {
-            alert('Tidak Dapat Memuat Berita.');
-          });
-  }
-</script>
+    let paginate = 1;
+    loadMoreData(paginate);
 
+    $('#load-more').click(function() {
+        let page = $(this).data('paginate');
+        loadMoreData(page);
+        $(this).data('paginate', page+1);
+    });
+    // run function when user click load more button
+    function loadMoreData(paginate) {
+        $.ajax({
+            url: '?page=' + paginate,
+            type: 'get',
+            datatype: 'html',
+            beforeSend: function() {
+                $('#text').text('Memuat Berita');
+                $('#spinner').removeClass('hidden').addClass('inline-block');
+            }
+        })
+        .done(function(data) {
+            if(data.length == 0) {
+                $('#nopost').removeClass('hidden');
+                $('#load-more').hide();
+                return;
+                } else {
+                $('#text').text('Muat Lagi...');
+                $('#spinner').removeClass('inline-block').addClass('hidden');
+                $('#post').append(data);
+                }
+        })
+        .fail(function(jqXHR, ajaxOptions, thrownError) {
+            alert('Tidak Dapat Memuat Berita.');
+        });
+    }
+</script>
+@endpush
 @endsection

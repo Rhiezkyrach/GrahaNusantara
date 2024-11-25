@@ -2,247 +2,270 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Fokus;
+use App\Models\Iklan;
+use App\Models\Berita;
+use App\Models\Epaper;
+use App\Models\Galeri;
+
+use App\Models\Statis;
+use App\Models\Network;
+use App\Models\Setting;
+use App\Models\Visitor;
+use App\Models\Kategori;
+use App\Enum\MyNetworkID;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
-
-use App\Models\Berita;
-use App\Models\Kategori;
-use App\Models\Galeri;
-use App\Models\Iklan;
-use App\Models\Setting;
-use App\Models\Statis;
-use App\Models\Epaper;
-use App\Models\Network;
+use Illuminate\Support\Facades\Auth;
+use App\Traits\GetFrontEndSettingTrait;
 
 class BeritaController extends Controller
 {
+    use GetFrontEndSettingTrait;
 
-    public function home(Request $request){
+    public $host;
+    public $network_utama;
+    public $current_setting;
+    public $current_network;
 
-        $setting = Setting::first();
-        $wcorona = DB::table('widget_corona')->where('id', 1)->first();
+    public function __construct(Request $request)
+    {
+        $this->host = $request->getHost();
+        $this->network_utama = Network::where('id_network', '001')->first();
+        $this->current_network = MyNetworkID::ID->value;
+        $this->current_setting = $this->get_network_setting();
+    }
+
+    public function home(Request $request)
+    {
 
         //Home Ajax
         if ($request->ajax()) {
-            $terkini =  Berita::terkini()->paginate(10);
-            return view('layouts.partials.home_ajax', compact('terkini'))->render();
+            $terkini =  Berita::terkini($this->current_network)->paginate(10);
+            return view('layouts.partials.home_ajax', [
+                'network_utama' => $this->network_utama,
+                'terkini' => $terkini,
+            ])->render();
         }
-  
+
         return view('home', [
-            'judul' => $setting->judul_situs . ' - ' . $setting->tagline,
-            'deskripsi' => $setting->deskripsi,
-            'keyword' => 'berita politik, berita terkini, berita viral, politik, berita hari ini, berita update, rajamedia, raja media, news',
-            'author' => $setting->judul_situs,
-            'foto' => asset('storage/' . $setting->logo),
-            'navKategori' => Kategori::navKategori(),
-            'extraNavKategori' => Kategori::extraNavKategori(),
-            'headline' => Berita::headlines(),
-            'terkini' => Berita::terkini()->paginate(10),
-            'trending' => Berita::trending(),
-            'populer' => Berita::populer(),
-            'epaper' => Epaper::showAllePaper()->first(),
-            "setting" => $setting,
-            "halstatis" => Statis::getStatis(),
-            "wcorona" => $wcorona,
-            "Network" => Network::showAllNetwork()->get(),
-            //KATEGORI
-            'Politik' => Berita::beranda('Politik')->limit(4)->get(),
-            'Hukum' => Berita::beranda('Hukum')->limit(4)->get(),
-            'Galeri' => Berita::beranda('Galeri')->limit(2)->get(),
-            'Nasional' => Berita::beranda('Nasional')->limit(6)->get(),
-            'Peristiwa' => Berita::beranda('Peristiwa')->limit(6)->get(),
-            'Opini' => Berita::beranda('Opini')->limit(3)->get(),
-            'Olahraga' => Berita::beranda('Olahraga')->limit(3)->get(),
-            'Parlemen' => Berita::beranda('Parlemen')->limit(3)->get(),
-            'Dunia' => Berita::beranda('Dunia')->limit(3)->get(),
-            'Daerah' => Berita::beranda('Daerah')->limit(3)->get(),
-            'Keamanan' => Berita::beranda('Keamanan')->limit(3)->get(),
-            'GayaHidup' => Berita::beranda('Gaya Hidup')->limit(3)->get(),
-            'CalonDewan' => Berita::beranda('Calon Dewan')->limit(3)->get(),
+            'network_utama' => $this->network_utama,
+            'judul' => $this->current_setting->judul_situs . ' - ' . $this->current_setting->tagline,
+            'deskripsi' => $this->current_setting->deskripsi,
+            'keyword' => $this->current_setting->keyword,
+            'author' => $this->current_setting->judul_situs,
+            'foto' => $this->network_utama->url . '/storage/' . $this->current_setting->logo,
+            'navKategori' => Kategori::navKategori($this->current_network),
+            'extraNavKategori' => Kategori::extraNavKategori($this->current_network),
+            'headline' => Berita::headlines($this->current_network),
+            'terkini' => Berita::terkini($this->current_network)->paginate(10),
+            'trending' => Berita::trending($this->current_network),
+            'populer' => Berita::populer($this->current_network),
+            'epaper' => Epaper::showAllePaper($this->current_network)->first(),
+            "halstatis" => Statis::getStatis($this->current_network),
+            "Network" => Network::showAllActiveNetwork(),
+            'Galeri' => Berita::beranda($this->current_network, 'Galeri')->limit(2)->get(),
+            'Opini' => Berita::beranda($this->current_network, 'Opini')->limit(3)->get(),
+            'beritaNetwork' => Berita::beritaNetwork($this->current_network),
+
+            // KATEGORI
+            'Kategori' => Kategori::with(['berita' => function ($query) {
+                $query->where('id_network', $this->current_network);
+            }])->where('id_network', $this->current_network)
+                ->whereNotIn('nama', ['Galeri', 'Opini'])
+                ->where('status', '1')->orderBy('urutan', 'asc')
+                ->get(),
+
+            // FOKUS
+            'Fokus' =>  Fokus::with(['berita' => function ($query) {
+                $query->where('id_network', $this->current_network);
+            }])->where('id_network', $this->current_network)->where('status', '1')->orderBy('urutan', 'asc')->get(),
+
             //IKLAN
-            "iklanHeader" => Iklan::showIklan('Header')->orderBy('created_at', 'desc')->first(),
-            "iklanHeadline" => Iklan::showIklan('Headline')->get(),
-            "iklanHomeA" => Iklan::showIklan('Home A')->get(),
-            "iklanHomeB" => Iklan::showIklan('Home B')->get(),
-            "iklanHomeC" => Iklan::showIklan('Home C')->get(),
-            "iklanSidebarA" => Iklan::showIklan('Sidebar A')->get(),
-            "iklanSidebarB" => Iklan::showIklan('Sidebar B')->get(),
-            "iklanSidebarC" => Iklan::showIklan('Sidebar C')->get(),
-            "iklanFooter" => Iklan::showIklan('Footer')->get(),
-            "corongRakyat" => Iklan::showTypeIklan('Corong Rakyat')->first(),
-            
-            
+            "iklanHeader" => Iklan::showIklan($this->current_network, 'Header')->orderBy('created_at', 'desc')->first(),
+            "iklanHeadline" => Iklan::showIklan($this->current_network, 'Headline')->get(),
+            "iklanHomeA" => Iklan::showIklan($this->current_network, 'Home A')->get(),
+            "iklanHomeB" => Iklan::showIklan($this->current_network, 'Home B')->get(),
+            "iklanHomeC" => Iklan::showIklan($this->current_network, 'Home C')->get(),
+            "iklanSidebarA" => Iklan::showIklan($this->current_network, 'Sidebar A')->get(),
+            "iklanSidebarB" => Iklan::showIklan($this->current_network, 'Sidebar B')->get(),
+            "iklanSidebarC" => Iklan::showIklan($this->current_network, 'Sidebar C')->get(),
+            "iklanFooter" => Iklan::showIklan($this->current_network, 'Footer')->get(),
+            "corongRakyat" => Iklan::showTypeIklan($this->current_network, 'Corong Rakyat')->first(),
 
         ]);
     }
 
-    public function detail(Berita $berita){
-
-        $setting = Setting::first();
-        $wcorona = DB::table('widget_corona')->where('id', 1)->first();
+    public function detail(Request $request, Berita $berita)
+    {
 
         $paragraphs = explode('</p>', $berita->isi);
         $deskripsi = html_entity_decode(strip_tags($paragraphs[0]));
 
         $tags = explode(',', $berita->tag);
-        $terkait = Berita::terkait()->filter($tags)->where('id_berita', '!=', $berita->id_berita)->limit(6)->get();
+        $terkait = Berita::terkait($this->current_network)->filter($tags)->where('id_berita', '!=', $berita->id_berita)->limit(6)->get();
         $sisa = 6 - $terkait->count();
-        $terkaitkanal = Berita::terkait()->where('id_channel', $berita->id_channel)->where('id_berita', '!=', $berita->id_berita)->limit($sisa)->get();
+        $terkaitkanal = Berita::terkait($this->current_network)->where('id_kategori', $berita->id_kategori)->where('id_berita', '!=', $berita->id_berita)->limit($sisa)->get();
 
-        return view('detail',[
-            'judul' => $berita->judul,
-            'deskripsi' => $deskripsi,
-            'keyword' => $berita->tag,
-            'author' => $berita->wartawan,
-            'foto' => asset('storage/' . $berita->gambar_detail),
-            'navKategori' => Kategori::navKategori(),
-            'extraNavKategori' => Kategori::extraNavKategori(),
-            'headline' => Berita::headlines(),
+        // Visitor
+        if(!Auth::check()) {
+            $visitor = Visitor::getTodayVisitor($this->current_network);
+            if ($visitor) {
+                $visitor->increment('counter', 1);
+            } else {
+                Visitor::create([
+                    'id_network' => $this->current_network,
+                    'tanggal' => Carbon::now(),
+                    'counter' => 1
+                ]);
+            }
+        }
+
+        return view('detail', [
+            'network_utama' => $this->network_utama,
+            'navKategori' => Kategori::navKategori($this->current_network),
+            'extraNavKategori' => Kategori::extraNavKategori($this->current_network),
+            'headline' => Berita::headlines($this->current_network),
             'berita' => $berita,
-            'counter' => Berita::where('id_berita', $berita->id_berita)->increment('counter', mt_rand(1, 2)),
-            'berita_prev' => Berita::beritaPrev($berita->id_berita),
-            'berita_next' => Berita::beritaNext($berita->id_berita),
+            'counter' => Berita::where('id_berita', $berita->id_berita)->increment('counter', 1),
+            'berita_prev' => Berita::beritaPrev($this->current_network, $berita->id_berita),
+            'berita_next' => Berita::beritaNext($this->current_network, $berita->id_berita),
             'galeri' => Galeri::where('id_berita', $berita->id_berita)->get(),
-            'terkini' => Berita::terkini()->limit(5)->get(),
-            'populer' => Berita::populer(),
-            'epaper' => Epaper::showAllePaper()->first(),
+            'terkini' => Berita::terkini($this->current_network)->limit(5)->get(),
+            'populer' => Berita::populer($this->current_network),
+            'epaper' => Epaper::showAllePaper($this->current_network)->first(),
             'terkait' => $terkait,
-            "setting" => $setting,
-            "halstatis" => Statis::getStatis(),
-            "wcorona" => $wcorona,
-            'terkaitkanal'=> $terkaitkanal,
-            "Network" => Network::showAllNetwork()->get(),
+            // "setting" => $setting,
+            "halstatis" => Statis::getStatis($this->current_network),
+            'terkaitkanal' => $terkaitkanal,
+            "Network" => Network::showAllActiveNetwork(),
+            'beritaNetwork' => Berita::beritaNetwork($this->current_network),
+
             //IKLAN
-            "iklanHeader" => Iklan::showIklan('Header')->orderBy('created_at', 'desc')->first(),
-            "iklanNewsA" => Iklan::showIklan('News A')->get(),
-            "iklanNewsB" => Iklan::showIklan('News B')->get(),
-            "iklanNewsC" => Iklan::showIklan('News C')->get(),
-            "iklanSidebarA" => Iklan::showIklan('Sidebar A')->get(),
-            "iklanSidebarB" => Iklan::showIklan('Sidebar B')->get(),
-            "iklanSidebarC" => Iklan::showIklan('Sidebar C')->get(),
-            "iklanFooter" => Iklan::showIklan('Footer')->get(),
-            "corongRakyat" => Iklan::showTypeIklan('Corong Rakyat')->first(),
+            "iklanHeader" => Iklan::showIklan($this->current_network, 'Header')->orderBy('created_at', 'desc')->first(),
+            "iklanNewsA" => Iklan::showIklan($this->current_network, 'News A')->get(),
+            "iklanNewsB" => Iklan::showIklan($this->current_network, 'News B')->get(),
+            "iklanNewsC" => Iklan::showIklan($this->current_network, 'News C')->get(),
+            "iklanSidebarA" => Iklan::showIklan($this->current_network, 'Sidebar A')->get(),
+            "iklanSidebarB" => Iklan::showIklan($this->current_network, 'Sidebar B')->get(),
+            "iklanSidebarC" => Iklan::showIklan($this->current_network, 'Sidebar C')->get(),
+            "iklanFooter" => Iklan::showIklan($this->current_network, 'Footer')->get(),
+            "corongRakyat" => Iklan::showTypeIklan($this->current_network, 'Corong Rakyat')->first(),
         ]);
     }
 
-    public function search(Request $request){
-
-        $setting = Setting::first();
-        $wcorona = DB::table('widget_corona')->where('id', 1)->first();
+    public function search(Request $request)
+    {
 
         $filter = '';
-        if(request(['cari'])){
+        if (request(['cari'])) {
             $filter = request(['cari']);
             $data = Str::title($filter['cari']);
-        } elseif(request(['tag'])) {
+        } elseif (request(['tag'])) {
             $filter = request(['tag']);
             $data = Str::title($filter['tag']);
         }
 
-        // dd($filter);
-        if($filter == null || !isset($request)){
-            $terkini = Berita::terkini()->limit(10)->get();
-            $judul = 'Berita Terkini ' . $setting->judul_situs;
+        if ($filter == null || !isset($request)) {
+            $terkini = Berita::terkini($this->current_network)->limit(10)->get();
+            $judul = 'Berita Terkini ' . $this->current_setting->judul_situs;
         } else {
-            $terkini = Berita::terkini()->filter($filter)->limit(10)->get();
-            $judul = 'Berita ' . $data . ' - '. $setting->judul_situs;
+            $terkini = Berita::terkini($this->current_network)->filter($filter)->limit(10)->get();
+            $judul = 'Berita ' . $data . ' - ' . $this->current_setting->judul_situs;
         }
-        
-        return view('search',[
+
+        return view('search', [
+            'network_utama' => $this->network_utama,
             'judul' => $judul,
-            'deskripsi' => $setting->deskripsi,
-            'keyword' => 'berita politik, berita terkini, berita viral, politik, berita hari ini, berita update, rajamedia, raja media, news',
-            'author' => $setting->judul_situs,
-            'foto' => asset('storage/' . $setting->logo),
-            'navKategori' => Kategori::navKategori(),
-            'extraNavKategori' => Kategori::extraNavKategori(),
-            'headline' => Berita::headlines(),
-            'populer' => Berita::populer(),
-            'epaper' => Epaper::showAllePaper()->first(),
+            'deskripsi' => $this->current_setting->deskripsi,
+            'keyword' => $this->current_setting->keyword,
+            'author' => $this->current_setting->judul_situs,
+            'foto' => $this->network_utama->url . '/storage/' . $this->current_setting->logo,
+            'navKategori' => Kategori::navKategori($this->current_network),
+            'extraNavKategori' => Kategori::extraNavKategori($this->current_network),
+            'headline' => Berita::headlines($this->current_network),
+            'populer' => Berita::populer($this->current_network),
+            'epaper' => Epaper::showAllePaper($this->current_network)->first(),
             'terkini' => $terkini,
-            "setting" => $setting,
-            "halstatis" => Statis::getStatis(),
-            "wcorona" => $wcorona,
-            "Network" => Network::showAllNetwork()->get(),
-            //IKLAN
-            "iklanHeader" => Iklan::showIklan('Header')->orderBy('created_at', 'desc')->first(),
-            "iklanHomeA" => Iklan::showIklan('Home A')->get(),
-            "iklanSidebarA" => Iklan::showIklan('Sidebar A')->get(),
-            "iklanSidebarB" => Iklan::showIklan('Sidebar B')->get(),
-            "iklanSidebarC" => Iklan::showIklan('Sidebar C')->get(),
-            "iklanFooter" => Iklan::showIklan('Footer')->get(),
-            "corongRakyat" => Iklan::showTypeIklan('Corong Rakyat')->first(),
+            "halstatis" => Statis::getStatis($this->current_network),
+            "Network" => Network::showAllActiveNetwork(),
+            'beritaNetwork' => Berita::beritaNetwork($this->current_network),
 
+            //IKLAN
+            "iklanHeader" => Iklan::showIklan($this->current_network, 'Header')->orderBy('created_at', 'desc')->first(),
+            "iklanHomeA" => Iklan::showIklan($this->current_network, 'Home A')->get(),
+            "iklanSidebarA" => Iklan::showIklan($this->current_network, 'Sidebar A')->get(),
+            "iklanSidebarB" => Iklan::showIklan($this->current_network, 'Sidebar B')->get(),
+            "iklanSidebarC" => Iklan::showIklan($this->current_network, 'Sidebar C')->get(),
+            "iklanFooter" => Iklan::showIklan($this->current_network, 'Footer')->get(),
+            "corongRakyat" => Iklan::showTypeIklan($this->current_network, 'Corong Rakyat')->first(),
         ]);
     }
 
-    public function indeks(){
-
-        $setting = Setting::first();
+    public function indeks(Request $request)
+    {
         $tanggal = Carbon::now()->translatedFormat('Y-m-d');
-        $wcorona = DB::table('widget_corona')->where('id', 1)->first();
 
-        return view('indeks',[
-            'judul' => 'Indeks Berita - ' . $setting->judul_situs,
-            'deskripsi' => $setting->deskripsi,
-            'keyword' => 'berita politik, berita terkini, berita viral, politik, berita hari ini, berita update, rajamedia, raja media, news',
-            'author' => $setting->judul_situs,
-            'foto' => asset('storage/' . $setting->logo),
-            'navKategori' => Kategori::navKategori(),
-            'extraNavKategori' => Kategori::extraNavKategori(),
-            'headline' => Berita::headlines(),
-            'indeks' => Berita::indeks($tanggal)->get(),
-            'populer' => Berita::populer(),
-            'epaper' => Epaper::showAllePaper()->first(),
-            "setting" => $setting,
-            "halstatis" => Statis::getStatis(),
-            "wcorona" => $wcorona,
-            "Network" => Network::showAllNetwork()->get(),
+        return view('indeks', [
+            'network_utama' => $this->network_utama,
+            'judul' => 'Indeks Berita - ' . $this->current_setting->judul_situs,
+            'deskripsi' => $this->current_setting->deskripsi,
+            'keyword' => $this->current_setting->keyword,
+            'author' => $this->current_setting->judul_situs,
+            'foto' => $this->network_utama->url . '/storage/' . $this->current_setting->logo,
+            'navKategori' => Kategori::navKategori($this->current_network),
+            'extraNavKategori' => Kategori::extraNavKategori($this->current_network),
+            'headline' => Berita::headlines($this->current_network),
+            'indeks' => Berita::indeks($this->current_network, $tanggal)->get(),
+            'populer' => Berita::populer($this->current_network),
+            'epaper' => Epaper::showAllePaper($this->current_network)->first(),
+            "halstatis" => Statis::getStatis($this->current_network),
+            "Network" => Network::showAllActiveNetwork(),
+            'beritaNetwork' => Berita::beritaNetwork($this->current_network),
+
             //IKLAN
-            "iklanHeader" => Iklan::showIklan('Header')->orderBy('created_at', 'desc')->first(),
-            "iklanHomeA" => Iklan::showIklan('Home A')->get(),
-            "iklanSidebarA" => Iklan::showIklan('Sidebar A')->get(),
-            "iklanSidebarB" => Iklan::showIklan('Sidebar B')->get(),
-            "iklanSidebarC" => Iklan::showIklan('Sidebar C')->get(),
-            "iklanFooter" => Iklan::showIklan('Footer')->get(),
-            "corongRakyat" => Iklan::showTypeIklan('Corong Rakyat')->first(),
+            "iklanHeader" => Iklan::showIklan($this->current_network, 'Header')->orderBy('created_at', 'desc')->first(),
+            "iklanHomeA" => Iklan::showIklan($this->current_network, 'Home A')->get(),
+            "iklanSidebarA" => Iklan::showIklan($this->current_network, 'Sidebar A')->get(),
+            "iklanSidebarB" => Iklan::showIklan($this->current_network, 'Sidebar B')->get(),
+            "iklanSidebarC" => Iklan::showIklan($this->current_network, 'Sidebar C')->get(),
+            "iklanFooter" => Iklan::showIklan($this->current_network, 'Footer')->get(),
+            "corongRakyat" => Iklan::showTypeIklan($this->current_network, 'Corong Rakyat')->first(),
         ]);
     }
 
-    public function indeksFilter(Request $request){
-
-        $setting = Setting::first();
+    public function indeksFilter(Request $request)
+    {
         $tanggal = $request->input('tanggal');
-        $wcorona = DB::table('widget_corona')->where('id', 1)->first();
 
-        return view('indeks_filter',[
-            'judul' => 'Indeks Berita - ' . $setting->judul_situs,
-            'deskripsi' => $setting->deskripsi,
-            'keyword' => 'berita politik, berita terkini, berita viral, politik, berita hari ini, berita update, rajamedia, raja media, news',
-            'author' => $setting->judul_situs,
-            'foto' => asset('storage/' . $setting->logo),
-            'navKategori' => Kategori::navKategori(),
-            'extraNavKategori' => Kategori::extraNavKategori(),
-            'headline' => Berita::headlines(),
-            'indeks' => Berita::indeks($tanggal)->get(),
-            'epaper' => Epaper::showAllePaper()->first(),
+        return view('indeks_filter', [
+            'network_utama' => $this->network_utama,
+            'judul' => 'Indeks Berita - ' . $this->current_setting->judul_situs,
+            'deskripsi' => $this->current_setting->deskripsi,
+            'keyword' => $this->current_setting->keyword,
+            'author' => $this->current_setting->judul_situs,
+            'foto' => $this->network_utama->url . '/storage/' . $this->current_setting->logo,
+            'navKategori' => Kategori::navKategori($this->current_network),
+            'extraNavKategori' => Kategori::extraNavKategori($this->current_network),
+            'headline' => Berita::headlines($this->current_network),
+            'indeks' => Berita::indeks($this->current_network, $tanggal)->get(),
+            'epaper' => Epaper::showAllePaper($this->current_network)->first(),
             'tanggal' => $tanggal,
-            'populer' => Berita::populer(),
-            "setting" => $setting,
-            "halstatis" => Statis::getStatis(),
-            "wcorona" => $wcorona,
-            "Network" => Network::showAllNetwork()->get(),
+            'populer' => Berita::populer($this->current_network),
+            "halstatis" => Statis::getStatis($this->current_network),
+            "Network" => Network::showAllActiveNetwork(),
+            'beritaNetwork' => Berita::beritaNetwork($this->current_network),
+
             //IKLAN
-            "iklanHeader" => Iklan::showIklan('Header')->orderBy('created_at', 'desc')->first(),
-            "iklanHomeA" => Iklan::showIklan('Home A')->get(),
-            "iklanSidebarA" => Iklan::showIklan('Sidebar A')->get(),
-            "iklanSidebarB" => Iklan::showIklan('Sidebar B')->get(),
-            "iklanSidebarC" => Iklan::showIklan('Sidebar C')->get(),
-            "iklanFooter" => Iklan::showIklan('Footer')->get(),
-            "corongRakyat" => Iklan::showTypeIklan('Corong Rakyat')->first(),
+            "iklanHeader" => Iklan::showIklan($this->current_network, 'Header')->orderBy('created_at', 'desc')->first(),
+            "iklanHomeA" => Iklan::showIklan($this->current_network, 'Home A')->get(),
+            "iklanSidebarA" => Iklan::showIklan($this->current_network, 'Sidebar A')->get(),
+            "iklanSidebarB" => Iklan::showIklan($this->current_network, 'Sidebar B')->get(),
+            "iklanSidebarC" => Iklan::showIklan($this->current_network, 'Sidebar C')->get(),
+            "iklanFooter" => Iklan::showIklan($this->current_network, 'Footer')->get(),
+            "corongRakyat" => Iklan::showTypeIklan($this->current_network, 'Corong Rakyat')->first(),
         ]);
     }
-
 }

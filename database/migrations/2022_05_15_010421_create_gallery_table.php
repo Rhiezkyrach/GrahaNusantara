@@ -15,9 +15,11 @@ return new class extends Migration
     {
         Schema::create('tbl_gallery', function (Blueprint $table) {
             $table->id();
+            $table->string('id_network', 4)->nullable();
             $table->bigInteger('id_berita');
             $table->string('nama_photo');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

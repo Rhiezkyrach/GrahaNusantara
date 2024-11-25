@@ -1,8 +1,7 @@
 User-agent: *
 Allow: / 
-Disallow: /cmslogin
-Disallow: /admin/
-Disallow: /search
+Disallow: /login
+Disallow: /admin
 
-Sitemap: https://www.rajamedia.co/feedberita
-Sitemap: https://www.rajamedia.co/sitemap
+Sitemap: https://idisnews.com/feedberita
+Sitemap: https://idisnews.com/sitemap

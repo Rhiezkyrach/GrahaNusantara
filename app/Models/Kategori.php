@@ -2,18 +2,18 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Cviebrock\EloquentSluggable\Sluggable;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 
 class Kategori extends Model
 {
-    use HasFactory, Sluggable;
+    use HasFactory, Sluggable, SoftDeletes;
 
-    protected $table = 'tbl_channel';
+    protected $table = 'tbl_kategori';
     protected $guarded = ['id'];
-    public $timestamps = false;
 
     public function getRouteKeyName()
     {
@@ -29,20 +29,27 @@ class Kategori extends Model
         ];
     }
 
-    public function berita(){
-        return $this->hasMany(Berita::class, 'id_channel');
+    //Eloquent Relations
+    public function Berita(){
+        return $this->hasMany(Berita::class, 'id_kategori')->orderBy('tanggal_tayang', 'desc')->orderBy('waktu', 'desc');
     }
 
-    static public function allKategori(){
+    public function Network(){
+        return $this->belongsTo(Network::class, 'id_network');
+    }
+
+    static public function allKategori($id_network){
         $q =  Kategori::where('status', 1)
+                        ->where('id_network', $id_network)
                         ->orderBy('nama', 'ASC')
                         ->get();
         
         return $q;
     }
 
-    static public function navKategori(){
+    static public function navKategori($id_network){
         $q =  Kategori::where('status', 1)
+                        ->where('id_network', $id_network)
                         ->where('navigasi', 1)
                         ->where('urutan', '!=' , 10)
                         ->orderBy('urutan', 'ASC')
@@ -51,8 +58,9 @@ class Kategori extends Model
         return $q;
     }
 
-    static public function extraNavKategori(){
+    static public function extraNavKategori($id_network){
         $q =  Kategori::where('status', 1)
+                        ->where('id_network', $id_network)
                         ->where('navigasi', 1)
                         ->where('urutan', '=' , 10)
                         ->get();
@@ -61,11 +69,11 @@ class Kategori extends Model
     }
 
     //BE Model
-    static public function showallKategori(){
-        $q =  Kategori::orderBy('status', 'DESC')
+    static public function showKategori($id_network){
+        $q =  Kategori::where('id_network', $id_network)
+                        ->orderBy('status', 'DESC')
                         ->orderBy('urutan', 'DESC')
-                        ->orderBy('navigasi', 'DESC')
-                        ->get();
+                        ->orderBy('navigasi', 'DESC');
         
         return $q;
     }

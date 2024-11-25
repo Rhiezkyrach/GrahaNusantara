@@ -1,108 +1,72 @@
-@extends('admin.layouts.header')
+<form id="forms" method="post" action="/admin/network" enctype="multipart/form-data">
+@csrf
 
-@section('admincontent')
+    <div class="w-full h-auto px-2 py-2 border border-green-500 rounded-md itemrow bg-green-100/25">
+        <div class="-mt-1.5 mb-2.5 text-center font-semibold"><span class="px-4 py-1 rounded-b-lg bg-green-500 text-white">TAMBAH NETWORK</span></div>
 
-<!-- main Container -->
-<div class="w-full h-auto bg-white px-5 my-20 md:mx-8 md:mt-5 md:mb-14">
-  <div class="flex flex-row items-center justify-between">
-    <div class="md:text-2xl font-semibold">Tambah Network</div>
-    <a href="/" target="_blank">
-      <div class="text-xxs -mt-px font-semibold text-white bg-red-500 hover:bg-red-600 py-2 px-3 rounded-full inline-block align-middle">Kunjungi Situs <i class="fas fa-external-link-alt"></i></div>
-    </a>
-  </div>
-  <div class="mt-5 w-full h-px bg-gray-200 rounded-full"></div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
 
-  {{-- main content --}}
+            <div class="grid grid-cols-1 gap-1">
+                {{-- NAMA NETWORK --}}
+                <div class="bg-gradient-to-b from-slate-300 rounded-lg">
+                    <label class="mb-1" for="inputnama"><span class="text-xs uppercase py-1 pl-2.5 font-semibold">NAMA NETWORK</span></label>
+                    <input type="text" id="inputnama" name="nama" class="main_input_md"
+                        value="{{ old('nama') }}" auto-complete="off" required>
+                </div>
 
-  <div class="flex flex-col mt-5 bg-gray-100 p-4 h-auto w-full rounded-lg">
-    <form method="post" action="/admin/network" enctype="multipart/form-data">
-    @csrf
+                {{-- TAGLINE --}}
+                <div class="bg-gradient-to-b from-slate-300 rounded-lg">
+                    <label class="mb-1" for="inputtagline"><span class="text-xs uppercase py-1 pl-2.5 font-semibold">TAGLINE</span></label>
+                    <input type="text" id="inputtagline" name="tagline" class="main_input_md"
+                        value="{{ old('tagline') }}" auto-complete="off" required>
+                </div>
 
-    {{-- Nama Network --}}
-    <div class="flex flex-col md:flex-row mt-3 items-center">
-      <div class="w-full md:w-2/12 font-semibold">Nama</div>
-      <div class="flex flex-col w-full md:w-5/12">
-        <input type="text" id="nama" name="nama" class="mt-1 md:mt-0 w-full p-2 border border-gray-400 rounded-md" value="{{ old('nama') }}" autocomplete="off" required>
-        @error('nama')
-          <div class="text-red-500 text-xs mt-1 font-semibold">{{ $message }}</div>
-        @enderror
-      </div>
+                {{-- URL --}}
+                <div class="bg-gradient-to-b from-slate-300 rounded-lg">
+                    <label class="mb-1" for="inputurl"><span class="text-xs uppercase py-1 pl-2.5 font-semibold">URL</span></label>
+                    <input type="url" id="inputurl" name="url" class="main_input_md" pattern="https://.*" placeholder="https://contoh.com"
+                        value="{{ old('url') }}" auto-complete="off" required>
+                </div>
+            </div>
+
+            {{-- LOGO --}}
+            <div class="bg-gradient-to-b from-slate-300 rounded-lg">
+                <label class="mb-1" for="inputlogo"><span class="text-xs uppercase py-1 pl-2.5 font-semibold">LOGO</span></label>
+                <div class="flex w-full h-32 mb-1 p-2 overflow-hidden rounded-md">
+                    <img class="object-cover w-full h-full logo-preview rounded" src="{{ asset('images/img-default.png') }}" alt="">
+                </div>
+                <input name="logo" id="inputlogo" type="file" class="w-full file-input file-input-bordered" accept="image/*" required>
+                @error('image')
+                    <div class="text-xs text-red-600">{{ $message }}</div>
+                @enderror
+            </div>
+            
+        </div>
+
+        <div class="mt-2 grid grid-cols-1 md:grid-cols-2 gap-2">
+            {{-- URUTAN --}}
+            <div class="bg-gradient-to-b from-slate-300 rounded-lg">
+                <label class="mb-1" for="inputurutan"><span class="text-xs uppercase py-1 pl-2.5 font-semibold">URUTAN</span></label>
+                <select id="inputurutan" name="urutan" class="main_input_md" required>
+                    @for($i=1; $i <=10; $i++)
+                    <option value="{{ $i }}">{{  $i }}</option>
+                    @endfor
+                </select>
+            </div>
+
+            {{-- STATUS --}}
+            <div class="bg-gradient-to-b from-slate-300 rounded-lg">
+                <label class="mb-1" for="inputstatus"><span class="text-xs uppercase py-1 pl-2.5 font-semibold">STATUS</span></label>
+                <select id="inputstatus" name="status" class="main_input_md" required>
+                <option value="1" @selected(old('status') == '1')>Aktif</option>
+                <option value="0" @selected(old('status') == '0')>Tidak Aktif</option>
+                </select>  
+            </div>
+        </div>
+
     </div>
-    {{-- /Nama Network --}}
 
-    {{-- URL --}}
-    <div class="flex flex-col md:flex-row mt-3 items-center">
-      <div class="w-full md:w-2/12 font-semibold">URL</div>
-      <div class="flex flex-col w-full md:w-5/12">
-        <input type="text" id="url" name="url" class="mt-1 md:mt-0 w-full p-2 border border-gray-400 rounded-md" value="{{ old('url') }}" autocomplete="off" required>
-        @error('url')
-          <div class="text-red-500 text-xs mt-1 font-semibold">{{ $message }}</div>
-        @enderror
-      </div>
-    </div>
-    {{-- /URL --}}
-
-    {{-- Logo--}}
-    <div class="flex flex-col md:flex-row mt-3 items-center">
-      <div class="w-full md:w-2/12 font-semibold">Logo</div>
-      <div class="flex flex-col w-full md:w-5/12">
-        <img class="img-preview mb-2 w-full object-cover overflow-hidden">
-        <input type="file" id="logo" name="logo" class="mt-1 md:mt-0 w-full p-2 border border-gray-400 rounded-md" onchange="previewGambar()" required>
-        @error('logo')
-          <div class="text-red-500 text-xs mt-1 font-semibold">{{ $message }}</div>
-        @enderror
-      </div>
-    </div>
-    {{-- /Logo--}}
-
-    {{-- Urutan --}}
-    <div class="flex flex-col md:flex-row mt-3 items-center">
-      <div class="w-full md:w-2/12 font-semibold">Urutan</div>
-      <div class="flex flex-col w-full md:w-5/12">
-        <select id="urutan" name="urutan" class="mt-1 md:mt-0 w-full p-2 border border-gray-400 rounded-md" required>
-          @for($i=1; $i <=10; $i++)
-          <option value="{{ $i }}">{{  $i }}</option>
-          @endfor
-        </select>
-          @error('urutan')
-          <div class="text-red-500 text-xs mt-1 font-semibold">{{ $message }}</div>
-          @enderror
-      </div>     
-    </div>
-    {{-- /Urutan --}}
-
-    {{-- Submit --}}
-    <div class="flex flex-col md:flex-row mt-3 items-center">
-      <div class="w-full md:w-2/12 font-semibold"></div>
-      <div class="flex flex-col md:flex-row w-full md:w-10/12 divide-x gap-2">
-        <button type="submit" class="bg-green-600 hover:bg-green-700 py-2 w-full md:w-1/2 text-white text-center font-semibold rounded-lg"><i class="fas fa-save"></i> Simpan</button>
-        <a href="/admin/network" class="bg-red-500 hover:bg-red-700 py-2 w-full md:w-1/2 text-white text-center font-semibold rounded-lg"><i class="far fa-list-alt"></i> Kembali ke Tabel</a>
-      </div>
-    </div>
-    {{-- /Submit --}}
-
-    </form>
-
-  </div>
-
-  {{-- /main content --}}
-
-</div>
-<!-- /Main Container -->
-<script>
-function previewGambar(){
-  const image = document.querySelector('#logo');
-  const imgPreview = document.querySelector('.img-preview');
-  
-  imgPreview.style.display = 'block';
-
-  const oFReader = new FileReader();
-  oFReader.readAsDataURL(image.files[0]);
-
-  oFReader.onload = function(oFREvent){
-    imgPreview.src = oFREvent.target.result;
-  }
-
-}
-</script>
-@endsection
+    <x-close-modal-button>
+        <x-slot:submit></x-slot:submit>
+    </x-close-modal-button>
+</form>
