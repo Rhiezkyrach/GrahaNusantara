@@ -43,7 +43,7 @@
           <form action="/search" class="w-full" autocomplete="off">
             <input type="text" name="cari" class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-1 focus:ring-sky-500"
               placeholder="Cari Berita..." value="{{ request('cari') }}" required>
-            <div class="absolute top-0 right-0 w-auto h-full rounded-r-lg bg-gradient-to-r from-teal-500 to-indigo-600">
+            <div class="absolute top-0 right-0 w-auto h-full rounded-r-lg main_color">
               <button type="submit" class="py-1 px-4 text-white"><i class="mt-2 fas fa-search"></i></button>
             </div>
           </form>
@@ -78,7 +78,7 @@
     <!-- /Mobile Nav -->
 
     <!-- PC Nav -->
-    <nav class="hidden lg:block">
+    <nav class="hidden lg:block bg-slate-200 shadow-sm">
       {{-- <div class="w-full h-auto bg-black shadow-sm">
         <div class="mx-auto lg:w-[1080px] px-4 xl:px-0 flex flex-row items-center justify-between">
 
@@ -133,7 +133,7 @@
         <div class="w-auto flex flex-row gap-3 items-start">
           {{-- Form Cari --}}
           <form class="w-auto" action="/search" class="w-full" autocomplete="off">
-            <div class="flex flex-row bg-gradient-to-r from-teal-500 to-indigo-600 p-0.5 rounded-lg items-center justify-between">
+            <div class="flex flex-row main_color p-0.5 rounded-lg items-center justify-between">
 
               <div class="relative block w-64">
                 <input type="text" name="cari" class="w-full px-3 py-1 rounded-md border border-gray-200 focus:outline-none focus:ring-1 focus:amber-sky-300 placeholder:text-xs"
@@ -156,51 +156,56 @@
       </div>
 
       {{-- Navigasi --}}
-      <div class="relative mx-auto lg:w-[1080px] mt-1 px-2 bg-teal-100 border-y-2 border-teal-400">
-        <div class="absolute right-0 -top-6 flex flex-row gap-0.5">
-          <a href="#" class="w-6 h-6 bg-teal-400 rounded-tl-md text-white text-center hover:-mt-1 hover:h-7 duration-200"><i class="mt-1 fa-brands fa-facebook-f"></i> </a>
-          <a href="#" class="w-6 h-6 bg-teal-400 text-white text-center hover:-mt-1 hover:h-7 duration-200"><i class="mt-1 fa-brands fa-instagram"></i> </a>
-          <a href="#" class="w-6 h-6 bg-teal-400 text-white text-center hover:-mt-1 hover:h-7 duration-200"><i class="mt-1 fa-brands fa-twitter"></i> </a>
-          <a href="#" class="w-6 h-6 bg-teal-400 rounded-tr-md text-white text-center hover:-mt-1 hover:h-7 duration-200"><i class="mt-1 fa-brands fa-tiktok"></i> </a>
+      <div class="w-full px-2 bg-amber-400">
+        <div class="relative mx-auto lg:w-[1080px] ">
+
+          {{-- Social --}}
+          {{-- <div class="absolute right-0 -top-6 flex flex-row gap-0.5">
+            <a href="#" class="w-6 h-6 bg-teal-400 rounded-tl-md text-white text-center hover:-mt-1 hover:h-7 duration-200"><i class="mt-1 fa-brands fa-facebook-f"></i> </a>
+            <a href="#" class="w-6 h-6 bg-teal-400 text-white text-center hover:-mt-1 hover:h-7 duration-200"><i class="mt-1 fa-brands fa-instagram"></i> </a>
+            <a href="#" class="w-6 h-6 bg-teal-400 text-white text-center hover:-mt-1 hover:h-7 duration-200"><i class="mt-1 fa-brands fa-twitter"></i> </a>
+            <a href="#" class="w-6 h-6 bg-teal-400 rounded-tr-md text-white text-center hover:-mt-1 hover:h-7 duration-200"><i class="mt-1 fa-brands fa-tiktok"></i> </a>
+          </div> --}}
+
+          <ul class="w-full px-4 lg:px-0 mx-auto flex flex-row grow-0 gap-2 lg:gap-1 items-center justify-between overflow-hidden">
+            {{-- <li class="lg:text-xs xl:text-sm text-slate-900 uppercase font-bold whitespace-nowrap">
+              <a href="{{ url('/') }}"><i class="fas fa-home"></i> Home</a>
+            </li>
+            <div class="h-6 w-px bg-gray-100/50"></div> --}}
+
+            @if($navKategori)
+            @foreach($navKategori as $nk)
+            <li class="py-3 px-2 text-slate-900 font-bold tracking-wide whitespace-nowrap">
+              <a href="/kategori/{{ $nk->slug }}">{{ $nk->nama }}</a>
+            </li>
+            @endforeach
+            @endif
+
+            @if($extraNavKategori->count())
+            <li class="group py-3 px-2 text-slate-900 font-bold tracking-wide whitespace-nowrap">Lainnya <i class="fa-solid fa-angle-down"></i>
+              <div class="group-hover:block dropdown-menu absolute hidden h-auto">
+                <ul class="relative z-50 top-0 mt-2 w-auto divide-y divide-gray-100/50 bg-gradient-to-r from-blue-600 to-blue-500 shadow px-6 py-4 rounded-md">
+                  @foreach($extraNavKategori as $enk)
+                  <li class="py-1.5 block text-white font-bold lg:text-xs xl whitespace-nowrap">
+                    <a href="/kategori/{{ $enk->slug }}">{{ $enk->nama }}</a>
+                  </li>
+                  @endforeach
+                </ul>
+              </div>
+            </li>
+            @endif
+
+            <li class="py-3 px-2 text-slate-900 font-bold tracking-wide whitespace-nowrap">
+              <a href="/indeks">Indeks</a>
+            </li>
+
+          </ul>
         </div>
-        <ul class="w-full px-4 lg:px-0 mx-auto flex flex-row grow-0 gap-2 lg:gap-1 items-center justify-between overflow-hidden">
-          {{-- <li class="lg:text-xs xl:text-sm text-blue-800 uppercase font-bold whitespace-nowrap">
-            <a href="{{ url('/') }}"><i class="fas fa-home"></i> Home</a>
-          </li>
-          <div class="h-6 w-px bg-gray-100/50"></div> --}}
-
-          @if($navKategori)
-          @foreach($navKategori as $nk)
-          <li class="pt-2.5 pb-1 px-2 text-sm text-blue-800 font-bold uppercase tracking-wide whitespace-nowrap border-b-4 hover:border-b-teal-700">
-            <a href="/kategori/{{ $nk->slug }}">{{ $nk->nama }}</a>
-          </li>
-          @endforeach
-          @endif
-
-          @if($extraNavKategori->count())
-          <li class="group pt-2.5 pb-1 px-2 text-sm text-blue-800 font-bold uppercase tracking-wide whitespace-nowrap border-b-4 hover:border-b-teal-700">Lainnya <i class="fa-solid fa-angle-down"></i>
-            <div class="group-hover:block dropdown-menu absolute hidden h-auto">
-              <ul class="relative z-50 top-0 mt-2 w-auto divide-y divide-gray-100/50 bg-gradient-to-r from-blue-600 to-blue-500 shadow px-6 py-4 rounded-md">
-                @foreach($extraNavKategori as $enk)
-                <li class="py-1.5 block text-white font-bold lg:text-xs uppercase xl:text-sm whitespace-nowrap">
-                  <a href="/kategori/{{ $enk->slug }}">{{ $enk->nama }}</a>
-                </li>
-                @endforeach
-              </ul>
-            </div>
-          </li>
-          @endif
-
-          <li class="pt-2.5 pb-1 px-2 text-sm text-blue-800 font-bold uppercase tracking-wide whitespace-nowrap border-b-4 hover:border-b-teal-700">
-            <a href="/indeks">Indeks</a>
-          </li>
-
-        </ul>
       </div>
       {{-- /Navigasi --}}
 
       {{-- Breaking --}}
-      <div class="mx-auto lg:w-[1080px] h-auto bg-gray-700 dark:bg-gray-900 rounded-b-lg overflow-hidden">
+      {{-- <div class="mx-auto lg:w-[1080px] h-auto bg-gray-700 dark:bg-gray-900 rounded-b-lg overflow-hidden">
 
         <div class="flex flex-row gap-2">
           <div class="py-1.5 bg-gradient-to-r from-teal-400 to-indigo-600 px-4 h-full text-sm text-white italic whitespace-nowrap">
@@ -212,7 +217,7 @@
               <div class="splide__list">
                 @foreach($headline as $hl)
                 <div class="splide__slide my-auto">
-                  <a href="/berita/{{ $hl->slug }}" class="text-xs text-white hover:text-amber-400">{!! $hl->judul !!} <span class="-mt-1 ml-1 bg-blue-100 text-blue-800 text-xxxs px-1 py-px rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-400">{{ Carbon\Carbon::parse($hl->created_at)->diffForHumans() }}</span> </a>
+                  <a href="/berita/{{ $hl->slug }}" class="text-xs text-white hover:text-amber-400">{!! $hl->judul !!} <span class="-mt-1 ml-1 bg-blue-100 text-slate-900 text-xxxs px-1 py-px rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-400">{{ Carbon\Carbon::parse($hl->created_at)->diffForHumans() }}</span> </a>
                 </div>
                 @endforeach
               </div>
@@ -220,7 +225,7 @@
           </section>
 
         </div>
-      </div>
+      </div> --}}
       {{-- /Breaking --}}
 
       {{-- Navigasi Scroll --}}
@@ -235,7 +240,7 @@
             </div>
 
             <form class="w-auto" action="/berita" class="w-full" autocomplete="off">
-              <div class="mt-4 flex flex-row bg-gradient-to-r from-teal-500 to-indigo-600 p-0.5 rounded-lg items-center justify-between">
+              <div class="mt-4 flex flex-row main_color p-0.5 rounded-lg items-center justify-between">
 
                 <div class="relative block w-64">
                   <input type="text" name="cari" class="w-full px-3 py-1 rounded-md border border-gray-200 focus:outline-none focus:ring-1 focus:amber-sky-300 placeholder:text-xs"
@@ -252,20 +257,20 @@
 
         <div class="w-full bg-teal-100 border-y-2 border-teal-400">
           <ul class="mx-auto lg:w-[1080px] flex flex-row grow-0 gap-2 lg:gap-1 items-center justify-between">
-            {{-- <li class="pt-2.5 pb-1 px-2 text-sm text-blue-800 border-b-4 hover:border-b-teal-700 font-bold uppercase whitespace-nowrap"><a
+            {{-- <li class="pt-2.5 pb-1 px-2 text-sm text-slate-900 border-b-4 hover:border-b-teal-700 font-bold uppercase whitespace-nowrap"><a
               href="{{ url('/') }}"><i class="fas fa-home"></i> Home</a>
             </li> --}}
             <div class="h-6 w-px bg-gray-100/50"></div>
             @if($navKategori)
             @foreach($navKategori as $nk)
-            <li class="pt-2.5 pb-1 px-2 text-sm text-blue-800 border-b-4 hover:border-b-teal-700 font-bold uppercase tracking-wide whitespace-nowrap">
+            <li class="pt-2.5 pb-1 px-2 text-sm text-slate-900 border-b-4 hover:border-b-teal-700 font-bold uppercase tracking-wide whitespace-nowrap">
               <a href="/kategori/{{ $nk->slug }}">{{ $nk->nama }}</a>
             </li>
             @endforeach
             @endif
 
             @if($extraNavKategori->count())
-            <li class="group relative pt-2.5 pb-1 px-2 text-sm text-blue-800 border-b-4 hover:border-b-teal-700 font-bold uppercase tracking-wide whitespace-nowrap">Lainnya <i class="fa-solid fa-angle-down"></i>
+            <li class="group relative pt-2.5 pb-1 px-2 text-sm text-slate-900 border-b-4 hover:border-b-teal-700 font-bold uppercase tracking-wide whitespace-nowrap">Lainnya <i class="fa-solid fa-angle-down"></i>
               <div class="group-hover:block dropdown-menu absolute hidden h-auto">
                 <ul class="relative z-10 top-0 mt-5 w-auto divide-y divide-gray-100/50 bg-gradient-to-r from-blue-600 to-blue-500 shadow px-6 py-4 rounded-md">
                   @foreach($extraNavKategori as $enk)
@@ -278,7 +283,7 @@
             </li>
             @endif
 
-            <li class="pt-2.5 pb-1 px-2 text-sm text-blue-800 border-b-4 hover:border-b-teal-700 font-bold uppercase tracking-wide whitespace-nowrap">
+            <li class="pt-2.5 pb-1 px-2 text-sm text-slate-900 border-b-4 hover:border-b-teal-700 font-bold uppercase tracking-wide whitespace-nowrap">
               <a href="/indeks">Indeks</a>
             </li>
           </ul>
