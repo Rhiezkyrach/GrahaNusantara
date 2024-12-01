@@ -36,16 +36,9 @@
       {!! $setting->headcode !!}
     @endif
 
-
     {{-- BEGIN: META TAG SEO --}}
     <link rel="canonical" href="{{ request()->fullUrl() }}">
     <meta name="robots" content="index,follow" />
-    {{-- <meta name="googlebot" content="index,follow" />
-    <meta name="googlebot-news" content="index,follow" />
-    <meta name="msnbot" content="index,follow" />
-    <meta name="webcrawlers" content="index,follow" />
-    <meta name="spiders" content="index,follow" />
-    <meta name="rating" content="general" /> --}}
 
     @if(isset($berita))
         @php
@@ -73,8 +66,8 @@
         
         {{-- Twitter Card --}}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:site" content="@Idisnews" />
-        <meta name="twitter:creator" content="@Idisnews" />
+        <meta name="twitter:site" content="@GrahaNusantara" />
+        <meta name="twitter:creator" content="@GrahaNusantara" />
         <meta name="twitter:title" content="{{ $berita->judul }}">
         <meta name="twitter:description" content="{{ substr($deskripsi, 0, 150) }}"/>
         <meta name="twitter:image" content="{{ asset('storage/' . $berita->gambar_detail) }}"/>
@@ -114,9 +107,6 @@
     {{-- Facebook --}}
     <div id="fb-root"></div>
     <script async defer crossorigin="anonymous" src="https://connect.facebook.net/id_ID/sdk.js#xfbml=1&version=v14.0&appId=1488921425167603&autoLogAppEvents=1" nonce="qMPcSAt9"></script>
-
-    {{-- Sharethis --}}
-    {{-- <script type='text/javascript' src='https://platform-api.sharethis.com/js/sharethis.js#property=62b153cc17626600191f44a5&product=sop' async='async'></script> --}}
 
     {{-- Dark Mode Check --}}
     <script>
