@@ -8,11 +8,11 @@
 
 /* MAIN COLOR */
 .main_color {
-    @apply bg-gradient-to-r from-red-600 to-rose-500;
+    @apply bg-gradient-to-r from-red-600 to-rose-600;
 }
 
 .secondary_color {
-    @apply bg-gradient-to-r from-amber-600 to-orange-500;
+    @apply bg-gradient-to-r from-amber-500 to-orange-400;
 }
 
 /* INPUT */

@@ -75,8 +75,8 @@
         <div class="md:w-full {{ $loop->iteration == 2 ? 'hidden md:block' : '' }}">
         <div class="relative flex h-52 md:h-40 lg:h-52 mb-3 bg-gray-500 rounded-lg overflow-hidden">
             <div class="absolute top-0 z-10 px-5 py-1.5 main_color text-xs text-white font-semibold rounded-br-xl">{{ $b->kategori->nama }}</div>
-            @if($b->gambar_detail && Storage::exists($b->gambar_detail))
-                <a href="/berita/{{ $b->slug }}" class="w-full"><img src="{{ asset('storage/' . $b->gambar_detail) }}" class="w-full h-full object-cover" alt="{{ $b->caption }}"></a>
+            @if($b->gambar_detail)
+                <a href="/berita/{{ $b->slug }}" class="w-full"><img src="{{ $network_utama ? $network_utama->url . '/storage/' . $b->gambar_detail : '' }}" class="w-full h-full object-cover" alt="{{ $b->caption }}"></a>
             @else
                 <div class="w-full h-full rounded-lg skeleton"></div>
             @endif
@@ -95,7 +95,7 @@
             <div class="relative flex w-3/12 h-20 md:h-24 lg:h-28 rounded-lg overflow-hidden">
                 <div class="absolute top-0 z-10 px-3 py-1 main_color text-xxxs md:text-xxs text-white font-semibold rounded-br-md rounded-tl-md">{{ $b->kategori->nama }}</div>
                 @if($b->gambar_detail)
-                    <a href="/berita/{{ $b->slug }}" class="w-full"><img src="{{ asset('thumbnail/' . $b->gambar_detail) }}" class="w-full h-full object-cover" alt="{{ $b->caption }}"></a>
+                    <a href="/berita/{{ $b->slug }}" class="w-full"><img src="{{ $network_utama ? $network_utama->url . '/thumbnail/' . $b->gambar_detail : '' }}" class="w-full h-full object-cover" alt="{{ $b->caption }}"></a>
                 @else
                     <div class="w-full h-full rounded-lg skeleton"></div>
                 @endif
@@ -116,40 +116,6 @@
 @endforeach
 <!-- END:KATEGORI 1 & 2 -->
 
-<!-- Galeri -->
-<div class="block w-full mt-4 mb-3 p-4 bg-local main_color rounded-md" style="background-image: url({{ asset('images/bg.png') }})">
-    <div class="flex flex-row px-2 py-1 bg-teal-100 dark:bg-teal-200 border border-teal-300 rounded items-center justify-between">
-        <div class="flex flex-row items-center">
-            {{-- <div class="h-8 w-1.5 bg-white rounded-full rotate-12"></div> --}}
-            <div class="text-lg text-teal-600 whitespace-nowrap"><span class="font-bold"><i class="fa-solid fa-camera-retro"></i> BERITA FOTO</span></div>
-        </div>
-        <div class="text-xs lg:text-sm"><a href="/indeks" class="font-semibold py-0.5 text-teal-600 hover:text-red-500">Lihat Lainnya <i class="fa-solid fa-arrow-right-long"></i></a></div>
-    </div>
-
-    <section id="splide_galeri" class="splide mt-4 max-h-60 md:max-h-80" aria-label="Berita Foto">
-
-        <div class="splide__track">
-            <div class="splide__list">
-            @foreach($Galeri as $gal)
-            <div class="splide__slide">
-                <div class="mb-1 relative flex h-48 bg-gray-500 rounded-lg overflow-hidden">
-                    <div class="absolute top-0 right-0 mt-3 mr-3 p-2 bg-white text-teal-600 font-semibold rounded"><i class="fa-regular fa-photo-film"></i></div>
-                    @if($gal->gambar_detail)
-                        <a href="/berita/{{ $gal->slug }}" class="w-full"><img src="{{ asset('thumbnail/' . $gal->gambar_detail) }}" class="w-full h-full object-cover" alt="{{ $gal->caption }}"></a>
-                     @else
-                        <div class="w-full h-full rounded-lg skeleton"></div>
-                    @endif
-                </div>
-                <a href="/berita/{{ $gal->slug }}" class="mt-2 text-base md:text-lg font-bold leading-tight text-white hover:text-red-500">{!! $gal->judul !!}</a>
-                <p class="text-xxxs md:text-xxs xl:text-xs text-white font-medium mt-1">{{ Carbon\Carbon::parse($gal->tanggal_tayang . ' ' . $gal->waktu)->translatedFormat('l, d F Y | H:i') }} WIB</p>
-            </div>
-            @endforeach
-            </div>
-        </div>
-    </section>
-
-</div>
-<!-- /Galeri -->
 
 {{-- KATEGORI 3 & 4 --}}
 @foreach($Kategori->slice(2, 2) as $key => $d)
@@ -169,7 +135,7 @@
         <div class="relative flex h-28 md:h-36 rounded-lg overflow-hidden">
             <div class="absolute top-0 px-3 py-1 main_color text-xxs md:text-xs text-white font-semibold rounded-br-md rounded-tl-md">{{ $b->kategori->nama }}</div>
             @if($b->gambar_detail)
-                <a href="/berita/{{ $b->slug }}" class="w-full"><img src="{{ asset('thumbnail/' . $b->gambar_detail) }}" alt="{{ $b->caption }}" class="w-full h-full object-cover"></a>
+                <a href="/berita/{{ $b->slug }}" class="w-full"><img src="{{ $network_utama ? $network_utama->url . '/thumbnail/' . $b->gambar_detail : '' }}" alt="{{ $b->caption }}" class="w-full h-full object-cover"></a>
             @else
                 <div class="w-full h-full rounded-lg skeleton"></div>
             @endif
@@ -203,23 +169,6 @@
 @push('js')
 <script type="text/javascript">
 $( document ).ready(function() {
-
-    let splide_galeri = new Splide( '#splide_galeri', {
-        mediaQuery: 'min',
-        type   : 'loop',
-        autoplay: true,
-        interval: 3000,
-        breakpoints: {
-            1024: {
-                perPage: 2,
-            },
-            767: {
-                perPage: 1,
-            }
-        },
-        pagination: false,
-        gap: 10,
-    }).mount();
     
     // run function when user click load more button
     let paginate = 1;

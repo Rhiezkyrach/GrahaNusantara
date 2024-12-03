@@ -16,8 +16,8 @@
             @if($loop->iteration == 1)
             <div class="relative h-52 md:h-40 lg:h-52 rounded-md overflow-hidden my-3">
                 <div class="absolute top-0 z-10 px-5 py-1.5 main_color text-xs text-white font-semibold rounded-br-xl">{{ $b->kategori->nama }}</div>
-                @if($b->gambar_detail && Storage::exists($b->gambar_detail))
-                    <a href="/berita/{{ $b->slug }}"><img class="w-full h-full object-cover" src="{{ asset('storage/' . $b->gambar_detail) }}" alt="{{ $b->caption }}"></a>
+                @if($b->gambar_detail)
+                    <a href="/berita/{{ $b->slug }}"><img class="w-full h-full object-cover" src="{{ $network_utama ? $network_utama->url . '/thumbnail/' . $b->gambar_detail : '' }}" alt="{{ $b->caption }}"></a>
                 @else
                     <div class="w-full h-full rounded-md skeleton"></div>
                 @endif
@@ -28,7 +28,7 @@
             <div class="flex flex-row">
                 <div class="flex shrink-0 w-14 h-14 rounded-md overflow-hidden">
                     @if($b->gambar_detail)
-                        <a href="/berita/{{ $b->slug }}"><img class="w-full h-full object-cover" src="{{ asset('storage/' . $b->gambar_detail) }}" alt="{{ $b->caption }}"> </a>
+                        <a href="/berita/{{ $b->slug }}"><img class="w-full h-full object-cover" src="{{ $network_utama ? $network_utama->url . '/thumbnail/' . $b->gambar_detail : '' }}" alt="{{ $b->caption }}"> </a>
                     @else
                         <div class="w-full h-full rounded-md skeleton"></div>
                     @endif

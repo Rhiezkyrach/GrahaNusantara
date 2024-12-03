@@ -1,9 +1,9 @@
 @include('layouts.header')
 @include('layouts.navigasi')
 
-<main class="px-4 xl:px-0 mt-5">
+<main class="bg-slate-50 dark:bg-slate-800 px-4 xl:px-0">
 
-  <div class="mt-2"> <!-- Headline PC Container -->
+  <div class="pt-5"> <!-- Headline PC Container -->
     <div class="mx-auto lg:w-[1080px] md:flex md:flex-row md:gap-5 md:h-auto"> 
       @if(Request::is('/'))
           @include('layouts.headline')

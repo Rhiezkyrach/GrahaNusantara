@@ -1,4 +1,4 @@
-<body class="bg-slate-50 dark:bg-slate-800 selection:bg-teal-600 selection:text-white">
+<body class="selection:bg-rose-600 selection:text-white">
   <header class="w-full h-auto shadow-md lg:shadow-none transition">
     <!-- Mobile Nav -->
     <nav class="lg:hidden fixed z-20 top-0 bg-slate-50 dark:bg-slate-700 shadow-md w-full px-4 mx-auto py-2">
@@ -43,7 +43,7 @@
           <form action="/search" class="w-full" autocomplete="off">
             <input type="text" name="cari" class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-1 focus:ring-sky-500"
               placeholder="Cari Berita..." value="{{ request('cari') }}" required>
-            <div class="absolute top-0 right-0 w-auto h-full rounded-r-lg main_color">
+          <div class="absolute top-0 right-0 w-auto h-full rounded-r-lg main_color">
               <button type="submit" class="py-1 px-4 text-white"><i class="mt-2 fas fa-search"></i></button>
             </div>
           </form>
@@ -78,7 +78,7 @@
     <!-- /Mobile Nav -->
 
     <!-- PC Nav -->
-    <nav class="hidden lg:block bg-slate-200 shadow-sm">
+    <nav class="relative hidden lg:block dark:bg-slate-900 shadow-sm">
       {{-- <div class="w-full h-auto bg-black shadow-sm">
         <div class="mx-auto lg:w-[1080px] px-4 xl:px-0 flex flex-row items-center justify-between">
 
@@ -121,11 +121,16 @@
 
         </div>
       </div> --}}
+      <div class="w-full h-full absolute -z-10">
+        <img class="w-full h-full object-cover " src="{{ asset('images/navbanner.jpg') }}" alt="">
+      </div>
 
       <div class="mx-auto lg:w-[1080px] px-4 xl:px-0 flex flex-row items-center justify-between">
         {{-- Logo --}}
         <div class="w-auto my-3">
-          <a href="{{ url('/') }}"><img class="w-60" src="{{ asset('storage/'. $setting->logo ) }}"
+          <a href="{{ url('/') }}"><img class="w-60 block dark:hidden" src="{{ asset('storage/'. $setting->logo ) }}"
+              alt="{{ $setting->judul_situs }}"></a>
+          <a href="{{ url('/') }}"><img class="w-60 hidden dark:block" src="{{ asset('storage/'. $setting->darklogo ) }}"
               alt="{{ $setting->judul_situs }}"></a>
         </div>
         {{-- /Logo --}}
@@ -133,7 +138,7 @@
         <div class="w-auto flex flex-row gap-3 items-start">
           {{-- Form Cari --}}
           <form class="w-auto" action="/search" class="w-full" autocomplete="off">
-            <div class="flex flex-row main_color p-0.5 rounded-lg items-center justify-between">
+          <div class="flex flex-row main_color p-0.5 rounded-lg items-center justify-between">
 
               <div class="relative block w-64">
                 <input type="text" name="cari" class="w-full px-3 py-1 rounded-md border border-gray-200 focus:outline-none focus:ring-1 focus:amber-sky-300 placeholder:text-xs"
@@ -147,7 +152,7 @@
           {{-- /Form Cari --}}
 
           {{-- Dark Mode --}}
-          <button id="theme-toggle" type="button" class="w-[38px] h-[38px] text-teal-700 dark:text-teal-700 bg-gray-300 hover:bg-gray-400 dark:hover:bg-gray-500 rounded-md p-2">
+          <button id="theme-toggle" type="button" class="w-[38px] h-[38px] text-gray-100 bg-rose-600 hover:bg-red-700 rounded-md p-2">
             <div id="theme-toggle-dark-icon" class="hidden text-base text-center"><i class="fa-regular fa-moon"></i></div>
             <div id="theme-toggle-light-icon" class="hidden text-base text-center"><i class="fa-regular fa-sun"></i></div>
           </button>
@@ -156,8 +161,8 @@
       </div>
 
       {{-- Navigasi --}}
-      <div class="w-full px-2 bg-amber-400">
-        <div class="relative mx-auto lg:w-[1080px] ">
+      <div class="w-full px-2  border-b-4 border-rose-500">
+        <div class="relative mx-auto lg:w-[1080px] main_color rounded-t-xl">
 
           {{-- Social --}}
           {{-- <div class="absolute right-0 -top-6 flex flex-row gap-0.5">
@@ -167,7 +172,7 @@
             <a href="#" class="w-6 h-6 bg-teal-400 rounded-tr-md text-white text-center hover:-mt-1 hover:h-7 duration-200"><i class="mt-1 fa-brands fa-tiktok"></i> </a>
           </div> --}}
 
-          <ul class="w-full px-4 lg:px-0 mx-auto flex flex-row grow-0 gap-2 lg:gap-1 items-center justify-between overflow-hidden">
+          <ul class="w-full px-4 mx-auto flex flex-row grow-0 gap-2 lg:gap-1 items-center justify-between">
             {{-- <li class="lg:text-xs xl:text-sm text-slate-900 uppercase font-bold whitespace-nowrap">
               <a href="{{ url('/') }}"><i class="fas fa-home"></i> Home</a>
             </li>
@@ -175,18 +180,18 @@
 
             @if($navKategori)
             @foreach($navKategori as $nk)
-            <li class="py-3 px-2 text-slate-900 font-bold tracking-wide whitespace-nowrap">
+            <li class="py-3 px-2 text-gray-100 hover:text-amber-300 hover:bg-rose-700 font-bold tracking-wide whitespace-nowrap">
               <a href="/kategori/{{ $nk->slug }}">{{ $nk->nama }}</a>
             </li>
             @endforeach
             @endif
 
             @if($extraNavKategori->count())
-            <li class="group py-3 px-2 text-slate-900 font-bold tracking-wide whitespace-nowrap">Lainnya <i class="fa-solid fa-angle-down"></i>
+            <li class="group py-3 px-2 text-gray-100 hover:text-amber-300 hover:bg-rose-700 font-bold tracking-wide whitespace-nowrap">Lainnya <i class="fa-solid fa-angle-down"></i>
               <div class="group-hover:block dropdown-menu absolute hidden h-auto">
-                <ul class="relative z-50 top-0 mt-2 w-auto divide-y divide-gray-100/50 bg-gradient-to-r from-blue-600 to-blue-500 shadow px-6 py-4 rounded-md">
+                <ul class="relative z-10 top-0 mt-5 w-auto divide-y divide-gray-100/50 main_color shadow px-6 py-4 rounded-md">
                   @foreach($extraNavKategori as $enk)
-                  <li class="py-1.5 block text-white font-bold lg:text-xs xl whitespace-nowrap">
+                  <li class="py-1.5 block text-white font-bold whitespace-nowrap">
                     <a href="/kategori/{{ $enk->slug }}">{{ $enk->nama }}</a>
                   </li>
                   @endforeach
@@ -195,7 +200,7 @@
             </li>
             @endif
 
-            <li class="py-3 px-2 text-slate-900 font-bold tracking-wide whitespace-nowrap">
+            <li class="py-3 px-2 text-gray-100 hover:text-amber-300 hover:bg-rose-700 font-bold tracking-wide whitespace-nowrap">
               <a href="/indeks">Indeks</a>
             </li>
 
@@ -231,16 +236,18 @@
       {{-- Navigasi Scroll --}}
       <div class="navigasi w-full h-auto hidden fixed z-50 top-0 shadow-md">
 
-        <div class="w-full bg-white dark:bg-slate-800 py-1.5">
+        <div class="w-full bg-slate-200 dark:bg-slate-900 py-1.5">
           <div class="mx-auto lg:w-[1080px] px-4 xl:px-0 flex flex-row items-center justify-between">
 
             <div class="py-1 w-auto">
-              <a href="{{ url('/') }}"><img class="w-44" src="{{ asset('storage/'. $setting->logo ) }}"
+              <a href="{{ url('/') }}"><img class="w-44 block dark:hidden" src="{{ asset('storage/'. $setting->logo ) }}"
+                  alt="{{ $setting->judul_situs }}"></a>
+              <a href="{{ url('/') }}"><img class="w-44 hidden dark:block" src="{{ asset('storage/'. $setting->darklogo ) }}"
                   alt="{{ $setting->judul_situs }}"></a>
             </div>
 
             <form class="w-auto" action="/berita" class="w-full" autocomplete="off">
-              <div class="mt-4 flex flex-row main_color p-0.5 rounded-lg items-center justify-between">
+              <div class="flex flex-row main_color p-0.5 rounded-lg items-center justify-between">
 
                 <div class="relative block w-64">
                   <input type="text" name="cari" class="w-full px-3 py-1 rounded-md border border-gray-200 focus:outline-none focus:ring-1 focus:amber-sky-300 placeholder:text-xs"
@@ -255,26 +262,26 @@
           </div>
         </div>
 
-        <div class="w-full bg-teal-100 border-y-2 border-teal-400">
+        <div class="w-full secondary_color">
           <ul class="mx-auto lg:w-[1080px] flex flex-row grow-0 gap-2 lg:gap-1 items-center justify-between">
-            {{-- <li class="pt-2.5 pb-1 px-2 text-sm text-slate-900 border-b-4 hover:border-b-teal-700 font-bold uppercase whitespace-nowrap"><a
+            {{-- <li class="pt-2.5 pb-1 px-2 text-sm text-slate-900 font-bold uppercase whitespace-nowrap"><a
               href="{{ url('/') }}"><i class="fas fa-home"></i> Home</a>
             </li> --}}
-            <div class="h-6 w-px bg-gray-100/50"></div>
+            {{-- <div class="h-6 w-px bg-gray-100/50"></div> --}}
             @if($navKategori)
             @foreach($navKategori as $nk)
-            <li class="pt-2.5 pb-1 px-2 text-sm text-slate-900 border-b-4 hover:border-b-teal-700 font-bold uppercase tracking-wide whitespace-nowrap">
+            <li class="py-2 px-2 text-sm text-blue-900 hover:text-blue-950 font-bold uppercase tracking-wide whitespace-nowrap">
               <a href="/kategori/{{ $nk->slug }}">{{ $nk->nama }}</a>
             </li>
             @endforeach
             @endif
 
             @if($extraNavKategori->count())
-            <li class="group relative pt-2.5 pb-1 px-2 text-sm text-slate-900 border-b-4 hover:border-b-teal-700 font-bold uppercase tracking-wide whitespace-nowrap">Lainnya <i class="fa-solid fa-angle-down"></i>
+            <li class="group relative py-2 px-2 text-sm text-blue-900 hover:text-blue-950 font-bold uppercase tracking-wide whitespace-nowrap">Lainnya <i class="fa-solid fa-angle-down"></i>
               <div class="group-hover:block dropdown-menu absolute hidden h-auto">
-                <ul class="relative z-10 top-0 mt-5 w-auto divide-y divide-gray-100/50 bg-gradient-to-r from-blue-600 to-blue-500 shadow px-6 py-4 rounded-md">
+                <ul class="relative z-10 top-0 mt-5 w-auto divide-y divide-gray-100/50 main_color shadow px-6 py-4 rounded-md">
                   @foreach($extraNavKategori as $enk)
-                  <li class="py-1.5 block text-white hover:text-yellow-300 font-bold uppercase pt-2.5 pb-1 px-2 text-sm whitespace-nowrap">
+                  <li class="py-1.5 block text-white hover:text-yellow-300 font-bold uppercase px-2 text-sm whitespace-nowrap">
                     <a href="/kategori/{{ $enk->slug }}">{{ $enk->nama }}</a>
                   </li>
                   @endforeach
@@ -283,7 +290,7 @@
             </li>
             @endif
 
-            <li class="pt-2.5 pb-1 px-2 text-sm text-slate-900 border-b-4 hover:border-b-teal-700 font-bold uppercase tracking-wide whitespace-nowrap">
+            <li class="py-1.5 px-2 text-sm text-blue-900 hover:text-blue-950 font-bold uppercase tracking-wide whitespace-nowrap">
               <a href="/indeks">Indeks</a>
             </li>
           </ul>
@@ -296,7 +303,7 @@
   </header>
 
   <!-- Ekplorasi -->
-  <div id="eksplor" class="lg:hidden flex flex-row w-full bg-gradient-to-r from-teal-100 to-indigo-100 overflow-x-auto mt-14 mx-auto px-4 py-2 no-scrollbar">
+  <div id="eksplor" class="lg:hidden flex flex-row w-full secondary_color overflow-x-auto mt-14 mx-auto px-4 py-2 no-scrollbar">
     {{-- <div class="px-3 py-1 bg-red-600 rounded-md text-xs font-semibold text-white whitespace-nowrap"><i
         class="far fa-compass"></i> Eksplorasi</div> --}}
     {{-- <div class="flex-shrink-0 w-px ml-3 h-auto bg-gray-300"></div> --}}
@@ -304,7 +311,7 @@
       @if($navKategori)
       @foreach($navKategori as $nk)
       <a href="/kategori/{{ $nk->slug }}">
-        <p class="text-sm text-teal-600 font-semibold whitespace-nowrap">{{ $nk->nama }}</p>
+        <p class="text-sm text-blue-900 hover:text-blue-950 font-semibold whitespace-nowrap">{{ $nk->nama }}</p>
       </a>
       @endforeach
       @endif
@@ -312,13 +319,13 @@
       @if($extraNavKategori)
       @foreach($extraNavKategori as $enkm)
       <a href="/kategori/{{ $enkm->slug }}">
-        <p class="text-sm text-teal-600 font-semibold whitespace-nowrap">{{ $enkm->nama }}</p>
+        <p class="text-sm text-blue-900 hover:text-blue-950 font-semibold whitespace-nowrap">{{ $enkm->nama }}</p>
       </a>
       @endforeach
       @endif
 
       <a href="/indeks">
-        <p class="text-sm text-teal-600 font-semibold whitespace-nowrap">Indeks</p>
+        <p class="text-sm text-blue-900 hover:text-blue-950 font-semibold whitespace-nowrap">Indeks</p>
       </a>
     </div>
   </div>
@@ -363,16 +370,17 @@ $( document ).ready(function() {
   });
 
   // Breaking News
-  let splide_breaking = new Splide( '#splide_breaking', {
-    type   : 'loop',
-    autoplay: true,
-    interval: 2500,
-    arrows: false,
-    pagination: false,
-  }).mount();
+  // let splide_breaking = new Splide( '#splide_breaking', {
+  //   type   : 'loop',
+  //   autoplay: true,
+  //   interval: 2500,
+  //   arrows: false,
+  //   pagination: false,
+  // }).mount();
 
   // Toggle Hamburger
   $('#hamburger').on('click', function(){
+    console.log('clicked')
     if($('#navlinks').hasClass("hidden")){
       $('#navlinks').removeClass("hidden");
       // $('#justify').addClass("justify-between");

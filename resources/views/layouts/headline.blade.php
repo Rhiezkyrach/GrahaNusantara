@@ -57,24 +57,21 @@
 {{-- Headline Side --}}
 
 <!-- Today's Trending -->
-<div class="hidden md:flex md:flex-col w-4/12 flex-grow-0 bg-gray-200 dark:bg-gray-600 rounded-lg h-72 lg:h-96 border border-teal-300 overflow-y-auto no-scrollbar">
-    <div class="w-full text-center top-0 px-5 py-1.5 bg-gradient-to-r from-teal-500 to-indigo-500 text-white italic whitespace-nowrap">
-        <span class="font-bold">TRENDING </span><i class="fa-solid fa-arrow-trend-up text-amber-300"></i>
-        <span>HARI INI</span>
-    </div>
-    <div class="mt-1 mb-4 flex flex-col divide-y gap-3 divide-gray-400/70">
+<div class="relative hidden md:flex md:flex-col flex-grow-0 w-4/12 h-72 lg:h-96 main_color border-2 border-rose-600 rounded-md">
+    
+    <div class="mt-1 mb-4 flex flex-col divide-y gap-3 divide-gray-400/70 overflow-y-auto no-scrollbar">
 
         @foreach($trending as $tr)
-        <div class="pt-3 mx-4 flex flex-row gap-5 justify-between">
+        <div class="pt-3 {{ $loop->last ? 'pb-8' : '' }} mx-4 flex flex-row gap-2 justify-between">
             <div class="flex flex-col">
 
                 <a href="/berita/{{ $tr->slug }}">
-                    <div  class="dark:text-white mt-1.5 text-sm lg:text-lg font-semibold hover:text-red-600 dark:hover:text-amber-300">{!! $tr->judul !!}</div>
+                    <div  class="text-white text-sm font-semibold hover:text-amber-300">{!! $tr->judul !!}</div>
                 </a>
 
-                <div class="mt-0.5 flex flex-row items-center">
-                    <div class="hidden lg:block px-1 py-0.5 bg-gradient-to-r from-teal-500 to-indigo-500 text-xxs text-white rounded">{{ $tr->kategori->nama }}</div>
-                    <div class="lg:ml-2 text-xxs text-gray-800 dark:text-gray-300"><i class="far fa-clock"></i> {{ Carbon\Carbon::parse($tr->tanggal_tayang . ' ' .$tr->waktu)->diffForHumans() }}</div>
+                <div class="mt-1 flex flex-row items-center">
+                    <div class="hidden lg:block px-1 py-0.5 bg-amber-300 text-xxs font-semibold rounded-sm">{{ $tr->kategori->nama }}</div>
+                    <div class="lg:ml-2 text-xxs text-white"><i class="far fa-clock"></i> {{ Carbon\Carbon::parse($tr->tanggal_tayang . ' ' .$tr->waktu)->diffForHumans() }}</div>
                 </div>
             </div>
 
@@ -90,6 +87,10 @@
         </div>
         @endforeach
 
+    </div>
+
+    <div class="absolute bottom-0 w-full text-center px-5 py-1.5 bg-amber-300 text-rose-600 rounded-b-md italic">
+        <i class="fa-solid fa-hashtag"></i></i><span>LAGI<b>TRENDING</b></span>
     </div>
 </div>
 <!-- /Today's Trending -->
